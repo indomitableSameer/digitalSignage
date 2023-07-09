@@ -1,3 +1,9 @@
 node_modules/
+__pycache__/
+migrations/
+__pycache__/
+dist/
 *.pyc
+*.pyo
+package-lock.json
 venv/
