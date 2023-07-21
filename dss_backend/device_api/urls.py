@@ -4,4 +4,3 @@ from .views import deviceRegistrationView
 urlpatterns = [
     path('register', deviceRegistrationView.as_view())
 ]
-        
