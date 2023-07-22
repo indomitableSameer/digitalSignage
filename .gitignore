@@ -1,6 +1,7 @@
 node_modules/
 __pycache__
 migrations/
+examples/
 __pycache__/
 dist/
 *.pyc
