@@ -1,0 +1,63 @@
+version: '3.8'
+networks:
+  roachnet:
+    driver: bridge
+services:
+  roach1:
+    image: cockroachdb/cockroach:v23.1.6
+    container_name: roach1
+    networks:
+      - roachnet
+    ports:
+      - 26257:26257
+      - 8080:8080
+    volumes:
+      - cockroachdb1-data:/cockroach/data
+    command:
+      - start
+      - --advertise-addr=roach1:26357
+      - --http-addr=roach1:8080
+      - --listen-addr=roach1:26357
+      - --sql-addr=roach1:26257
+      - --insecure
+      - --join=roach1:26357,roach2:26357,roach3:26357
+  roach2:
+    image: cockroachdb/cockroach:v23.1.6
+    container_name: roach2 
+    networks:
+      - roachnet
+    ports:
+      - 26258:26258
+      - 8081:8081
+    volumes:
+      - cockroachdb2-data:/cockroach/data
+    command:
+      - start
+      - --advertise-addr=roach2:26357
+      - --http-addr=roach2:8081
+      - --listen-addr=roach2:26357
+      - --sql-addr=roach2:26258
+      - --insecure
+      - --join=roach1:26357,roach2:26357,roach3:26357
+  roach3:
+    image: cockroachdb/cockroach:v23.1.6
+    container_name: roach3
+    networks:
+      - roachnet
+    ports:
+      - 26259:26259
+      - 8082:8082
+    volumes:
+      - cockroachdb3-data:/cockroach/data
+    command:
+      - start
+      - --advertise-addr=roach3:26357
+      - --http-addr=roach3:8082
+      - --listen-addr=roach3:26357
+      - --sql-addr=roach3:26259
+      - --insecure
+      - --join=roach1:26357,roach2:26357,roach3:26357
+volumes:
+  cockroachdb1-data:
+  cockroachdb2-data:
+  cockroachdb3-data:
