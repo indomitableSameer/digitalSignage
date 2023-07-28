@@ -21,6 +21,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"crypto/x509"
 	"flag"
 	"fmt"
@@ -31,7 +32,7 @@ import (
 	pb "backend-servers/registrationServer/protobuf"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 )
 
 const (
@@ -39,7 +40,7 @@ const (
 )
 
 var (
-	addr = flag.String("addr", "localhost:8000", "the address to connect to")
+	addr = flag.String("addr", "device.dss.com:4001", "the address to connect to")
 	name = flag.String("name", defaultName, "Name to greet")
 )
 
@@ -52,8 +53,8 @@ func main() {
 	}
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(caCert)
-	//cert, _ := tls.LoadX509KeyPair("../../pki/clientTest/client-cert.pem", "../../pki/clientTest/client-key.pem")
-	/*cfg := &tls.Config{
+	cert, _ := tls.LoadX509KeyPair("../../pki/clientTest/client-cert.pem", "../../pki/clientTest/client-key.pem")
+	cfg := &tls.Config{
 		MinVersion:               tls.VersionTLS12,
 		CurvePreferences:         []tls.CurveID{tls.CurveP521, tls.CurveP384, tls.CurveP256},
 		PreferServerCipherSuites: true,
@@ -66,12 +67,12 @@ func main() {
 		RootCAs:      caCertPool,
 		Certificates: []tls.Certificate{cert},
 		//InsecureSkipVerify: true,
-	}*/
+	}
 
 	// Set up a connection to the server.
 	//insecure.NewCredentials()
-	//conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(credentials.NewTLS(cfg)))
-	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(credentials.NewTLS(cfg)))
+	//conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
