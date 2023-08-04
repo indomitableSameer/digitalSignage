@@ -1,0 +1,55 @@
+2023-08-04 00:49:55,902 INFO main(20) test
+2023-08-04 00:50:21,670 INFO main(20) test
+2023-08-04 00:54:12,663 INFO main(20) test
+2023-08-04 00:54:44,493 INFO main(21) test
+2023-08-04 00:55:37,758 INFO main(21) test
+2023-08-04 00:56:00,149 INFO main(21) test
+2023-08-04 00:59:32,696 INFO main(21) test
+2023-08-04 01:30:56,876 INFO main(21) test
+2023-08-04 01:39:42,935 INFO main(21) test
+2023-08-04 01:41:46,156 INFO main(21) test
+2023-08-04 01:41:55,918 INFO main(21) test
+2023-08-04 01:42:15,721 INFO main(21) test
+2023-08-04 01:42:57,810 INFO main(21) test
+2023-08-04 01:44:45,249 INFO main(21) test
+2023-08-04 02:00:49,737 INFO main(21) test
+2023-08-04 02:01:58,732 INFO main(21) test
+2023-08-04 02:02:12,620 INFO main(21) test
+2023-08-04 02:02:12,673 INFO playnow(18) ready to play..
+2023-08-04 02:15:19,025 INFO main(22) test
+2023-08-04 02:16:39,741 INFO main(22) test
+2023-08-04 02:16:39,794 DEBUG main(27) other work
+2023-08-04 02:18:03,089 INFO main(22) test
+2023-08-04 02:18:03,140 DEBUG main(27) other work
+2023-08-04 02:18:56,290 INFO main(22) test
+2023-08-04 02:18:56,325 DEBUG main(27) other work
+2023-08-04 02:21:14,198 INFO main(22) test
+2023-08-04 02:24:22,728 INFO main(22) test
+2023-08-04 02:28:54,865 INFO main(22) test
+2023-08-04 02:29:20,293 INFO main(22) test
+2023-08-04 02:29:20,347 INFO playnow(20) ready to play..
+2023-08-04 02:29:20,348 DEBUG main(27) other work
+2023-08-04 02:32:15,611 INFO main(22) test
+2023-08-04 02:32:15,662 DEBUG main(25) other work
+2023-08-04 02:32:15,664 INFO playnow(20) ready to play..
+2023-08-04 02:33:32,378 INFO main(22) test
+2023-08-04 02:34:06,834 INFO main(22) test
+2023-08-04 02:34:06,887 DEBUG main(25) other work
+2023-08-04 02:34:06,888 INFO playnow(20) ready to play..
+2023-08-04 02:35:33,835 INFO main(22) test
+2023-08-04 02:35:33,891 INFO playnow(20) ready to play..
+2023-08-04 02:35:33,893 DEBUG main(25) other work
+2023-08-04 02:35:40,550 INFO main(22) test
+2023-08-04 02:35:40,601 DEBUG main(25) other work
+2023-08-04 02:35:40,602 INFO playnow(20) ready to play..
+2023-08-04 02:36:56,975 INFO main(22) test
+2023-08-04 02:36:57,028 DEBUG main(25) other work
+2023-08-04 02:36:57,029 INFO playnow(20) ready to play..
+2023-08-04 02:50:05,728 INFO main(22) test
+2023-08-04 02:50:05,778 DEBUG main(25) other work
+2023-08-04 02:50:05,781 INFO playnow(21) ready to play..
+2023-08-04 02:54:57,756 INFO main(22) dss player stating..
+2023-08-04 02:54:57,806 INFO __init__(17) vlc player init done.
+2023-08-04 02:54:57,807 INFO main(24) starting vlc player thread..
+2023-08-04 02:54:57,813 DEBUG main(26) other work
+2023-08-04 02:54:57,815 INFO playnow(22) ready to play..
