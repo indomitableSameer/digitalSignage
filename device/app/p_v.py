@@ -20,7 +20,7 @@ app_log.addHandler(my_handler)
 
 def main():
 	app_log.info('dss player stating..')
-	player_thread = vlcplayer(app_log, "vv.mp4")
+	player_thread = vlcplayer(app_log, "./media/vv.mp4")
 	app_log.info('starting vlc player thread..')
 	player_thread.start()
 	app_log.debug("other work")
