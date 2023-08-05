@@ -1,8 +1,6 @@
 # importing time and vlc
 import vlc
-import logging
 import threading
-from logging.handlers import RotatingFileHandler
 
 class vlcplayer(threading.Thread):
     
@@ -11,7 +9,7 @@ class vlcplayer(threading.Thread):
         self.media_file = media_file
         self.logger = logger
         #self.vlc_instance = vlc.Instance("--aout=adummy --embedded-video --file-logging --logfile=vlc-log.txt --verbose 3")
-        self.vlc_instance = vlc.Instance("--aout=adummy --embedded-video --file-logging --verbose 3")
+        self.vlc_instance = vlc.Instance("--aout=adummy --embedded-video --verbose 3")
         self.vlc_instance.vlm_set_loop(media_file, True)
         self.player = self.vlc_instance.media_player_new()
         logger.info('vlc player init done.')
@@ -21,7 +19,7 @@ class vlcplayer(threading.Thread):
         self.player.set_media(media)
         self.logger.info('ready to play..')
         self.player.play()
-        logger.info('playing..')
+        self.logger.info('playing..')
 
     def run(self):
         self.playnow()
