@@ -11,9 +11,10 @@ class channel():
     def get_channel(self):
         print("going to connect")
         ccert = open(self.cPubKey, "rb").read()
-        ckey = open(self.cPriKey, "rb").read()
+        #ckey = open(self.cPriKey, "rb").read()
         rootca = open(self.rootCert, "rb").read()
-        sslcreds = grpc.ssl_channel_credentials(rootca, ckey, ccert)
+        #sslcreds = grpc.ssl_channel_credentials(rootca, ckey, ccert)
+        sslcreds = grpc.ssl_channel_credentials(rootca, "engine:zymkey_ssl:pkcs11:token=device;object=iotkey;type=private", ccert)
         print("cred done")
         return grpc.secure_channel(target=self.serverUlr, credentials=sslcreds)
         #print("secure channel done")
