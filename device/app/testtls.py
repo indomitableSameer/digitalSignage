@@ -32,9 +32,10 @@ connection.set_debuglevel(3)
 
 connection.connect()
 
-time.sleep(100)
-#res = connection.request("", "device.dss.com")
-#print(res)
+res = connection.request("GET", "/albums")
+print(res)
+time.sleep(10)
+connection.close()
 #connection.ses
 #response = connection.getresponse()
 
