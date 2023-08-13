@@ -28,7 +28,7 @@ async def main():
 	#player_thread.start()
 	#app_log.debug("other work")
 	#player_thread.join(timeout=None)
-	c = channel(app_log, "device.dss.com:4001", "./pki/client-cert.pem", "./pki/client-key.pem", "./pki/ca-cert.pem")
+	c = channel(app_log, "device.dss.com:4001", "./pki/device-cert.pem", "./pki/client-key.pem", "./pki/ca-cert.pem")
 	await registerDevice(c.get_channel())
 	#registerDevice(c.get_channel())
 	#time.sleep(500)
