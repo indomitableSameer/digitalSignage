@@ -37,9 +37,9 @@ INSTALLER=$APT_GET
 export DEBIAN_FRONTEND=noninteractive
 INSTALLER_SPECIFIC_PACKAGES="jq python3-pip opensc"
 
-#sudo $INSTALLER update -y
-#sudo $INSTALLER upgrade -y
-#sudo $INSTALLER install -y $INSTALLER_SPECIFIC_PACKAGES
+sudo $INSTALLER update -y
+sudo $INSTALLER upgrade -y
+sudo $INSTALLER install -y $INSTALLER_SPECIFIC_PACKAGES
 
 #sudo pip3 install awscli
 
@@ -51,9 +51,9 @@ if [ $? -ne 0 ]; then
 fi
 
 # Make sure the user is added to the necessary group so they can use the tools later without being root
-#sudo usermod -a -G zk_pkcs11 $USER
+sudo usermod -a -G zk_pkcs11 $USER
 
-#hash pkcs11-tool &>/dev/null
+hash pkcs11-tool &>/dev/null
 
 if [ $? -ne 0 ]; then
   error "pkcs11-tool not found, on Debian based distros install opensc"
@@ -68,13 +68,13 @@ fi
 sudo pkcs11-tool --login --module $LIBZKPKCS11_SO --list-objects --pin 1234 2>&1 | grep -q devicekey >/dev/null
 
 if [ $? -ne 0 ]; then
-  SLOT_NUMBER=$(sudo zk_pkcs11-util --init-token --slot 0 --label "device" --pin 1234 --so-pin 1234 | sed 's/[^0-9]//g')
-
+  SLOT_NUMBER=$(sudo zk_pkcs11-util --init-token --slot 0 --label "device" --pin 1234 --so-pin 1234)
+  ID=$(sudo zk_pkcs11-util --show-slot | grep "SoftHSM slot ID" | head -1 | cut -f2 -d"x")
   if [ $? -ne 0 ]; then
     error "Failed to initialize token with zk_pkcs11-util"
   fi
 
-  sudo zk_pkcs11-util --use-zkslot 0 --slot $SLOT_NUMBER --label devicekey --id $SLOT_NUMBER --pin 1234
+  sudo zk_pkcs11-util --use-zkslot 0 --slot $SLOT_NUMBER --label devicekey --id $ID --pin 1234
 else
   echo "Keys already exist, skipping token initialization and private key creation"
 fi
