@@ -3,7 +3,7 @@ import asyncio
 import time
 import logging
 import threading
-from player.vlcplayer import *
+#from player.vlcplayer import *
 from channel import channel
 from registerDevice import registerDevice
 from logging.handlers import RotatingFileHandler
