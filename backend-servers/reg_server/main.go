@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var db, _ = gorm.Open(postgres.Open("postgresql://root@localhost:26257?sslmode=disable"+"&application_name=$ docs_simplecrud_gorm"), &gorm.Config{})
+var db, _ = gorm.Open(postgres.Open("postgresql://root@localhost:26257?sslmode=disable"+"&application_name=$ dss_reg_server"), &gorm.Config{})
 
 type DeviceDbInterface interface {
 	AddDevice(device Device)
