@@ -3,6 +3,7 @@ module backend-servers
 go 1.20
 
 require (
+	github.com/gorilla/mux v1.8.0
 	google.golang.org/grpc v1.56.2
 	google.golang.org/protobuf v1.31.0
 )
