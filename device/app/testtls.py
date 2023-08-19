@@ -1,4 +1,7 @@
+from dataclasses import dataclass
 from http.client import HTTPConnection
+import json
+import pprint
 import time
 from urllib.request import HTTPHandler
 import M2Crypto.SSL
@@ -6,6 +9,11 @@ import M2Crypto.Engine
 import M2Crypto.X509
 import M2Crypto.m2urllib2 as urllib2
 import requests
+
+class DeviceRegisterRequest:
+    def __init__(self):
+        self.Mac = "11:11:11:11:11"
+        self.IpAddr = "123.123.232.32"
 
 ciphers = "EECDH+AESGCM:EECDH+aECDSA:EECDH+aRSA:EDH+AESGCM:EDH+aECDSA:EDH+aRSA:!SHA1:SHA256:SHA384:!MEDIUM:!LOW:!EXP:!aNULL:!eNULL:!PSK:!SRP:@STRENGTH"
 
@@ -28,22 +36,20 @@ x509_cert = M2Crypto.X509.load_cert_string(ccert)
 M2Crypto.m2.ssl_ctx_use_x509(ssl_context.ctx, x509_cert.x509)
 
 connection = M2Crypto.httpslib.HTTPSConnection('device.dss.com', 4001, ssl_context=ssl_context)
-connection.set_debuglevel(3)
+#connection.set_debuglevel(3)
 #M2Crypto.SSL.Connection.postConnectionCheck = None
 connection.connect()
 
-HTTPConnection
 
-
-#session = connection.get_session()
-time.sleep(3)
-res = connection.request("GET", "/albums")
+session = connection.get_session()
+headers = {'Content-type': 'application/json'}
+res = connection.request("POST", "/register", json.dumps(DeviceRegisterRequest().__dict__), headers)
 #res = connection.putrequest("GET", "/albums")
 response = connection.getresponse()
 
-
-print(response)
-print(response.read())
+pp = pprint.PrettyPrinter(indent=4)
+pp.pprint(response.read().decode())
+#print(response.read())
 time.sleep(10)
 connection.close()
 #connection.ses

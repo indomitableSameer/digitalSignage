@@ -4,8 +4,6 @@ import time
 import logging
 import threading
 #from player.vlcplayer import *
-from channel import channel
-from registerDevice import registerDevice
 from logging.handlers import RotatingFileHandler
 
 logFile = 'dss_player.log'
@@ -28,10 +26,8 @@ async def main():
 	#player_thread.start()
 	#app_log.debug("other work")
 	#player_thread.join(timeout=None)
-	c = channel(app_log, "device.dss.com:4001", "./pki/device-cert.pem", "./pki/client-key.pem", "./pki/ca-cert.pem")
-	await registerDevice(c.get_channel())
 	#registerDevice(c.get_channel())
-	#time.sleep(500)
+	time.sleep(10)
 
 if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(main())
