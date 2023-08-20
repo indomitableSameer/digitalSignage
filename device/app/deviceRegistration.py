@@ -1,13 +1,9 @@
-from dataclasses import dataclass
-import datetime
-from enum import Enum
 import json
 import logging
 import configparser
 import M2Crypto.SSL
 import M2Crypto.Engine
 import M2Crypto.X509
-import M2Crypto.m2urllib2 as urllib2
 
 class DeviceRegisterRequest:
     def __init__(self):
@@ -43,7 +39,7 @@ def registerDevice(log:logging , connection:M2Crypto.httpslib.HTTPSConnection):
     if reg_state.status == True :
         log.info("Device already registered.. checking other info")
         if reg_state.port !=0 and len(reg_state.serverUrl) != 0 :
-            log.info("info stored in init " + reg_state.serverUrl + str(reg_state.port) + "look okay. Not sending registration request..")
+            log.info("info stored in init " + reg_state.serverUrl +':'+ str(reg_state.port) + " looks okay. Not sending registration request..")
             return True
         
     log.info("sending registration request..")
@@ -54,7 +50,7 @@ def registerDevice(log:logging , connection:M2Crypto.httpslib.HTTPSConnection):
     body = json.loads(response.read().decode())
     connection.close()
     log.info("closed connection! Going to entract and save info received..") 
-    log.info("registration response -->" + response.read().decode())
+    log.info("registration response -->" + json.dumps(body))
     if int(body['RegistrationStatus']) == 1 or int(body['RegistrationStatus']) == 2 :
         reg_state.serverUrl = config['backend.service']['Url'] = body['Backend_Server_url']
         reg_state.port = config['backend.service']['Port'] = str(4001)

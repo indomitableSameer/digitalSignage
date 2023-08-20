@@ -9,6 +9,7 @@ import deviceRegistration
 import testtls
 import M2Crypto.SSL
 from logging.handlers import RotatingFileHandler
+from dotenv import load_dotenv
 
 logFile = 'dss_player.log'
 log_formatter = logging.Formatter('%(asctime)s %(levelname)s %(funcName)s(%(lineno)d) %(message)s')
@@ -22,6 +23,8 @@ app_log = logging.getLogger('root')
 app_log.setLevel(logging.DEBUG)
 
 app_log.addHandler(my_handler)
+
+load_dotenv()
 
 def read_reg_config():
     config = configparser.ConfigParser(interpolation=None)
