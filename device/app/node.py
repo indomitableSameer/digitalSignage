@@ -4,10 +4,9 @@ import configparser
 import time
 import logging
 import threading
-#from player.vlcplayer import *
-import deviceRegistration
-import testtls
-import M2Crypto.SSL
+from player.vlcplayer import *
+import deviceRegistration as deviceRegistration
+import secure_conn as secure_conn
 from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
 
@@ -34,7 +33,7 @@ def read_reg_config():
     #print(config['registration.server']['Port'])
 
 async def main():
-	app_log.info('dss player stating..')
+	app_log.info('dss node app stating..')
 	#player_thread = vlcplayer(app_log, "./media/vv.mp4")
 	#app_log.info('starting vlc player thread..')
 	#player_thread.start()
@@ -42,10 +41,15 @@ async def main():
 	#player_thread.join(timeout=None)
 	#registerDevice(c.get_channel())
 	#read_reg_config()
-	conn = testtls.getConnection()
+	conn = secure_conn.getConnection()
 	deviceRegistration.registerDevice(app_log, conn)
 	print(deviceRegistration.reg_state.status)
-	time.sleep(30)
+	if deviceRegistration.reg_state.status == True:
+		player_thread = vlcplayer(app_log, "./media/vv.mp4")
+		app_log.info('starting vlc player thread..')
+		player_thread.start()
+		app_log.debug("other work")
+	time.sleep(300)
 
 
 if __name__ == "__main__":
