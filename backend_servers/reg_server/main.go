@@ -8,6 +8,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+
+	"github.com/indomitableSameer/digitalSignage/backend_servers/dbentities"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -58,30 +60,41 @@ func register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("going to check if mac present")
-	var device Device
-	db.Where("Mac = ?", regReq.Mac).First(&device)
-	fmt.Println(device)
-	if regReq.Mac != device.Mac {
-		fmt.Println("mac not found")
+	var devicelist dbentities.DeviceList
+	db.Where("Mac = ?", regReq.Mac).First(&devicelist)
+	fmt.Println(devicelist)
+	if regReq.Mac == devicelist.Mac {
+
+		var registerdDevices dbentities.DeviceRegistration
+		db.Where("Device_Id = ?", devicelist.DeviceId).First(&registerdDevices)
+		fmt.Println(registerdDevices)
+		if registerdDevices.DeviceId != uuid.Nil {
+
+			response := DeviceRegistrationResponse{Backend_Server_url: registerdDevices.Service, RegistrationStatus: 2, UniqueSystemId: registerdDevices.RegistrationId}
+			json, _ := json.Marshal(response)
+			w.Header().Set("content-type", "application/json")
+			w.Write(json)
+			return
+		}
 
 		// add this to db and send response
-		var device Device
-		device.Mac = regReq.Mac
-		device.Id = uuid.New()
-		device.Ipaddr = regReq.IpAddr
-		device.Service = "device.dss.com"
-		db.Create(&device)
+		var register dbentities.DeviceRegistration
+		register.DeviceId = devicelist.DeviceId
+		register.RegistrationId = uuid.New()
+		register.IpAddr = regReq.IpAddr
+		register.Service = "device.dss.com"
+		db.Create(&register)
 
-		response := DeviceRegistrationResponse{Backend_Server_url: device.Service, RegistrationStatus: 1, UniqueSystemId: device.Id}
+		response := DeviceRegistrationResponse{Backend_Server_url: register.Service, RegistrationStatus: 1, UniqueSystemId: register.RegistrationId}
 		json, _ := json.Marshal(response)
 		w.Header().Set("content-type", "application/json")
 		w.Write(json)
 	} else {
-		response := DeviceRegistrationResponse{Backend_Server_url: device.Service, RegistrationStatus: 2, UniqueSystemId: device.Id}
-		json, _ := json.Marshal(response)
-		w.Header().Set("content-type", "application/json")
-		w.Write(json)
-		//w.WriteHeader(http.StatusFound)
+		// response := DeviceRegistrationResponse{Backend_Server_url: devicelist.Service, RegistrationStatus: 2, UniqueSystemId: devicelist.}
+		// json, _ := json.Marshal(response)
+		// w.Header().Set("content-type", "application/json")
+		// w.Write(json)
+		w.WriteHeader(http.StatusPreconditionFailed)
 	}
 }
 
@@ -108,7 +121,10 @@ func main() {
 
 	fmt.Println("creating db..")
 	db.AutoMigrate(&Device{})
-	db.AutoMigrate(&DeviceList)
+	db.AutoMigrate(&dbentities.DeviceList{})
+	db.AutoMigrate(&dbentities.DeviceRegistration{})
+
+	db.Create(&dbentities.DeviceList{DeviceId: uuid.New(), Mac: "ab:ac:ad:ae:af"})
 
 	multiplexer := mux.NewRouter()
 	multiplexer.HandleFunc("/register", register).Methods(http.MethodPost)

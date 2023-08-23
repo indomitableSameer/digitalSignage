@@ -1,4 +1,4 @@
-module github.com/indomitableSameer/digitalSignage/backend_servers/reg_server
+module github.com/indomitableSameer/digitalSignage/backend_servers
 
 go 1.20
 
