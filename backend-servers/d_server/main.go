@@ -48,19 +48,20 @@ type StatusUpdateRequest struct {
 }
 
 type Device_Status struct {
-	Id        int       `gorm:"primaryKey"`
-	DeviceId  uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+	//Id        int `gorm:"primaryKey"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Device    Device `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+
+	DeviceId uuid.UUID `gorm:"unique;type:uuid;default:uuid_generate_v4()"`
+	Device   Device    `gorm:"foreignKey:Id;references:DeviceId;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
-type Device_Details struct {
-	DeviceId  uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Device    Device `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-}
+// type Device_Details struct {
+// 	DeviceId  uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+// 	CreatedAt time.Time
+// 	UpdatedAt time.Time
+// 	Device    Device `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+// }
 
 func status(w http.ResponseWriter, r *http.Request) {
 	var statusReq StatusUpdateRequest
@@ -79,7 +80,7 @@ func status(w http.ResponseWriter, r *http.Request) {
 
 		// add this to db and send response
 		var status Device_Status
-		//status.Id = statusReq.Id
+		status.DeviceId = device.Id
 		//status.last_update = time.Now()
 		//db.Create(&status)
 		db.Clauses(clause.OnConflict{

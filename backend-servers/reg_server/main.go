@@ -108,6 +108,7 @@ func main() {
 
 	fmt.Println("creating db..")
 	db.AutoMigrate(&Device{})
+	db.AutoMigrate(&DeviceList)
 
 	multiplexer := mux.NewRouter()
 	multiplexer.HandleFunc("/register", register).Methods(http.MethodPost)
