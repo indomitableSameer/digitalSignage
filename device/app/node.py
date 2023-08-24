@@ -6,6 +6,8 @@ import logging
 import threading
 from player.vlcplayer import *
 import deviceRegistration as deviceRegistration
+import statusUpdate as statusUpdate
+import configManager as configManager
 import secure_conn as secure_conn
 from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
@@ -34,21 +36,17 @@ def read_reg_config():
 
 async def main():
 	app_log.info('dss node app stating..')
-	#player_thread = vlcplayer(app_log, "./media/vv.mp4")
-	#app_log.info('starting vlc player thread..')
-	#player_thread.start()
-	#app_log.debug("other work")
-	#player_thread.join(timeout=None)
-	#registerDevice(c.get_channel())
-	#read_reg_config()
+	appConfig = configManager.read_config()
 	conn = secure_conn.getConnection()
 	deviceRegistration.registerDevice(app_log, conn)
 	print(deviceRegistration.reg_state.status)
+	appConfig = configManager.read_config()
 	if deviceRegistration.reg_state.status == True:
-		player_thread = vlcplayer(app_log, "./media/vv.mp4")
+		#player_thread = vlcplayer(app_log, "./media/vv.mp4")
 		app_log.info('starting vlc player thread..')
-		player_thread.start()
-		app_log.debug("other work")
+		#player_thread.start()
+		#app_log.debug("other work")
+		statusUpdate.updateDeviceStatusToCloud(app_log, appConfig, conn)
 	time.sleep(300)
 
 

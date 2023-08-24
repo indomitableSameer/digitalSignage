@@ -7,7 +7,7 @@ import M2Crypto.X509
 
 class DeviceRegisterRequest:
     def __init__(self):
-        self.Mac = "12:11:11:11:11"
+        self.Mac = "ab:ac:ad:ae:af"
         self.IpAddr = "123.123.232.32"
 
 #@dataclass
@@ -47,6 +47,7 @@ def registerDevice(log:logging , connection:M2Crypto.httpslib.HTTPSConnection):
     connection.connect()
     connection.request("POST", "/register", json.dumps(DeviceRegisterRequest().__dict__), headers)    
     response = connection.getresponse()
+    print(response)
     body = json.loads(response.read().decode())
     connection.close()
     log.info("closed connection! Going to entract and save info received..") 
