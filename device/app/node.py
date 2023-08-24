@@ -34,7 +34,8 @@ def read_reg_config():
     #print(config['registration.server']['Url'])
     #print(config['registration.server']['Port'])
 
-async def main():
+#async def main():
+def main():
 	app_log.info('dss node app stating..')
 	appConfig = configManager.read_config()
 	conn = secure_conn.getConnection()
@@ -46,9 +47,11 @@ async def main():
 		app_log.info('starting vlc player thread..')
 		#player_thread.start()
 		#app_log.debug("other work")
-		statusUpdate.updateDeviceStatusToCloud(app_log, appConfig, conn)
-	time.sleep(300)
+		statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log, appConfig, conn), daemon=False, name="statusThread")
+		#statusUpdate.updateDeviceStatusToCloud(app_log, appConfig, conn)	
+		statusDeamonThread.start()
 
 
 if __name__ == "__main__":
-    asyncio.get_event_loop().run_until_complete(main())
+    #asyncio.get_event_loop().run_until_complete(main())
+    main()
