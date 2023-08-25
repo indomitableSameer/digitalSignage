@@ -11,3 +11,4 @@ venv/
 pkg/
 go.work
 go.work.sum
+bin/
