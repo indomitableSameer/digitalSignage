@@ -1,8 +1,0 @@
-FROM nginx
-
-COPY startup.sh .
-RUN apt-get update && apt-get install -y docker.io
-
-#ENTRYPOINT ["sh", "-c", "service docker start"]
-#CMD ["docker", "run", "hello-world"]
-CMD ["/bin/bash","-c","./startup.sh"]
