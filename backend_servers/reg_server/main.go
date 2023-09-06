@@ -124,7 +124,7 @@ func main() {
 	db.AutoMigrate(&dbentities.DeviceList{})
 	db.AutoMigrate(&dbentities.DeviceRegistration{})
 
-	db.Create(&dbentities.DeviceList{DeviceId: uuid.New(), Mac: "ab:ac:ad:ae:af"})
+	//db.Create(&dbentities.DeviceList{DeviceId: uuid.New(), Mac: "ab:ac:ad:ae:af"})
 
 	multiplexer := mux.NewRouter()
 	multiplexer.HandleFunc("/register", register).Methods(http.MethodPost)
