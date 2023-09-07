@@ -30,6 +30,8 @@ func HandleAddDeviceRequest(w http.ResponseWriter, r *http.Request) {
 			//w.WriteHeader(http.StatusInternalServerError)
 			http.Error(w, "entry already exists", 412)
 		}
+	} else {
+		http.Error(w, "missing details", 412)
 	}
 	return
 }

@@ -1,5 +1,5 @@
 import { MouseEvent, useRef, useState } from "react";
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
 //axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 const api = axios.create({
   baseURL: "http://api.dss.com:8000",
@@ -8,15 +8,22 @@ const api = axios.create({
 function DeviceAdd() {
   const [mac, setMac] = useState("");
   const [loc, setLoc] = useState("");
+  const [alertMsg, setAlertMsg] = useState("");
 
   const [devicelist, setDeviceList] = useState([""]);
 
-  let api_retrun = [""];
   const getMessage = () => {
-    return api_retrun.length != 0 ? <p>{api_retrun}</p> : null;
+    return alertMsg.length != 0 ? (
+      <div className="alert alert-danger" role="alert">
+        {alertMsg}
+      </div>
+    ) : (
+      ""
+    );
   };
 
   const getDevices = async () => {
+    setAlertMsg("");
     let data = await api
       .get("/deviceList")
       .then((res) => {
@@ -44,25 +51,20 @@ function DeviceAdd() {
     event: MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.preventDefault();
+    setAlertMsg("");
     let addReqRes = await api
       .post("/addDevice", { Mac: mac, Location: loc })
-      .then((res) => console.log(res.status))
+      .then((res) =>
+        res.status == HttpStatusCode.Ok
+          ? setAlertMsg("Added Entry Successfully!")
+          : setAlertMsg(String(res.data))
+      )
       .catch((error) => {
-        // error is handled in catch block
-        if (error.response) {
-          // status code out of the range of 2xx
-          console.log("Data :", error.response.data);
-          console.log("Status :" + error.response.status);
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.log(error.request);
-        } else {
-          // Error on setting up the request
-          console.log("Error", error.message);
-        }
+        setAlertMsg(String(error.message));
       });
-    console.log(addReqRes);
-    getDevices();
+
+    //console.log(addReqRes);
+    //getDevices();
   };
 
   return (
@@ -81,13 +83,13 @@ function DeviceAdd() {
           </div>
         </div>
         <div className="form-group row">
-          <label className="col-sm-2 col-form-label">Device Loc</label>
+          <label className="col-sm-2 col-form-label">Country</label>
           <div className="col-sm-10">
             <input
               type="text"
               className="form-control"
-              id="locationid"
-              placeholder="Location Id"
+              id="countryid"
+              placeholder="Country"
               onChange={(event) => setLoc(event.target.value)}
             />
           </div>
