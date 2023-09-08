@@ -1,12 +1,12 @@
-import DeviceAdd from "./components/DeviceAdd";
-import Login from "./components/Login";
 import SideNavBar from "./components/SideNavBar";
 import "./App.css";
+import { Outlet } from "react-router";
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <SideNavBar />
+      <Outlet />
     </div>
   );
 }
