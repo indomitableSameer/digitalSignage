@@ -3,11 +3,30 @@ import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 
+export const CountryList = [
+  {
+    101: "Germany",
+  },
+];
+
+export const LocationList = [
+  {
+    1: "Frankfurt",
+    countryId: 101,
+  },
+  {
+    2: "Koln",
+    countryId: 101,
+  },
+];
+
 export const LocatonData = [
   {
     country: "Germany",
     city: "FRA",
+    path: "/content",
     location: "FRA-UAS Campus 1",
+    cName: "link-body-emphasis d-inline-flex text-decoration-none rounded",
   },
 ];
 

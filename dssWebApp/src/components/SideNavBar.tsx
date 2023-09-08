@@ -1,5 +1,7 @@
+import { Link, Outlet } from "react-router-dom";
 import "../App.css";
 import Content from "../routes/Contents";
+import { LocatonData, SidebarData } from "./SideBarData";
 
 function SideNavBar() {
   return (
@@ -37,36 +39,26 @@ function SideNavBar() {
             <div className="collapse" id="orders-collapse">
               <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                 <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                  >
+                  <button className="btn btn-toggle d-inline-flex align-items-center rounded border-0">
                     Add New
-                  </a>
+                  </button>
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                  >
-                    FRA Campus 1
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                  >
-                    FRA Campus 1
-                  </a>
-                </li>
+                {LocatonData.map((item, index) => {
+                  return (
+                    <li>
+                      <a key={index} className={item.cName}>
+                        <span>{item.country}</span>
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </li>
           <li className="mb-1">
-            <button className="btn d-inline-flex align-items-center rounded border-0">
-              Content
-            </button>
+            <a className="d-inline-flex align-items-center rounded border-0">
+              <Link to={`content`}>Content</Link>
+            </a>
           </li>
           <li className="border-top my-3"></li>
           <li className="mb-1">
@@ -80,22 +72,6 @@ function SideNavBar() {
             </button>
             <div className="collapse" id="account-collapse">
               <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                  >
-                    Profile
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                  >
-                    Settings
-                  </a>
-                </li>
                 <li>
                   <a
                     href="#"

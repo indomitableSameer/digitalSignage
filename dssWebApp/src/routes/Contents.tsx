@@ -1,7 +1,12 @@
 import React from "react";
+import ContentCard from "../components/ContentCard";
 
 function Content() {
-  return <div>Content</div>;
+  return (
+    <div className="content">
+      <ContentCard />
+    </div>
+  );
 }
 
 export default Content;

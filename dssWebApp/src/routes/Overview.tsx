@@ -1,7 +1,11 @@
 import React from "react";
 
 function Overview() {
-  return <div>Overview</div>;
+  return (
+    <div className="overview">
+      <span>Overview</span>
+    </div>
+  );
 }
 
 export default Overview;
