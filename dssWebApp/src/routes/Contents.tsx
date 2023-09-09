@@ -1,10 +1,10 @@
 import React from "react";
-import ContentCard from "../components/ContentCard";
+import ContentGrid from "../components/ContentGrid";
 
 function Content() {
   return (
     <div className="content">
-      <ContentCard />
+      <ContentGrid />
     </div>
   );
 }
