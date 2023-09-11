@@ -20,8 +20,9 @@ func main() {
 	dbprovider.DBObj.AutoMigrate(&dbentities.DeviceStatus{})
 	dbprovider.DBObj.AutoMigrate(&dbentities.ContentInfo{})
 
-	content := dbentities.ContentInfo{ContentId: uuid.New(), FileName: "test.mp4"}
+	content := dbentities.ContentInfo{ContentId: uuid.New(), FileName: "test.mp4", Description: "testing"}
 	dbprovider.DBObj.Create(&content)
+	//requesthandlers.HandleAddContentRequest()
 
 	multiplexer := mux.NewRouter()
 	multiplexer.HandleFunc("/status", requesthandlers.HandleStatusRequest).Methods(http.MethodPut)

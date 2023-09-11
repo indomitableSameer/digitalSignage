@@ -41,7 +41,7 @@ function ContentGrid() {
   };
   return (
     <div className="container">
-      <div className="row row-cols-auto">
+      <div className="row row-cols-auto contentgrid">
         {getContent().map((item, index) => {
           return (
             <div key={index} className="col">

@@ -1,0 +1,12 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "driver": "CockroachDB",
+      "name": "cockroachdb",
+      "connectString": "postgresql://root@localhost:26257?sslmode=disable",
+      "password": ""
+    }
+  ]
+}

@@ -20,5 +20,6 @@ func init() {
 	if err != nil {
 		log.Fatal("Failed to init db:", err)
 	}
+
 	DBObj = db
 }

@@ -86,18 +86,62 @@ span {
   margin-left: 16px;
 }
 
-.overview,
-.content,
+/*.overview,
 .location {
   display: flex;
   height: 90vh;
   align-items: center;
   justify-content: center;
   font-size: 3rem;
-  background-color: rgb(182, 184, 184);
+  background-color: rgb(242, 242, 242);
   color: #fff;
+}*/
+
+textarea,
+input,
+button {
+  font-size: 1rem;
+  font-family: inherit;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);
+  background-color: white;
+  line-height: 1.5;
+  margin: 0;
 }
 
+.overview,
+.location,
+.content {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: flex;
+  height: 100%;
+  align-items: flex-start;
+  /* justify-content: center; */
+  /*font-size: 3rem;*/
+  background-color: rgb(242, 242, 242);
+  /*color: #fff;*/
+}
+
+.contentgrid {
+  position: absolute; 
+  left: 150px; 
+  top: 300px; 
+  width: 100%; 
+  height: 75px; 
+}
+
+.contentform {
+  position: absolute; 
+  left: 40%; 
+  top: 10%; 
+  align-items: center;
+  width: fit-content; 
+  height: fit-content; 
+}
 
 * {
   box-sizing: border-box;
