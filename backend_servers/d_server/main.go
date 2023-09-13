@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/google/uuid"
 	dbprovider "github.com/indomitableSameer/digitalSignage/backend_servers/dbProvider"
 	"github.com/indomitableSameer/digitalSignage/backend_servers/dbentities"
 	requesthandlers "github.com/indomitableSameer/digitalSignage/backend_servers/requestHandlers"
@@ -18,17 +17,14 @@ func main() {
 	fmt.Println("creating db..")
 	dbprovider.DBObj.AutoMigrate(&dbentities.DeviceList{})
 	dbprovider.DBObj.AutoMigrate(&dbentities.DeviceStatus{})
-	dbprovider.DBObj.AutoMigrate(&dbentities.ContentInfo{})
-
-	content := dbentities.ContentInfo{ContentId: uuid.New(), FileName: "test.mp4", Description: "testing"}
-	dbprovider.DBObj.Create(&content)
-	//requesthandlers.HandleAddContentRequest()
+	dbprovider.DBObj.AutoMigrate(&dbentities.ContentDirectory{})
 
 	multiplexer := mux.NewRouter()
 	multiplexer.HandleFunc("/status", requesthandlers.HandleStatusRequest).Methods(http.MethodPut)
 	multiplexer.HandleFunc("/content", requesthandlers.HandleContentRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/addDevice", requesthandlers.HandleAddDeviceRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/deviceList", requesthandlers.HandleGetDeviceListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/addContent", requesthandlers.HandlePostAddContentRequest).Methods(http.MethodPost)
 
 	credentials := handlers.AllowCredentials()
 	methods := handlers.AllowedMethods([]string{"GET", "PUT", "POST", "OPTIONS"})
