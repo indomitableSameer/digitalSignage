@@ -6,7 +6,6 @@ require (
 	github.com/google/uuid v1.3.1
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
-	github.com/jackc/pgx/v5 v5.3.1
 	github.com/minio/minio-go/v7 v7.0.63
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gorm v1.25.4
