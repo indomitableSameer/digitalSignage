@@ -14,4 +14,4 @@ services:
     command: server --console-address ":9001" /data
 
 volumes:
-  minio_storage: {}
+  minio_storage: {} 
