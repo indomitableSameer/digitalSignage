@@ -23,7 +23,7 @@ func HandleStatusRequest(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("received ", statusReq)
 	var regDev dbentities.DeviceRegistration
-	dbprovider.DBObj.Where("Registration_Id = ?", statusReq.Id).First(&regDev)
+	dbprovider.Conn.RDb.Where("Registration_Id = ?", statusReq.Id).First(&regDev)
 	fmt.Println(regDev)
 	if statusReq.Id != uuid.Nil && statusReq.Id == regDev.RegistrationId {
 		fmt.Println("Found device id ", regDev.DeviceId)
@@ -31,7 +31,7 @@ func HandleStatusRequest(w http.ResponseWriter, r *http.Request) {
 		// add this to db and send response
 		var status dbentities.DeviceStatus
 		status.DeviceId = regDev.DeviceId
-		dbprovider.DBObj.Clauses(clause.OnConflict{
+		dbprovider.Conn.RDb.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "device_id"}},
 			DoUpdates: clause.AssignmentColumns([]string{"updated_at"}),
 		}).Create(&status)

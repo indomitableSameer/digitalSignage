@@ -9,12 +9,10 @@ import (
 	"gorm.io/gorm"
 )
 
-var DBObj *gorm.DB
-
 var Conn *dbConnObj
 
 type dbConnObj struct {
-	rDb   *gorm.DB
+	RDb   *gorm.DB
 	ObjDb *minio.Client
 }
 
@@ -50,6 +48,5 @@ func init() {
 		log.Fatal("Failed to init db:", err)
 	}
 
-	Conn = &dbConnObj{rDb: db, ObjDb: objStorage}
-	DBObj = db
+	Conn = &dbConnObj{RDb: db, ObjDb: objStorage}
 }

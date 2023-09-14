@@ -25,10 +25,9 @@ func HandleAddDeviceRequest(w http.ResponseWriter, r *http.Request) {
 		var device dbentities.DeviceList
 		device.DeviceId = uuid.New()
 		device.Mac = addDevReq.Mac
-		result := dbprovider.DBObj.Create(&device)
+		result := dbprovider.Conn.RDb.Create(&device)
 		if result.Error != nil {
-			//w.WriteHeader(http.StatusInternalServerError)
-			http.Error(w, "entry already exists", 412)
+			http.Error(w, "entry already exists", http.StatusInternalServerError)
 		}
 	} else {
 		http.Error(w, "missing details", 412)

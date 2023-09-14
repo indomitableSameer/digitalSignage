@@ -14,7 +14,7 @@ func HandleGetDeviceListRequest(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("recived getDevicelist request")
 	var dbdevList []dbentities.DeviceList
-	result := dbprovider.DBObj.Limit(10).Order("Created_At desc").Find(&dbdevList)
+	result := dbprovider.Conn.RDb.Limit(10).Order("Created_At desc").Find(&dbdevList)
 
 	var resDevList []response.DeviceList
 	for i := 0; i < int(result.RowsAffected); i++ {

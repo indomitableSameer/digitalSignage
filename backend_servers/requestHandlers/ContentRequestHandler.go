@@ -22,7 +22,7 @@ func HandleContentRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var regDev dbentities.DeviceRegistration
-	dbprovider.DBObj.Where("Registration_Id = ?", contentReq.Id).First(&regDev)
+	dbprovider.Conn.RDb.Where("Registration_Id = ?", contentReq.Id).First(&regDev)
 	fmt.Println(regDev)
 
 	// here instead of sending file directly, we will use db to read and send file.

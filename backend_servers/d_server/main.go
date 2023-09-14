@@ -15,9 +15,9 @@ import (
 func main() {
 
 	fmt.Println("creating db..")
-	dbprovider.DBObj.AutoMigrate(&dbentities.DeviceList{})
-	dbprovider.DBObj.AutoMigrate(&dbentities.DeviceStatus{})
-	dbprovider.DBObj.AutoMigrate(&dbentities.ContentDirectory{})
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceList{})
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceStatus{})
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.ContentDirectory{})
 
 	multiplexer := mux.NewRouter()
 	multiplexer.HandleFunc("/status", requesthandlers.HandleStatusRequest).Methods(http.MethodPut)

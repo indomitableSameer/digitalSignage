@@ -58,7 +58,7 @@ func HandlePostAddContentRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := dbprovider.DBObj.Create(&contentInfo)
+	result := dbprovider.Conn.RDb.Create(&contentInfo)
 	if result.Error != nil {
 		dbprovider.Conn.ObjDb.RemoveObject(context.Background(), contentFileBucket, fileId.String(), minio.RemoveObjectOptions{})
 		http.Error(w, "Failed to make a entry in database", http.StatusInternalServerError)
