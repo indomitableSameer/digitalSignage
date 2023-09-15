@@ -4,7 +4,7 @@ import configparser
 import time
 import logging
 import threading
-from player.vlcplayer import *
+from vlcplayer import vlcplayer
 import deviceRegistration as deviceRegistration
 import statusUpdate as statusUpdate
 import configManager as configManager
@@ -12,11 +12,13 @@ import contentHandler as contentHandler
 import secure_conn as secure_conn
 from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
+import globalVariables as gv
+import playScheduler
 
 logFile = 'dss_player.log'
 log_formatter = logging.Formatter('%(asctime)s %(levelname)s %(funcName)s(%(lineno)d) %(message)s')
 
-my_handler = RotatingFileHandler(logFile, mode='a', maxBytes=5*1024*1024, backupCount=2, encoding=None, delay=0)
+my_handler = RotatingFileHandler(logFile, mode='a', maxBytes=1*1024*1024, backupCount=2, encoding=None, delay=0)
 
 my_handler.setFormatter(log_formatter)
 my_handler.setLevel(logging.DEBUG)
@@ -43,6 +45,8 @@ def main():
 	deviceRegistration.registerDevice(app_log, conn)
 	print(deviceRegistration.reg_state.status)
 	appConfig = configManager.read_config()
+	playSchedulerThread = threading.Thread(target=playScheduler.maintainPlaySchedule, args=(), daemon=False, name="Schedular thread")
+	playSchedulerThread.start()
 	if deviceRegistration.reg_state.status == True:
 		player_thread = vlcplayer(app_log, "/home/pi/media/test.mp4")
 		#contentHandler.getUpdatedContent(app_log, appConfig, conn)
@@ -51,7 +55,7 @@ def main():
 		app_log.debug("status update thread..")
 		statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log, appConfig, conn), daemon=False, name="statusThread")
 		#statusUpdate.updateDeviceStatusToCloud(app_log, appConfig, conn)
-		statusDeamonThread.start()
+		#statusDeamonThread.start()
 
 
 if __name__ == "__main__":
