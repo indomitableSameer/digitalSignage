@@ -8,6 +8,7 @@ from player.vlcplayer import *
 import deviceRegistration as deviceRegistration
 import statusUpdate as statusUpdate
 import configManager as configManager
+import contentHandler as contentHandler
 import secure_conn as secure_conn
 from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
@@ -43,12 +44,13 @@ def main():
 	print(deviceRegistration.reg_state.status)
 	appConfig = configManager.read_config()
 	if deviceRegistration.reg_state.status == True:
-		#player_thread = vlcplayer(app_log, "./media/vv.mp4")
+		player_thread = vlcplayer(app_log, "/home/pi/media/test.mp4")
+		#contentHandler.getUpdatedContent(app_log, appConfig, conn)
 		app_log.info('starting vlc player thread..')
-		#player_thread.start()
-		#app_log.debug("other work")
+		player_thread.start()
+		app_log.debug("status update thread..")
 		statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log, appConfig, conn), daemon=False, name="statusThread")
-		#statusUpdate.updateDeviceStatusToCloud(app_log, appConfig, conn)	
+		#statusUpdate.updateDeviceStatusToCloud(app_log, appConfig, conn)
 		statusDeamonThread.start()
 
 
