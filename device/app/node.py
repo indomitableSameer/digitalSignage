@@ -14,6 +14,7 @@ from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
 import globalVariables as gv
 import playScheduler
+import deviceConfigManger
 
 logFile = 'dss_player.log'
 log_formatter = logging.Formatter('%(asctime)s %(levelname)s %(funcName)s(%(lineno)d) %(message)s')
@@ -37,7 +38,12 @@ def read_reg_config():
     #print(config['registration.server']['Url'])
     #print(config['registration.server']['Port'])
 
-#async def main():
+def appThreads(config, conn):
+	playSchedulerDemonThread = threading.Thread(target=playScheduler.maintainPlaySchedule, args=(app_log, config), daemon=False, name="Schedular thread")
+	statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log, config, conn), daemon=False, name="statusThread")
+	playSchedulerDemonThread.start()
+	statusDeamonThread.start()
+
 def main():
 	app_log.info('dss node app stating..')
 	appConfig = configManager.read_config()
@@ -45,18 +51,12 @@ def main():
 	deviceRegistration.registerDevice(app_log, conn)
 	print(deviceRegistration.reg_state.status)
 	appConfig = configManager.read_config()
-	playSchedulerThread = threading.Thread(target=playScheduler.maintainPlaySchedule, args=(), daemon=False, name="Schedular thread")
-	playSchedulerThread.start()
 	if deviceRegistration.reg_state.status == True:
 		player_thread = vlcplayer(app_log, "/home/pi/media/test.mp4")
 		#contentHandler.getUpdatedContent(app_log, appConfig, conn)
 		app_log.info('starting vlc player thread..')
 		player_thread.start()
-		app_log.debug("status update thread..")
-		statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log, appConfig, conn), daemon=False, name="statusThread")
-		#statusUpdate.updateDeviceStatusToCloud(app_log, appConfig, conn)
-		#statusDeamonThread.start()
-
+		appThreads(appConfig, conn)
 
 if __name__ == "__main__":
     #asyncio.get_event_loop().run_until_complete(main())
