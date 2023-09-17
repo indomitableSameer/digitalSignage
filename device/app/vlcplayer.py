@@ -1,6 +1,5 @@
 # importing time and vlc
 import vlc, time
-import threading
 import globalVariables as gv
 
 class vlcplayer():
@@ -29,8 +28,8 @@ class vlcplayer():
         self.player.stop()
 
     def run(self):
-        try:
-            while True:
+        while True:
+            try:
                 if self.is_playing != True and gv.schedule_active.wait() == True:
                     self._startplay() #uncomment to run actual
                     self.logger.info('received schedule_active event set, start playing')
@@ -39,5 +38,6 @@ class vlcplayer():
                     self._stopplay()
                     self.logger.info('received schedule_active event cleared, stoping playing..')
                     self.is_playing = False
-        except Exception as e:
-            self.logger.info(e)
+            except Exception as e:
+                self.logger.info(e)
+                time.sleep(30)

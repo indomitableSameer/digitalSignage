@@ -4,10 +4,11 @@ import configparser
 import M2Crypto.SSL
 import M2Crypto.Engine
 import M2Crypto.X509
+import appUtils
 
 class DeviceRegisterRequest:
     def __init__(self):
-        self.Mac = "ab:ac:ad:ae:af"
+        self.Mac = appUtils.get_mac_address()
         self.IpAddr = "123.123.232.32"
 
 #@dataclass

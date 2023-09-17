@@ -1,6 +1,6 @@
 import json
 import logging
-from time import sleep
+import time
 
 import M2Crypto
 from configManager import AppConfiguration
@@ -26,7 +26,8 @@ def updateDeviceStatusToCloud(log:logging, config:AppConfiguration, connection:M
                 response.read()
                 log.info("Status Update: server response code -> " + str(response.status))
                 connection.close()
-                sleep(20)
+                time.sleep(20)
         except Exception as e:
             log.critical("Exception in satus thread", e)
+            time.sleep(30)
     
