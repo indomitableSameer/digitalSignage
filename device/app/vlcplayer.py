@@ -3,10 +3,8 @@ import vlc, time
 import threading
 import globalVariables as gv
 
-class vlcplayer(threading.Thread):
-    
+class vlcplayer():
     def __init__(self, logger, media_file):
-        threading.Thread.__init__(self, daemon=False, name='player')
         self.is_playing = False
         self.media_file = media_file
         self.logger = logger
@@ -16,27 +14,30 @@ class vlcplayer(threading.Thread):
         self.player = self.vlc_instance.media_player_new()
         logger.info('vlc player init done.')
 
-    def playnow(self):
+    def _setup(self):
+        self.logger.info('setting up media to player..')
         media = self.vlc_instance.media_new(self.media_file)
         self.vlc_instance.vlm_set_loop('vv', True)
         self.player.set_media(media)
         self.logger.info('ready to play..')
-        self.player.play()
-        self.logger.info('playing..')
 
-    def stopplay(self):
+    def _startplay(self):
+        self._setup()
+        self.player.play()
+
+    def _stopplay(self):
         self.player.stop()
 
     def run(self):
         try:
             while True:
                 if self.is_playing != True and gv.schedule_active.wait() == True:
-                    #self.playnow()
+                    self._startplay() #uncomment to run actual
                     self.logger.info('received schedule_active event set, start playing')
                     self.is_playing = True
                 elif gv.schedule_active.is_set() != True:
-                    self.stopplay()
+                    self._stopplay()
                     self.logger.info('received schedule_active event cleared, stoping playing..')
                     self.is_playing = False
-        except:
-            self.logger.info('exeption')
+        except Exception as e:
+            self.logger.info(e)

@@ -1,6 +1,7 @@
 # importing time and vlc
 import asyncio
 import configparser
+import os
 import time
 import logging
 import threading
@@ -14,6 +15,7 @@ from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
 import globalVariables as gv
 import playScheduler
+import M2Crypto
 import deviceConfigManger
 
 logFile = 'dss_player.log'
@@ -38,26 +40,28 @@ def read_reg_config():
     #print(config['registration.server']['Url'])
     #print(config['registration.server']['Port'])
 
-def appThreads(config, conn):
+def appThreads(config:configManager.AppConfiguration, conn:M2Crypto.httpslib.HTTPSConnection):
+	player_instance = vlcplayer(app_log, os.path.join(config.content_filepath, config.content_file))
+
+	mediaPlayerDemonThread = threading.Thread(target=player_instance.run, args=(), daemon=False, name="media player thread")
 	playSchedulerDemonThread = threading.Thread(target=playScheduler.maintainPlaySchedule, args=(app_log, config), daemon=False, name="Schedular thread")
-	statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log, config, conn), daemon=False, name="statusThread")
-	playSchedulerDemonThread.start()
-	statusDeamonThread.start()
+	statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log, config, conn), daemon=False, name="status Thread")
+
+	mediaPlayerDemonThread.start()
+	#playSchedulerDemonThread.start()
+	#statusDeamonThread.start()
 
 def main():
 	app_log.info('dss node app stating..')
 	appConfig = configManager.read_config()
 	conn = secure_conn.getConnection()
+	appThreads(appConfig, conn)
 	deviceRegistration.registerDevice(app_log, conn)
 	print(deviceRegistration.reg_state.status)
 	appConfig = configManager.read_config()
-	if deviceRegistration.reg_state.status == True:
-		player_thread = vlcplayer(app_log, "/home/pi/media/test.mp4")
-		#contentHandler.getUpdatedContent(app_log, appConfig, conn)
-		app_log.info('starting vlc player thread..')
-		player_thread.start()
-		appThreads(appConfig, conn)
+	if deviceRegistration.reg_state.status == True:		
+		print("reg")
 
 if __name__ == "__main__":
-    #asyncio.get_event_loop().run_until_complete(main())
-    main()
+	main()
+	

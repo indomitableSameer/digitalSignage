@@ -9,6 +9,10 @@ class AppConfiguration():
         self.reg_id = ''
         self.backend_url = ''
         self.backend_port = ''
+        self.content_file = ''
+        self.content_filepath = ''
+        self.content_fileid = ''
+        self.content_version = ''
         
 AppConfig = AppConfiguration()
 
@@ -22,6 +26,10 @@ def read_config():
     AppConfig.backend_url = config['backend.service']['url']
     AppConfig.backend_port = int(config['backend.service']['port'])
     AppConfig.reg_id = config['backend.service']['systemid']
+    AppConfig.content_file = config['content']['file']
+    AppConfig.content_filepath = config['content']['filepath']
+    AppConfig.content_fileid = config['content']['fileid']
+    AppConfig.content_version = config['content']['version']
     return AppConfig
 
 def write_config(config):
