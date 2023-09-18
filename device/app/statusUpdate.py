@@ -1,17 +1,16 @@
 import json
 import logging
 import time
-
+import appUtils
 import M2Crypto
 from configManager import AppConfiguration
-
 
 class StatusUpdateRequest:
     def __init__(self, config:AppConfiguration):
         self.Id = config.reg_id
-        self.Mac = "ab.ac.ad.a.af"
-        self.App_Version = "1.1"
-        self.Os_Version = "6.1.21-v8+"
+        self.Mac = appUtils.get_mac_address()
+        self.App_Version = appUtils.get_app_version()
+        self.Os_Version = appUtils.get_os_version()
 
 def updateDeviceStatusToCloud(log:logging, config:AppConfiguration, connection:M2Crypto.httpslib.HTTPSConnection):
     while True:

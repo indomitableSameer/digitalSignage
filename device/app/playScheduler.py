@@ -3,19 +3,28 @@ import logging, json
 from configManager import AppConfiguration
 import globalVariables as gv
 import time, M2Crypto
+import appUtils
 
-start_date = datetime.strptime("15:09:2023", "%d:%m:%Y").date()
-end_date = datetime.strptime("18:09:2023", "%d:%m:%Y").date()
-start_time = datetime.strptime("00:12", "%H:%M").time()
-end_time = datetime.strptime("00:14", "%H:%M").time()
+_start_date = datetime.strptime("15:09:2023", "%d:%m:%Y").date()
+_end_date = datetime.strptime("18:09:2500", "%d:%m:%Y").date()
+_start_time = datetime.strptime("00:00", "%H:%M").time()
+_end_time = datetime.strptime("00:00", "%H:%M").time()
+
+class _GetScheduleResponse:
+    def __init__():
+        ScheduleId = ''
+        StartData = ''
+        EndDate = ''
+        StartTime = ''
+        EndTime = ''
 
 def maintainPlaySchedule(log:logging, config:AppConfiguration, connection:M2Crypto.httpslib.HTTPSConnection):
     while True:
         try:
             # for now get the schedule every 30 sec, but this should be imporved.
             _getScheduleFromServer(log, config, connection)
-            if date.today() >=  start_date or date.today() <= end_date:
-                if datetime.now().time() >= start_time and datetime.now().time() <= end_time:
+            if date.today() >=  _start_date or date.today() <= _end_date:
+                if datetime.now().time() >= _start_time and datetime.now().time() <= _end_time:
                     log.info("setting schedule active event..")
                     gv.schedule_active.set()
                 else:
@@ -24,19 +33,37 @@ def maintainPlaySchedule(log:logging, config:AppConfiguration, connection:M2Cryp
             else:
                 log.info("clearing schedule inactive event..")
                 gv.schedule_active.clear()
-            time.sleep(30)
         except Exception as e:
             log.error(e)
+        time.sleep(30)
 
 def _getScheduleFromServer(log:logging, config:AppConfiguration, connection:M2Crypto.httpslib.HTTPSConnection):
+    global _start_date, _start_time
+    global _end_date, _end_time
+    log.info("sending getSchedule request..")   
     if config.registered == True:
         connection.connect()
         log.info("sending getSchedule request..")
         headers = {'Content-type': 'application/json'}
                     
-        connection.request("PUT", "/getSchedule", json.dumps({'RegistrationId':config.reg_id}), headers)    
+        connection.request("PUT", "/getPlaySchedule", json.dumps({'RegistrationId':config.reg_id}), headers)    
         response = connection.getresponse()
-        response.read()
-        log.info("Status Update: server response code -> " + str(response.status))
+        
+
+        if response.status != appUtils.HttpStatus.OK.value:
+            log.warning("getSehedule failed. resonse->" + str(response.status))
+            connection.close()
+
+        body = json.loads(response.read().decode())
+
+        if len(body['ScheduleId']) != 0:
+            if len(body['StartDate']) !=0 and len(body['EndDate']) !=0:
+                _start_date = datetime.strptime(body['StartDate'], "%d:%m:%Y").date()
+                _end_date = datetime.strptime(body['EndDate'], "%d:%m:%Y").date()
+                if len(body['StartTime']) !=0 and len(body['EndTime']) !=0:
+                    _start_time = datetime.strptime(body['StartTime'], "%H:%M").time()
+                    _end_time = datetime.strptime(body['EndTime'], "%H:%M").time()
+
         connection.close()
+        log.info("Schedule received: ", _start_date, _start_time, _end_date, _end_time)
         time.sleep(20)

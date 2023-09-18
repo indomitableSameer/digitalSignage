@@ -44,11 +44,11 @@ def appThreads(config:configManager.AppConfiguration, conn:M2Crypto.httpslib.HTT
 	player_instance = vlcplayer(app_log, os.path.join(config.content_filepath, config.content_file))
 
 	mediaPlayerDemonThread = threading.Thread(target=player_instance.run, args=(), daemon=False, name="media player thread")
-	playSchedulerDemonThread = threading.Thread(target=playScheduler.maintainPlaySchedule, args=(app_log, config), daemon=False, name="Schedular thread")
+	playSchedulerDemonThread = threading.Thread(target=playScheduler.maintainPlaySchedule, args=(app_log, config, conn), daemon=False, name="Schedular thread")
 	statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log, config, conn), daemon=False, name="status Thread")
 
-	mediaPlayerDemonThread.start()
-	#playSchedulerDemonThread.start()
+	#mediaPlayerDemonThread.start()
+	playSchedulerDemonThread.start()
 	#statusDeamonThread.start()
 
 def main():
@@ -64,4 +64,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-	
