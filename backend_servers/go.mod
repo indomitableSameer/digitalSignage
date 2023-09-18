@@ -3,6 +3,7 @@ module github.com/indomitableSameer/digitalSignage/backend_servers
 go 1.20
 
 require (
+	github.com/3d0c/gmf v0.0.0-20220906170454-be727bc5b56c
 	github.com/google/uuid v1.3.1
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
