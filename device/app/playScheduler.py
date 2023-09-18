@@ -40,21 +40,20 @@ def maintainPlaySchedule(log:logging, config:AppConfiguration, connection:M2Cryp
 def _getScheduleFromServer(log:logging, config:AppConfiguration, connection:M2Crypto.httpslib.HTTPSConnection):
     global _start_date, _start_time
     global _end_date, _end_time
-    log.info("sending getSchedule request..")   
     if config.registered == True:
         connection.connect()
         log.info("sending getSchedule request..")
         headers = {'Content-type': 'application/json'}
-                    
-        connection.request("PUT", "/getPlaySchedule", json.dumps({'RegistrationId':config.reg_id}), headers)    
+        req = {"RegistrationId": config.reg_id}
+        connection.request("GET", "/getPlaySchedule", json.dumps(req), headers)    
         response = connection.getresponse()
-        
 
         if response.status != appUtils.HttpStatus.OK.value:
             log.warning("getSehedule failed. resonse->" + str(response.status))
             connection.close()
 
         body = json.loads(response.read().decode())
+        print(body)
 
         if len(body['ScheduleId']) != 0:
             if len(body['StartDate']) !=0 and len(body['EndDate']) !=0:
@@ -63,7 +62,7 @@ def _getScheduleFromServer(log:logging, config:AppConfiguration, connection:M2Cr
                 if len(body['StartTime']) !=0 and len(body['EndTime']) !=0:
                     _start_time = datetime.strptime(body['StartTime'], "%H:%M").time()
                     _end_time = datetime.strptime(body['EndTime'], "%H:%M").time()
-
+        
+        log.info("Schedule received: " + _start_date.strftime("%d:%m:%Y") + " - " + _end_date.strftime("%d:%m:%Y") + " " + _start_time.strftime("%H:%M") + " - " + _end_time.strftime("%H:%M"))
         connection.close()
-        log.info("Schedule received: ", _start_date, _start_time, _end_date, _end_time)
         time.sleep(20)
