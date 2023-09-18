@@ -18,6 +18,9 @@ func main() {
 	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceList{})
 	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceStatus{})
 	dbprovider.Conn.RDb.AutoMigrate(&dbentities.ContentDirectory{})
+	//dbprovider.Conn.RDb.AutoMigrate(&dbentities.Country{})
+	//dbprovider.Conn.RDb.AutoMigrate(&dbentities.City{})
+	//dbprovider.Conn.RDb.Create(&dbentities.Country{CountryName: "Germany", TimeZone: "Europe/Berlin"})
 
 	multiplexer := mux.NewRouter()
 	multiplexer.HandleFunc("/status", requesthandlers.HandleStatusRequest).Methods(http.MethodPut)
@@ -25,6 +28,7 @@ func main() {
 	multiplexer.HandleFunc("/addDevice", requesthandlers.HandleAddDeviceRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/deviceList", requesthandlers.HandleGetDeviceListRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/addContent", requesthandlers.HandlePostAddContentRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/getPlaySchedule", requesthandlers.HandleGetPlayScheduleRequest).Methods(http.MethodGet)
 
 	credentials := handlers.AllowCredentials()
 	methods := handlers.AllowedMethods([]string{"GET", "PUT", "POST", "OPTIONS"})
