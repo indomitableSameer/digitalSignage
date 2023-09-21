@@ -7,5 +7,5 @@ type DeviceRegistrationResponse struct {
 	UniqueSystemId     uuid.UUID
 	ServiceUrl         string
 	ServicePort        string
-	TimeZone           string
+	Timezone           string
 }
