@@ -21,7 +21,7 @@ func HandleContentRequest(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("error:", err)
 	}
 
-	var regDev dbentities.DeviceRegistration
+	var regDev dbentities.DeviceRegistrationDirectory
 	dbprovider.Conn.RDb.Where("Registration_Id = ?", contentReq.Id).First(&regDev)
 	fmt.Println(regDev)
 

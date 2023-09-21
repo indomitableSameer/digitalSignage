@@ -15,12 +15,19 @@ import (
 func main() {
 
 	fmt.Println("creating db..")
-	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceList{})
-	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceStatus{})
-	dbprovider.Conn.RDb.AutoMigrate(&dbentities.ContentDirectory{})
-	//dbprovider.Conn.RDb.AutoMigrate(&dbentities.Country{})
-	//dbprovider.Conn.RDb.AutoMigrate(&dbentities.City{})
-	//dbprovider.Conn.RDb.Create(&dbentities.Country{CountryName: "Germany", TimeZone: "Europe/Berlin"})
+
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.Country{})
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.City{})
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.Building{})
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.Area{})
+
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceDirectory{})
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceRegistrationDirectory{})
+
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.ContentAllocationDirectory{})
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.ScheduleAllocationDirectory{})
+
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceStatusRegister{})
 
 	multiplexer := mux.NewRouter()
 	multiplexer.HandleFunc("/status", requesthandlers.HandleStatusRequest).Methods(http.MethodPut)
