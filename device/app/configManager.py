@@ -13,7 +13,9 @@ class AppConfiguration():
         self.content_filepath = ''
         self.content_fileid = ''
         self.content_version = ''
-        
+        self.Timezone = ''
+
+
 AppConfig = AppConfiguration()
 
 
@@ -21,6 +23,7 @@ def read_config():
     config = configparser.ConfigParser()
     config.read("/home/pi/digitalSignage/device/app/app.ini")
     AppConfig.registered = config['DEFAULT'].getboolean('Registered')
+    AppConfig.registered = config['DEFAULT']['Timezone']
     AppConfig.reg_url = config['registration.server']['url']
     AppConfig.reg_port = int(config['registration.server']['port'])
     AppConfig.backend_url = config['backend.service']['url']
@@ -31,6 +34,7 @@ def read_config():
     AppConfig.content_fileid = config['content']['fileid']
     AppConfig.content_version = config['content']['version']
     return AppConfig
+
 
 def write_config(config):
     with open('/home/pi/digitalSignage/device/app/app.ini', 'w') as configfile:

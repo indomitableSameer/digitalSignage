@@ -91,7 +91,7 @@ func HandlePostAddContentRequest(w http.ResponseWriter, r *http.Request) {
 	var contentId = uuid.New()
 	var fileId = uuid.New()
 	var thumbnailId = uuid.New()
-	var contentInfo = dbentities.ContentDirectory{
+	var contentInfo = dbentities.ContentAllocationDirectory{
 		ContentId:             contentId,
 		FileName:              filename,
 		Description:           description,

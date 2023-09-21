@@ -22,15 +22,22 @@ func HandleAddDeviceRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(addDevReq.Mac) > 0 && len(addDevReq.Location) > 0 {
-		var device dbentities.DeviceList
-		device.DeviceId = uuid.New()
-		device.Mac = addDevReq.Mac
-		result := dbprovider.Conn.RDb.Create(&device)
-		if result.Error != nil {
-			http.Error(w, "entry already exists", http.StatusInternalServerError)
+		var countryInfo dbentities.Country
+		dbprovider.Conn.RDb.Where("name = ?", addDevReq.Location).First(&countryInfo)
+		if len(countryInfo.Name) > 0 && countryInfo.Name == addDevReq.Location {
+			var device dbentities.DeviceDirectory
+			device.DeviceID = uuid.New()
+			device.MAC = addDevReq.Mac
+			device.CountryId = countryInfo.Id
+			result := dbprovider.Conn.RDb.Create(&device)
+			if result.Error != nil {
+				http.Error(w, "entry already exists", http.StatusInternalServerError)
+			}
+		} else {
+			http.Error(w, "Country not supported", http.StatusNotFound)
 		}
 	} else {
-		http.Error(w, "missing details", 412)
+		http.Error(w, "missing details", http.StatusBadRequest)
 	}
 	return
 }

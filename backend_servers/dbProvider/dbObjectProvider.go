@@ -17,7 +17,7 @@ type dbConnObj struct {
 }
 
 func getDB() (*gorm.DB, error) {
-	var db, err = gorm.Open(postgres.Open("postgresql://root@localhost:26257?sslmode=disable"+"&application_name=$ dss_reg_server"), &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true})
+	var db, err = gorm.Open(postgres.Open("postgresql://root@localhost:26257?sslmode=disable"+"&application_name=$ dss_reg_server"+"&dbname=postgres"), &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true})
 	return db, err
 }
 
