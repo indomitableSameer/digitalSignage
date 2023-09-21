@@ -8,8 +8,8 @@ import (
 
 type DeviceRegistrationDirectory struct {
 	RegistrationId  uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
-	DeviceId        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	CountryId       uint
+	DeviceId        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4(); not null"`
+	CountryId       uint      `gorm:"not null"`
 	ServiceUrl      string
 	ServicePort     string
 	CreatedAt       time.Time
