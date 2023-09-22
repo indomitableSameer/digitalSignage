@@ -36,6 +36,7 @@ func main() {
 	multiplexer.HandleFunc("/deviceList", requesthandlers.HandleGetDeviceListRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/addContent", requesthandlers.HandlePostAddContentRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/getPlaySchedule", requesthandlers.HandleGetPlayScheduleRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/addPlaySchedule", requesthandlers.HandleAddPlayScheduleRequest).Methods(http.MethodPost)
 
 	credentials := handlers.AllowCredentials()
 	methods := handlers.AllowedMethods([]string{"GET", "PUT", "POST", "OPTIONS"})
