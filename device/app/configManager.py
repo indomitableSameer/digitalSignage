@@ -25,9 +25,9 @@ def read_config():
     AppConfig.registered = config['DEFAULT'].getboolean('Registered')
     AppConfig.registered = config['DEFAULT']['Timezone']
     AppConfig.reg_url = config['registration.server']['url']
-    AppConfig.reg_port = int(config['registration.server']['port'])
+    AppConfig.reg_port = 4001 if config['registration.server']['port'] == '' else int(config['registration.server']['port'])
     AppConfig.backend_url = config['backend.service']['url']
-    AppConfig.backend_port = int(config['backend.service']['port'])
+    AppConfig.backend_port = 4001 if config['backend.service']['port'] == '' else int(config['backend.service']['port'])
     AppConfig.reg_id = config['backend.service']['systemid']
     AppConfig.content_file = config['content']['file']
     AppConfig.content_filepath = config['content']['filepath']

@@ -48,14 +48,14 @@ def appThreads(config:configManager.AppConfiguration, conn:M2Crypto.httpslib.HTT
 	statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log, config, conn), daemon=False, name="status Thread")
 
 	#mediaPlayerDemonThread.start()
-	playSchedulerDemonThread.start()
+	#playSchedulerDemonThread.start()
 	#statusDeamonThread.start()
 
 def main():
 	app_log.info('dss node app stating..')
 	appConfig = configManager.read_config()
 	conn = secure_conn.getConnection()
-	appThreads(appConfig, conn)
+	#appThreads(appConfig, conn)
 	deviceRegistration.registerDevice(app_log, conn)
 	print(deviceRegistration.reg_state.status)
 	appConfig = configManager.read_config()
