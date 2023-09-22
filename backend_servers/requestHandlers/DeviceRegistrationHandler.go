@@ -37,7 +37,6 @@ func HandleDeviceRegistrationRequest(w http.ResponseWriter, r *http.Request) {
 
 		
 		if registerdDevices.DeviceId != uuid.Nil {
-
 			fmt.Println(registerdDevices) 
 			response := response.DeviceRegistrationResponse{ServiceUrl: registerdDevices.ServiceUrl, ServicePort: registerdDevices.ServicePort, RegistrationStatus: 2, UniqueSystemId: registerdDevices.RegistrationId, Timezone: aCountryAssociation.TimeZone}
 			json, _ := json.Marshal(response)

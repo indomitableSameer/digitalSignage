@@ -21,7 +21,7 @@ func HandleGetPlayScheduleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("recived getPlaySchedule request")
-	var schedule = response.PlaySchedule{ScheduleId: uuid.New(), StartData: "21-01-2023", EndDate: "22-01-2023", StartTime: "14:00", EndTime: "15:00"}
+	var schedule = response.PlaySchedule{ScheduleId: uuid.New(), StartDate: "21-01-2023", EndDate: "22-01-2023", StartTime: "14:00", EndTime: "15:00"}
 
 	json, _ := json.Marshal(schedule)
 	w.Header().Set("content-type", "application/json")
