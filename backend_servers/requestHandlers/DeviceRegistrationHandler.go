@@ -32,12 +32,11 @@ func HandleDeviceRegistrationRequest(w http.ResponseWriter, r *http.Request) {
 		var aCountryAssociation dbentities.Country
 		var registerdDevices dbentities.DeviceRegistrationDirectory
 
-		dbprovider.Conn.RDb.Where("country_id = ?", deviceDirEntry.CountryId).First(&aCountryAssociation)
+		dbprovider.Conn.RDb.Where("id = ?", deviceDirEntry.CountryId).First(&aCountryAssociation)
 		dbprovider.Conn.RDb.Where("Device_Id = ?", deviceDirEntry.DeviceID).First(&registerdDevices)
 
 		fmt.Println(registerdDevices)
 		if registerdDevices.DeviceId != uuid.Nil {
-
 			response := response.DeviceRegistrationResponse{ServiceUrl: registerdDevices.ServiceUrl, ServicePort: registerdDevices.ServicePort, RegistrationStatus: 2, UniqueSystemId: registerdDevices.RegistrationId, Timezone: aCountryAssociation.TimeZone}
 			json, _ := json.Marshal(response)
 			w.Header().Set("content-type", "application/json")

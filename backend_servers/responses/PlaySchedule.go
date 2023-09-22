@@ -6,7 +6,7 @@ import (
 
 type PlaySchedule struct {
 	ScheduleId uuid.UUID
-	StartData  string
+	StartDate  string
 	EndDate    string
 	StartTime  string
 	EndTime    string
