@@ -1,8 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
+import { useEffect, useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
+import GetDevices from '../apidata/devicelist';
 // components
 import Iconify from '../components/iconify';
 // sections
@@ -22,36 +24,50 @@ import {
 
 export default function DashboardAppPage() {
   const theme = useTheme();
+  const devicesData = GetDevices();
+  const [online, setOnline] = useState(0);
+  const [offline, setOffline] = useState(0);
+  const [available, setAvailable] = useState(0);
+  const [registered, setRegistered] = useState(0);
+
+  useEffect(() => {
+    // Use devicesData as needed
+    if (devicesData != null) {
+      console.log('Devices Data:', devicesData);
+      setOnline(devicesData.Online);
+      setOffline(devicesData.Offline);
+      setRegistered(devicesData.Registered);
+      setAvailable(devicesData.Available);
+    }
+  }, [devicesData]);
 
   return (
     <>
       <Helmet>
         <title> Dashboard | Minimal UI </title>
       </Helmet>
-
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
-
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Online" total={1} icon={'zondicons:location'} />
+            <AppWidgetSummary title="Online" total={online} icon={'zondicons:location'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Registered" total={1} color="info" icon={'zondicons:location'} />
+            <AppWidgetSummary title="Registered" total={registered} color="info" icon={'zondicons:location'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Available" total={4} color="warning" icon={'zondicons:location'} />
+            <AppWidgetSummary title="Available" total={available} color="warning" icon={'zondicons:location'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Offline" total={1} color="error" icon={'zondicons:location'} />
+            <AppWidgetSummary title="Offline" total={offline} color="error" icon={'zondicons:location'} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
+          {/* <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
               title="Website Visits"
               subheader="(+43%) than last year"
@@ -89,7 +105,7 @@ export default function DashboardAppPage() {
                 },
               ]}
             />
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits

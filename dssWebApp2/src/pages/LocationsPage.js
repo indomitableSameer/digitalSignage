@@ -21,20 +21,13 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
-  FormControl,
-  Select,
-  InputLabel,
-  Input,
-  Grid,
-  TextField,
 } from '@mui/material';
 // components
 import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-import { LocationForm } from '../sections/@dashboard/location';
+import { LocationForm, LocationListHead, LocationListToolbar } from '../sections/@dashboard/location';
 // mock
 import USERLIST from '../_mock/user';
 
@@ -80,7 +73,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function UserPage() {
+export default function LocationsPage() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -171,11 +164,15 @@ export default function UserPage() {
           </Card>
         </Stack>
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <LocationListToolbar
+            numSelected={selected.length}
+            filterName={filterName}
+            onFilterName={handleFilterByName}
+          />
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
+                <LocationListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}

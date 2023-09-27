@@ -19,10 +19,10 @@ func HandleGetDeviceListRequest(w http.ResponseWriter, r *http.Request) {
 	var resDevList []response.DeviceList
 	for i := 0; i < int(result.RowsAffected); i++ {
 		item := response.DeviceList{
-			Id:        dbdevList[i].DeviceID,
-			Mac:       dbdevList[i].MAC,
-			Location:  "Germany",
-			CreatedAt: dbdevList[i].CreatedAt,
+			Mac:        dbdevList[i].MAC,
+			Registered: true,
+			Online:     true,
+			Location:   "Germany",
 		}
 		resDevList = append(resDevList, item)
 	}
