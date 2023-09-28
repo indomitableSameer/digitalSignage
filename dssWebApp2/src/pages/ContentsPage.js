@@ -3,23 +3,13 @@ import { useState } from 'react';
 // @mui
 import { Container, Card, Stack, Typography } from '@mui/material';
 // components
-import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
+import { ContentList } from '../sections/@dashboard/contents';
 // mock
-import PRODUCTS from '../_mock/products';
+import CONTENT_INFO from '../_mock/contents';
 
 // ----------------------------------------------------------------------
 
 export default function ContentsPage() {
-  const [openFilter, setOpenFilter] = useState(false);
-
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
-  };
-
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
-
   return (
     <>
       <Helmet>
@@ -30,23 +20,7 @@ export default function ContentsPage() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Content
         </Typography>
-
-        <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
-          <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-            <ProductFilterSidebar
-              openFilter={openFilter}
-              onOpenFilter={handleOpenFilter}
-              onCloseFilter={handleCloseFilter}
-            />
-            <ProductSort />
-          </Stack>
-        </Stack>
-
-        <Stack>
-          <Card>test</Card>
-        </Stack>
-
-        <ProductList products={PRODUCTS} />
+        <ContentList content={CONTENT_INFO} />
       </Container>
     </>
   );

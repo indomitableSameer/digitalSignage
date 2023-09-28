@@ -29,7 +29,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function CartWidget() {
+export default function ContentCartWidget() {
   return (
     <StyledRoot>
       <Badge showZero badgeContent={0} color="error" max={99}>

@@ -159,7 +159,7 @@ export default function LocationsPage() {
           </Typography>
         </Stack>
         <Stack>
-          <Card>
+          <Card sx={{ width: 'auto' }}>
             <LocationForm />
           </Card>
         </Stack>
