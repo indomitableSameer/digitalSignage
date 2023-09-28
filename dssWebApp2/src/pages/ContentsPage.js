@@ -3,7 +3,7 @@ import { useState } from 'react';
 // @mui
 import { Container, Card, Stack, Typography } from '@mui/material';
 // components
-import { ContentList } from '../sections/@dashboard/contents';
+import { ContentList, ContentForm } from '../sections/@dashboard/contents';
 // mock
 import CONTENT_INFO from '../_mock/contents';
 
@@ -17,10 +17,19 @@ export default function ContentsPage() {
       </Helmet>
 
       <Container>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Content
-        </Typography>
-        <ContentList content={CONTENT_INFO} />
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} spacing={1}>
+          <Typography variant="h4" gutterBottom>
+            Content
+          </Typography>
+        </Stack>
+        <Stack spacing={1}>
+          <Card>
+            <ContentForm />
+          </Card>
+          <Card>
+            <ContentList content={CONTENT_INFO} />
+          </Card>
+        </Stack>
       </Container>
     </>
   );
