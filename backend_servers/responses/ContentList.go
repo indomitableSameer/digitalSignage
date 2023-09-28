@@ -1,9 +1,11 @@
 package response
 
+import "github.com/google/uuid"
+
 type ContentList struct {
-	id          string
+	Id          uuid.UUID
 	Name        string
-	Discription string
+	Description string
 	Date        string
 	Time        string
 }

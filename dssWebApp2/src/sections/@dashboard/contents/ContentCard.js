@@ -20,21 +20,21 @@ ContentCard.propTypes = {
 };
 
 export default function ContentCard({ content }) {
-  const { cover, name, description, date, time } = content;
+  const { cover, Name, Description, Date, Time } = content;
 
   return (
     <Card>
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        <StyledProductImg alt={name} src={cover} />
+        <StyledProductImg alt={Name} src={`/assets/images/contents/testimg.jpg`} />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
-        <Typography variant="subtitle2">{name}</Typography>
-        <Typography variant="subtitle2">{description}</Typography>
+        <Typography variant="subtitle2">{Name}</Typography>
+        <Typography variant="subtitle2">{Description}</Typography>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="subtitle2">{date}</Typography>
-          <Typography variant="subtitle2">{time}</Typography>
+          <Typography variant="subtitle2">{Date}</Typography>
+          <Typography variant="subtitle2">{Time}</Typography>
         </Stack>
       </Stack>
     </Card>

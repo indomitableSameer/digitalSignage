@@ -1,15 +1,26 @@
 import { Helmet } from 'react-helmet-async';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import { Container, Card, Stack, Typography } from '@mui/material';
 // components
 import { ContentList, ContentForm } from '../sections/@dashboard/contents';
 // mock
-import CONTENT_INFO from '../_mock/contents';
+import GetContent from '../apidata/contentlist';
+import UploadContent from '../apidata/uploadContent';
 
 // ----------------------------------------------------------------------
 
 export default function ContentsPage() {
+  const contentListData = GetContent();
+  const [content, setContent] = useState([]);
+  useEffect(() => {
+    // Use devicesData as needed
+    if (contentListData != null) {
+      console.log('Devices Data:', contentListData);
+      setContent(contentListData);
+    }
+  }, [contentListData]);
+
   return (
     <>
       <Helmet>
@@ -27,7 +38,7 @@ export default function ContentsPage() {
             <ContentForm />
           </Card>
           <Card>
-            <ContentList content={CONTENT_INFO} />
+            <ContentList content={content} />
           </Card>
         </Stack>
       </Container>

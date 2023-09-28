@@ -15,6 +15,7 @@ import (
 func main() {
 
 	fmt.Println("creating db..")
+	dbprovider.Conn.RDb.AutoMigrate(&dbentities.ContentInfo{})
 
 	dbprovider.Conn.RDb.AutoMigrate(&dbentities.Country{})
 	dbprovider.Conn.RDb.AutoMigrate(&dbentities.City{})
@@ -34,7 +35,8 @@ func main() {
 	multiplexer.HandleFunc("/content", requesthandlers.HandleContentRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/addDevice", requesthandlers.HandleAddDeviceRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/deviceList", requesthandlers.HandleGetDeviceListRequest).Methods(http.MethodGet)
-	multiplexer.HandleFunc("/addContent", requesthandlers.HandlePostAddContentRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/addContent", requesthandlers.HandleAddContentRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/getContentList", requesthandlers.HandleGetContentListRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/getPlaySchedule", requesthandlers.HandleGetPlayScheduleRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/addPlaySchedule", requesthandlers.HandleAddPlayScheduleRequest).Methods(http.MethodPost)
 

@@ -1,19 +1,24 @@
 import axios, { HttpStatusCode } from 'axios';
-import { map } from 'lodash';
 import { useEffect, useState } from 'react';
 
 const api = axios.create({
   baseURL: 'http://api.dss.com:8000',
 });
 
-const GetContent = () => {
-  const [data, setData] = useState(null);
-  console.log('test');
+const UploadContent = (file, name, description) => {
+  const [data, setData] = useState([]);
+  const formData = new FormData();
+  formData.append('File', file);
+  formData.append('FileName', name);
+  formData.append('Description', description);
+  formData.append('FileSize', file.size);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const uploadfile = async () => {
       try {
-        const response = await api.get('/getContentList');
+        const response = await api.post('/addContent', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
         setData(response.data);
       } catch (error) {
         if (error.response) {
@@ -27,10 +32,10 @@ const GetContent = () => {
       }
     };
 
-    fetchData();
+    uploadfile();
   }, []); // Empty dependency array to run the effect only once
 
   return data;
 };
 
-export default GetContent;
+export default UploadContent;
