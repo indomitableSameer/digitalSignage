@@ -5,6 +5,7 @@ import SimpleLayout from './layouts/simple';
 //
 import UserPage from './pages/UserPage';
 import LocationsPage from './pages/LocationsPage';
+import DevicesPage from './pages/DevicesPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ContentsPage from './pages/ContentsPage';
@@ -21,7 +22,7 @@ export default function Router() {
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'locations', element: <LocationsPage /> },
-        { path: 'devices', element: <LocationsPage /> },
+        { path: 'devices', element: <DevicesPage /> },
         { path: 'contents', element: <ContentsPage /> },
       ],
     },
