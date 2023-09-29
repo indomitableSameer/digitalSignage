@@ -10,13 +10,11 @@ import GetFromCloud from '../apidata/getApiCalls';
 // ----------------------------------------------------------------------
 
 export default function ContentsPage() {
-  // const contentListData = GetContent();
   const contentListData = GetFromCloud('contentlist');
   const [content, setContent] = useState([]);
   useEffect(() => {
-    // Use devicesData as needed
     if (contentListData != null) {
-      console.log('Devices Data:', contentListData);
+      console.log('ContentsPage:Devices Data:', contentListData);
       setContent(contentListData);
     }
   }, [contentListData, content]);

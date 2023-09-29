@@ -80,6 +80,7 @@ export default function LocationsPage() {
   const [cityList, setCityList] = useState([]);
   const [buildingList, setBuildingList] = useState([]);
   const [areaList, setAreaList] = useState([]);
+  const [deviceList, setDeviceList] = useState([]);
 
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
@@ -94,16 +95,27 @@ export default function LocationsPage() {
   const cityListData = GetFromCloud('citylist');
   const buildingListData = GetFromCloud('buildinglist');
   const areaListData = GetFromCloud('arealist');
+  const deviceListData = GetFromCloud('devicelist');
 
   useEffect(() => {
-    // Use devicesData as needed
+    // TODO : there check the if condition
     if (contentListData != null) {
-      console.log('Devices Data:', countryListData);
       setContentList(contentListData);
+    }
+    if (countryListData != null) {
       setCountryList(countryListData);
+    }
+    if (cityListData != null) {
       setCityList(cityListData);
+    }
+    if (buildingListData != null) {
       setBuildingList(buildingListData);
+    }
+    if (areaListData != null) {
       setAreaList(areaListData);
+    }
+    if (deviceListData != null) {
+      setDeviceList(deviceListData);
     }
   }, [
     contentListData,
@@ -116,6 +128,8 @@ export default function LocationsPage() {
     buildingList,
     areaListData,
     areaList,
+    deviceListData,
+    deviceList,
   ]);
 
   const handleOpenMenu = (event) => {
@@ -195,6 +209,7 @@ export default function LocationsPage() {
               citylist={cityList}
               buildinglist={buildingList}
               arealist={areaList}
+              devicelist={deviceList}
               contentlist={contentList}
             />
           </Card>

@@ -33,7 +33,7 @@ export default function DashboardAppPage() {
   useEffect(() => {
     // Use devicesData as needed
     if (devicesData != null) {
-      console.log('Devices Data:', devicesData);
+      console.log('DashboardAppPage: Devices Data:', devicesData);
       setOnline(devicesData.Online);
       setOffline(devicesData.Offline);
       setRegistered(devicesData.Registered);

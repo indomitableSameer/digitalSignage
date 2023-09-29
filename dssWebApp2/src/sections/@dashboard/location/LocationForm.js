@@ -11,22 +11,29 @@ import Autocomplete from '@mui/material/Autocomplete';
 // component
 import Iconify from '../../../components/iconify';
 
-const top100Films = ['test1', 'test2'];
-
 LocationForm.propTypes = {
   countrylist: PropTypes.array.isRequired,
   citylist: PropTypes.array.isRequired,
   buildinglist: PropTypes.array.isRequired,
   arealist: PropTypes.array.isRequired,
+  devicelist: PropTypes.array.isRequired,
   contentlist: PropTypes.array.isRequired,
 };
 
-export default function LocationForm({ countrylist, citylist, buildinglist, arealist, contentlist, ...other }) {
+export default function LocationForm({
+  countrylist,
+  citylist,
+  buildinglist,
+  arealist,
+  devicelist,
+  contentlist,
+  ...other
+}) {
   const [country, setCountry] = useState();
   const [city, setCity] = useState();
   const [building, setBuilding] = useState();
   const [area, setArea] = useState();
-  const [mac, setMac] = useState('');
+  const [device, setDevice] = useState();
   const [startdate, setStartDate] = useState(dayjs());
   const [enddate, setEndDate] = useState(dayjs());
   const [starttime, setStartTime] = useState(dayjs('2022-04-17T00:00'));
@@ -38,7 +45,7 @@ export default function LocationForm({ countrylist, citylist, buildinglist, area
     console.log(city);
     console.log(building);
     console.log(area);
-    console.log(mac);
+    console.log(device);
     console.log(startdate.format('DD-MM-YYYY'));
     console.log(endtime.format('HH:mm'));
     console.log(content);
@@ -115,13 +122,14 @@ export default function LocationForm({ countrylist, citylist, buildinglist, area
           <Autocomplete
             id="mac"
             freeSolo
-            options={top100Films}
-            value={mac}
+            options={devicelist}
+            getOptionLabel={(option) => option.Name}
+            value={device}
             onChange={(event, newValue) => {
-              setMac(newValue);
+              setDevice(newValue);
             }}
             onInputChange={(event, newValue) => {
-              setMac(newValue);
+              setDevice(newValue);
             }}
             renderInput={(params) => <TextField {...params} label="Device Mac" />}
           />
