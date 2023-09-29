@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import {
   Card,
@@ -30,6 +30,7 @@ import Scrollbar from '../components/scrollbar';
 import { LocationForm, LocationListHead, LocationListToolbar } from '../sections/@dashboard/location';
 // mock
 import USERLIST from '../_mock/user';
+import GetContent from '../apidata/contentlist';
 
 // ----------------------------------------------------------------------
 
@@ -74,19 +75,23 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function LocationsPage() {
+  const [contentList, setContentList] = useState([]);
   const [open, setOpen] = useState(null);
-
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const contentListData = GetContent();
+  useEffect(() => {
+    // Use devicesData as needed
+    if (contentListData != null) {
+      console.log('Devices Data:', contentListData);
+      setContentList(contentListData);
+    }
+  }, [contentListData, contentList]);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -160,7 +165,7 @@ export default function LocationsPage() {
         </Stack>
         <Stack spacing={1}>
           <Card sx={{ width: 'auto' }}>
-            <LocationForm />
+            <LocationForm contentlist={contentList} />
           </Card>
 
           <Card>

@@ -19,7 +19,7 @@ export default function ContentsPage() {
       console.log('Devices Data:', contentListData);
       setContent(contentListData);
     }
-  }, [contentListData]);
+  }, [contentListData, content]);
 
   return (
     <>

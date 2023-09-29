@@ -1,5 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 // @mui
 import { Grid, FormControl, InputLabel, Select, MenuItem, TextField, Button } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,7 +15,11 @@ const top100Films = ['test1', 'test2'];
 const countries = ['Germany'];
 const cities = ['Frankfurt'];
 
-export default function LocationForm() {
+LocationForm.propTypes = {
+  contentlist: PropTypes.array.isRequired,
+};
+
+export default function LocationForm({ contentlist, ...other }) {
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
   const [building, setBuilding] = useState('');
@@ -150,8 +155,10 @@ export default function LocationForm() {
 
         <Grid item xs={2} sm={3} ms={5}>
           <Autocomplete
+            autoHighlight
             id="contentselect"
-            options={top100Films}
+            options={contentlist}
+            getOptionLabel={(option) => option.Name}
             value={content}
             onChange={(event, newValue) => {
               setContent(newValue);
