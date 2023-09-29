@@ -40,6 +40,9 @@ func main() {
 	multiplexer.HandleFunc("/getPlaySchedule", requesthandlers.HandleGetPlayScheduleRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/addPlaySchedule", requesthandlers.HandleAddPlayScheduleRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/getCountryList", requesthandlers.HandleGetCountryListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/getCityList", requesthandlers.HandleGetCityListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/getBuildingList", requesthandlers.HandleGetBuildingListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/getAreaList", requesthandlers.HandleGetAreaListRequest).Methods(http.MethodGet)
 
 	credentials := handlers.AllowCredentials()
 	methods := handlers.AllowedMethods([]string{"GET", "PUT", "POST", "OPTIONS"})

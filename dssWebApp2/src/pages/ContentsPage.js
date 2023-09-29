@@ -5,13 +5,13 @@ import { Container, Card, Stack, Typography } from '@mui/material';
 // components
 import { ContentList, ContentForm } from '../sections/@dashboard/contents';
 // mock
-import GetContent from '../apidata/contentlist';
-import UploadContent from '../apidata/uploadContent';
+import GetFromCloud from '../apidata/getApiCalls';
 
 // ----------------------------------------------------------------------
 
 export default function ContentsPage() {
-  const contentListData = GetContent();
+  // const contentListData = GetContent();
+  const contentListData = GetFromCloud('contentlist');
   const [content, setContent] = useState([]);
   useEffect(() => {
     // Use devicesData as needed

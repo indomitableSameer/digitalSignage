@@ -12,24 +12,26 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Iconify from '../../../components/iconify';
 
 const top100Films = ['test1', 'test2'];
-const countries = ['Germany'];
-const cities = ['Frankfurt'];
 
 LocationForm.propTypes = {
+  countrylist: PropTypes.array.isRequired,
+  citylist: PropTypes.array.isRequired,
+  buildinglist: PropTypes.array.isRequired,
+  arealist: PropTypes.array.isRequired,
   contentlist: PropTypes.array.isRequired,
 };
 
-export default function LocationForm({ contentlist, ...other }) {
-  const [country, setCountry] = useState('');
-  const [city, setCity] = useState('');
-  const [building, setBuilding] = useState('');
-  const [area, setArea] = useState('');
+export default function LocationForm({ countrylist, citylist, buildinglist, arealist, contentlist, ...other }) {
+  const [country, setCountry] = useState();
+  const [city, setCity] = useState();
+  const [building, setBuilding] = useState();
+  const [area, setArea] = useState();
   const [mac, setMac] = useState('');
   const [startdate, setStartDate] = useState(dayjs());
   const [enddate, setEndDate] = useState(dayjs());
   const [starttime, setStartTime] = useState(dayjs('2022-04-17T00:00'));
   const [endtime, setEndTime] = useState(dayjs('2022-04-17T00:00'));
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState();
 
   const handleSubmit = async () => {
     console.log(country);
@@ -48,7 +50,8 @@ export default function LocationForm({ contentlist, ...other }) {
         <Grid item xs={2} sm={3} ms={5}>
           <Autocomplete
             id="country"
-            options={countries}
+            options={countrylist}
+            getOptionLabel={(option) => option.Name}
             value={country}
             onChange={(event, newValue) => {
               setCountry(newValue);
@@ -61,7 +64,8 @@ export default function LocationForm({ contentlist, ...other }) {
           <Autocomplete
             id="city"
             freeSolo
-            options={cities}
+            options={citylist}
+            getOptionLabel={(option) => option.Name}
             value={city}
             onChange={(event, newValue) => {
               setCity(newValue);
@@ -77,7 +81,8 @@ export default function LocationForm({ contentlist, ...other }) {
           <Autocomplete
             id="building"
             freeSolo
-            options={top100Films}
+            options={buildinglist}
+            getOptionLabel={(option) => option.Name}
             value={building}
             onChange={(event, newValue) => {
               setBuilding(newValue);
@@ -93,7 +98,8 @@ export default function LocationForm({ contentlist, ...other }) {
           <Autocomplete
             id="area"
             freeSolo
-            options={top100Films}
+            options={arealist}
+            getOptionLabel={(option) => option.Name}
             value={area}
             onChange={(event, newValue) => {
               setArea(newValue);

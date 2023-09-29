@@ -19,8 +19,6 @@ func HandleGetContentListRequest(w http.ResponseWriter, r *http.Request) {
 
 	var resContentList []response.ContentList
 	for i := 0; i < int(res.RowsAffected); i++ {
-		fmt.Println(dbContentInfo[i].CreatedAt)
-		fmt.Println(dbContentInfo[i].CreatedAt.Format("02/01/2006"))
 		item := response.ContentList{
 			Id:          dbContentInfo[i].ContentId,
 			Name:        dbContentInfo[i].FileName,

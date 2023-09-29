@@ -13,7 +13,7 @@ export default function ContentList({ content, ...other }) {
   return (
     <Grid container spacing={3} {...other}>
       {content.map((content) => (
-        <Grid key={content.id} item xs={12} sm={6} md={3}>
+        <Grid key={content.Id} item xs={12} sm={6} md={3}>
           <ContentCard content={content} />
         </Grid>
       ))}

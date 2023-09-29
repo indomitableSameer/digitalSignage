@@ -30,7 +30,7 @@ import Scrollbar from '../components/scrollbar';
 import { LocationForm, LocationListHead, LocationListToolbar } from '../sections/@dashboard/location';
 // mock
 import USERLIST from '../_mock/user';
-import GetContent from '../apidata/contentlist';
+import GetFromCloud from '../apidata/getApiCalls';
 
 // ----------------------------------------------------------------------
 
@@ -76,6 +76,11 @@ function applySortFilter(array, comparator, query) {
 
 export default function LocationsPage() {
   const [contentList, setContentList] = useState([]);
+  const [countryList, setCountryList] = useState([]);
+  const [cityList, setCityList] = useState([]);
+  const [buildingList, setBuildingList] = useState([]);
+  const [areaList, setAreaList] = useState([]);
+
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -84,14 +89,34 @@ export default function LocationsPage() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const contentListData = GetContent();
+  const contentListData = GetFromCloud('contentlist');
+  const countryListData = GetFromCloud('countrylist');
+  const cityListData = GetFromCloud('citylist');
+  const buildingListData = GetFromCloud('buildinglist');
+  const areaListData = GetFromCloud('arealist');
+
   useEffect(() => {
     // Use devicesData as needed
     if (contentListData != null) {
-      console.log('Devices Data:', contentListData);
+      console.log('Devices Data:', countryListData);
       setContentList(contentListData);
+      setCountryList(countryListData);
+      setCityList(cityListData);
+      setBuildingList(buildingListData);
+      setAreaList(areaListData);
     }
-  }, [contentListData, contentList]);
+  }, [
+    contentListData,
+    contentList,
+    countryListData,
+    countryList,
+    cityListData,
+    cityList,
+    buildingListData,
+    buildingList,
+    areaListData,
+    areaList,
+  ]);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -165,7 +190,13 @@ export default function LocationsPage() {
         </Stack>
         <Stack spacing={1}>
           <Card sx={{ width: 'auto' }}>
-            <LocationForm contentlist={contentList} />
+            <LocationForm
+              countrylist={countryList}
+              citylist={cityList}
+              buildinglist={buildingList}
+              arealist={areaList}
+              contentlist={contentList}
+            />
           </Card>
 
           <Card>
