@@ -20,10 +20,10 @@ export default function LocationForm() {
   const [building, setBuilding] = useState('');
   const [area, setArea] = useState('');
   const [mac, setMac] = useState('');
-  const [startdate, setStartDate] = useState(null);
-  const [enddate, setEndDate] = useState(null);
-  const [starttime, setStartTime] = useState(null);
-  const [endtime, setEndTime] = useState(null);
+  const [startdate, setStartDate] = useState(dayjs());
+  const [enddate, setEndDate] = useState(dayjs());
+  const [starttime, setStartTime] = useState(dayjs('2022-04-17T00:00'));
+  const [endtime, setEndTime] = useState(dayjs('2022-04-17T00:00'));
   const [content, setContent] = useState('');
 
   const handleSubmit = async () => {
@@ -32,15 +32,15 @@ export default function LocationForm() {
     console.log(building);
     console.log(area);
     console.log(mac);
-    console.log(startdate);
-    console.log(endtime);
+    console.log(startdate.format('DD-MM-YYYY'));
+    console.log(endtime.format('HH:mm'));
     console.log(content);
   };
 
   return (
-    <Grid spacing={2}>
-      <FormControl sx={{ m: 1, minWidth: 150 }}>
-        <Grid item xs={5}>
+    <FormControl sx={{ m: 1, minWidth: 150 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={2} sm={3} ms={5}>
           <Autocomplete
             id="country"
             options={countries}
@@ -138,20 +138,13 @@ export default function LocationForm() {
           <Grid item xs={2} sm={3} ms={5}>
             <TimePicker
               label="Start Time"
-              format="HH:MM"
               ampm={false}
               value={starttime}
-              onChange={(event) => setStartTime(event.target.value)}
+              onChange={(newValue) => setStartTime(newValue)}
             />
           </Grid>
           <Grid item xs={2} sm={3} ms={5}>
-            <TimePicker
-              label="End Time"
-              format="HH:MM"
-              ampm={false}
-              value={endtime}
-              onChange={(event) => setEndTime(event.target.value)}
-            />
+            <TimePicker label="End Time" ampm={false} value={endtime} onChange={(newValue) => setEndTime(newValue)} />
           </Grid>
         </LocalizationProvider>
 
@@ -172,7 +165,7 @@ export default function LocationForm() {
             Add
           </Button>
         </Grid>
-      </FormControl>
-    </Grid>
+      </Grid>
+    </FormControl>
   );
 }
