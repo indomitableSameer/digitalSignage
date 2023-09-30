@@ -22,6 +22,16 @@ func HandleDeviceRegistrationRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unable to parse request body", http.StatusBadRequest)
 	}
 
+	var aB dbentities.Building
+	var aC dbentities.City
+	var aCo dbentities.Country
+	dbprovider.Conn.RDb.Where("id= ?", 1).First(&aB)
+	fmt.Println(aB)
+	dbprovider.Conn.RDb.Where("id= ?", aB.CityId).First(&aC)
+	fmt.Println(aC)
+	dbprovider.Conn.RDb.Where("id= ?", aC.CountryId).First(&aCo)
+	fmt.Println(aCo)
+
 	fmt.Println("reg request received from device -> ", regReq.Mac)
 	fmt.Println("going to check if mac present")
 	var deviceDirEntry dbentities.DeviceDirectory
@@ -29,16 +39,15 @@ func HandleDeviceRegistrationRequest(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(deviceDirEntry)
 	if regReq.Mac == deviceDirEntry.MAC {
 
-		var aCountryAssociation dbentities.Country
+		var aArea dbentities.Area
 		var registerdDevices dbentities.DeviceRegistrationDirectory
 
-		dbprovider.Conn.RDb.Where("id = ?", deviceDirEntry.CountryId).First(&aCountryAssociation)
+		dbprovider.Conn.RDb.Where("id = ?", deviceDirEntry.AreaId).First(&aArea)
 		dbprovider.Conn.RDb.Where("Device_Id = ?", deviceDirEntry.DeviceID).First(&registerdDevices)
 
-		
 		if registerdDevices.DeviceId != uuid.Nil {
-			fmt.Println(registerdDevices) 
-			response := response.DeviceRegistrationResponse{ServiceUrl: registerdDevices.ServiceUrl, ServicePort: registerdDevices.ServicePort, RegistrationStatus: 2, UniqueSystemId: registerdDevices.RegistrationId, Timezone: aCountryAssociation.TimeZone}
+			fmt.Println(registerdDevices)
+			response := response.DeviceRegistrationResponse{ServiceUrl: registerdDevices.ServiceUrl, ServicePort: registerdDevices.ServicePort, RegistrationStatus: 2, UniqueSystemId: registerdDevices.RegistrationId, Timezone: "Europe/Berlin"}
 			json, _ := json.Marshal(response)
 			w.Header().Set("content-type", "application/json")
 			w.Write(json)
@@ -48,15 +57,14 @@ func HandleDeviceRegistrationRequest(w http.ResponseWriter, r *http.Request) {
 		// add this to db and send response
 		var register dbentities.DeviceRegistrationDirectory
 		register.DeviceId = deviceDirEntry.DeviceID
-		register.CountryId = deviceDirEntry.CountryId
 		register.RegistrationId = uuid.New()
 		register.ServiceUrl = "device.dss.com"
 		register.ServicePort = "4001"
-		dbprovider.Conn.RDb.Create(&register)
+		// dbprovider.Conn.RDb.Create(&register)
 
-		fmt.Println(register) 
+		fmt.Println(register)
 
-		response := response.DeviceRegistrationResponse{ServiceUrl: register.ServiceUrl, ServicePort: registerdDevices.ServicePort, RegistrationStatus: 1, UniqueSystemId: register.RegistrationId, Timezone: aCountryAssociation.TimeZone}
+		response := response.DeviceRegistrationResponse{ServiceUrl: register.ServiceUrl, ServicePort: registerdDevices.ServicePort, RegistrationStatus: 1, UniqueSystemId: register.RegistrationId, Timezone: "Europe/Berlin"}
 		json, _ := json.Marshal(response)
 		w.Header().Set("content-type", "application/json")
 		w.Write(json)

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSE Example</title>
+</head>
+<body>
+  <div id="sseOutput"></div>
+
+  <script>
+    const eventSource = new EventSource('/events');
+
+    eventSource.onmessage = (event) => {
+      const sseOutput = document.getElementById('sseOutput');
+      sseOutput.innerHTML += `Message: ${event.data}<br>`;
+    };
+
+    eventSource.onerror = (error) => {
+      console.error('EventSource failed:', error);
+      eventSource.close();
+    };
+  </script>
+</body>
+</html>

@@ -25,10 +25,10 @@ func HandleGetPlayScheduleRequest(w http.ResponseWriter, r *http.Request) {
 	var scheAllocDir dbentities.ScheduleAllocationDirectory
 	dbprovider.Conn.RDb.Where("registration_id = ?", recvPlaySched.RegistrationId).First(&scheAllocDir)
 
-	if scheAllocDir.ScheduleId != uuid.Nil {
+	if scheAllocDir.Id != uuid.Nil {
 		fmt.Println("recived getPlaySchedule request")
 		var schedule = response.PlaySchedule{
-			ScheduleId: scheAllocDir.ScheduleId,
+			ScheduleId: scheAllocDir.Id,
 			StartDate:  scheAllocDir.StartDate,
 			EndDate:    scheAllocDir.EndDate,
 			StartTime:  scheAllocDir.StartTime,

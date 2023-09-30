@@ -39,13 +39,11 @@ func HandleAddPlayScheduleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var devDir dbentities.DeviceDirectory
-	var devRegDir dbentities.DeviceRegistrationDirectory
 	dbprovider.Conn.RDb.Where("mac = ?", addPlaySchedule.Mac).First(&devDir)
-	dbprovider.Conn.RDb.Where("device_id = ?", devDir.DeviceID).First(&devRegDir)
 
-	if devRegDir.RegistrationId != uuid.Nil {
-		schedule.ScheduleId = uuid.New()
-		schedule.RegistrationId = devRegDir.RegistrationId
+	if devDir.DeviceID != uuid.Nil {
+		schedule.Id = uuid.New()
+		schedule.DeviceId = devDir.DeviceID
 		result := dbprovider.Conn.RDb.Create(&schedule)
 		if result.Error != nil {
 			fmt.Print(result)

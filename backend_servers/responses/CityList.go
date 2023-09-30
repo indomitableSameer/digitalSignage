@@ -1,6 +1,6 @@
 package response
 
 type CityList struct {
-	Id   uint
+	Id   uint64
 	Name string
 }

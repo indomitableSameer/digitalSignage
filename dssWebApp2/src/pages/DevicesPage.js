@@ -35,11 +35,11 @@ import GetFromCloud from '../apidata/getApiCalls';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'Country', label: 'Country', alignRight: false },
-  { id: 'City', label: 'City', alignRight: false },
-  { id: 'Building', label: 'Building', alignRight: false },
-  { id: 'Area', label: 'Area', alignRight: false },
-  { id: 'Devices', label: 'Active Devices', alignRight: false },
+  { id: 'Device', label: 'Device', alignRight: false },
+  { id: 'Status', label: 'Status', alignRight: false },
+  { id: 'Content', label: 'Content', alignRight: false },
+  { id: 'Schedule', label: 'Schedule', alignRight: false },
+  { id: 'Location', label: 'Location', alignRight: false },
   { id: '' },
 ];
 
@@ -185,22 +185,19 @@ export default function DevicesPage() {
 
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
-                              <Typography variant="subtitle2" noWrap>
+                              <Typography variant="subtitle1" noWrap>
                                 {name}
                               </Typography>
                             </Stack>
                           </TableCell>
 
-                          <TableCell align="left">{company}</TableCell>
-
-                          <TableCell align="left">{role}</TableCell>
-
-                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-
                           <TableCell align="left">
-                            <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
+                            <Label color={(status === 'Offline' && 'error') || 'success'}>{sentenceCase(status)}</Label>
                           </TableCell>
+
+                          <TableCell align="left">{'TestVideoFile.mp4'}</TableCell>
+                          <TableCell align="left">{'28/09/23-22/10/23 00:00-00:00'}</TableCell>
+                          <TableCell align="left">{'F1-W1, FRA-UAS, Frankfurt, Germany'}</TableCell>
 
                           <TableCell align="right">
                             <IconButton size="large" color="inherit" onClick={handleOpenMenu}>

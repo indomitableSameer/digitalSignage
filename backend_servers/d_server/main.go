@@ -33,7 +33,7 @@ func main() {
 	multiplexer := mux.NewRouter()
 	multiplexer.HandleFunc("/status", requesthandlers.HandleStatusRequest).Methods(http.MethodPut)
 	multiplexer.HandleFunc("/content", requesthandlers.HandleContentRequest).Methods(http.MethodPost)
-	multiplexer.HandleFunc("/addDevice", requesthandlers.HandleAddDeviceRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/addLocation", requesthandlers.HandleAddLocationRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/deviceList", requesthandlers.HandleGetDeviceListRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/addContent", requesthandlers.HandleAddContentRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/getContentList", requesthandlers.HandleGetContentListRequest).Methods(http.MethodGet)
@@ -43,6 +43,7 @@ func main() {
 	multiplexer.HandleFunc("/getCityList", requesthandlers.HandleGetCityListRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/getBuildingList", requesthandlers.HandleGetBuildingListRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/getAreaList", requesthandlers.HandleGetAreaListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/getEventStream", requesthandlers.HandleEventStreamRequest).Methods(http.MethodGet)
 
 	credentials := handlers.AllowCredentials()
 	methods := handlers.AllowedMethods([]string{"GET", "PUT", "POST", "OPTIONS"})
