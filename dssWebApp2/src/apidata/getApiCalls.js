@@ -12,6 +12,7 @@ const apiEndpoints = {
   citylist: '/getCityList',
   buildinglist: '/getBuildingList',
   arealist: '/getAreaList',
+  deviceInfoList: '/getDeviceInfoList',
 };
 
 const GetFromCloud = (what) => {
@@ -33,6 +34,9 @@ const GetFromCloud = (what) => {
       break;
     case 'arealist':
       apiendoint = apiEndpoints.arealist;
+      break;
+    case 'deviceInfoList':
+      apiendoint = apiEndpoints.deviceInfoList;
       break;
     default:
       apiendoint = '';

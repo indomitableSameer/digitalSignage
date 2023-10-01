@@ -1,12 +1,10 @@
 import { Helmet } from 'react-helmet-async';
-import { faker } from '@faker-js/faker';
 import { useEffect, useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
-import GetDevices from '../apidata/devicelist';
+import GetDashboardData from '../apidata/deviceInfoList';
 // components
-import Iconify from '../components/iconify';
 // sections
 import { AppCurrentVisits, AppWidgetSummary, AppConversionRates } from '../sections/@dashboard/app';
 
@@ -14,7 +12,7 @@ import { AppCurrentVisits, AppWidgetSummary, AppConversionRates } from '../secti
 
 export default function DashboardAppPage() {
   const theme = useTheme();
-  const devicesData = GetDevices();
+  const devicesData = GetDashboardData();
   const [online, setOnline] = useState(0);
   const [offline, setOffline] = useState(0);
   const [available, setAvailable] = useState(0);
@@ -58,46 +56,6 @@ export default function DashboardAppPage() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Offline" total={offline} color="error" icon={'zondicons:location'} />
           </Grid>
-
-          {/* <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits
-              title="Website Visits"
-              subheader="(+43%) than last year"
-              chartLabels={[
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003',
-              ]}
-              chartData={[
-                {
-                  name: 'Online',
-                  type: 'column',
-                  fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-                },
-                {
-                  name: 'Offline',
-                  type: 'area',
-                  fill: 'gradient',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-                },
-                {
-                  name: 'Registered',
-                  type: 'line',
-                  fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-                },
-              ]}
-            />
-          </Grid> */}
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
