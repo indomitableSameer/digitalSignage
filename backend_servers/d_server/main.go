@@ -34,7 +34,7 @@ func main() {
 	multiplexer.HandleFunc("/statusUpdate", requesthandlers.HandleStatusUpdateRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/getContent", requesthandlers.HandleGetContentRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/addLocation", requesthandlers.HandleAddLocationRequest).Methods(http.MethodPost)
-	multiplexer.HandleFunc("/deviceList", requesthandlers.HandleGetDeviceListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/getDeviceInfoList", requesthandlers.HandleGetDeviceInfoListRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/addContent", requesthandlers.HandleAddContentRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/getContentList", requesthandlers.HandleGetContentListRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/getPlaySchedule", requesthandlers.HandleGetPlayScheduleRequest).Methods(http.MethodGet)
@@ -51,7 +51,7 @@ func main() {
 	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Authorization", "Content-Type"})
 	origins := handlers.AllowedOrigins([]string{"*"})
 	/*, "localhost", "localhost:5173", "127.0.0.1", "127.0.0.1:5173", "http://127.0.0.1", "http://127.0.0.1:5173/"*/
-	fmt.Println("taking care of cors..")
+	fmt.Println("Started server at port 8000")
 	//servererror := http.ListenAndServe(":8000", handlers.CORS(methods, origins, ttl, header)(multiplexer))
 	servererror := http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, ttl, headers)(multiplexer))
 	if servererror != nil {
