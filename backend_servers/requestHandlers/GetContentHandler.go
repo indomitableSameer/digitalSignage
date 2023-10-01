@@ -1,17 +1,18 @@
 package requesthandlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/google/uuid"
 	dbprovider "github.com/indomitableSameer/digitalSignage/backend_servers/dbProvider"
 	"github.com/indomitableSameer/digitalSignage/backend_servers/dbentities"
 	"github.com/indomitableSameer/digitalSignage/backend_servers/requests"
+	"github.com/minio/minio-go/v7"
 )
 
 func HandleGetContentRequest(w http.ResponseWriter, r *http.Request) {
@@ -37,45 +38,46 @@ func HandleGetContentRequest(w http.ResponseWriter, r *http.Request) {
 			dbprovider.Conn.RDb.Where("content_id = ?", aAllocatedContent.ContentInfoId).First(&aContentInfo)
 			if aContentInfo.ContentId != uuid.Nil && aContentInfo.FileBacketObjId != uuid.Nil {
 				// now here load fine binary form bucket and send to client
+				objectInfo, err := dbprovider.Conn.ObjDb.StatObject(context.Background(), dbprovider.BucketInfo.FileBucket, aContentInfo.FileBacketObjId.String(), minio.StatObjectOptions{})
+				if err != nil {
+					fmt.Println("getting object stat failed.", err)
+					http.Error(w, "failed to get object status.", http.StatusInternalServerError)
+					return
+				}
+
+				object, err := dbprovider.Conn.ObjDb.GetObject(context.Background(), dbprovider.BucketInfo.FileBucket, aContentInfo.FileBacketObjId.String(), minio.GetObjectOptions{})
+				if err != nil {
+					fmt.Println("retriving object failed", err)
+					http.Error(w, "failed to retrive content.", http.StatusInternalServerError)
+					return
+				}
+				defer object.Close()
+
+				//Transmit the headers
+				w.Header().Set("Expires", "0")
+				w.Header().Set("Content-Transfer-Encoding", "binary")
+				w.Header().Set("Content-Control", "private, no-transform, no-store, must-revalidate")
+				//w.Header().Set("Content-Disposition", "attachment; filename=v.mp4")
+				//w.Header().Set("Content-Type", fileType)
+				w.Header().Set("Content-Length", strconv.FormatInt(objectInfo.Size, 10))
+
+				if _, err = io.Copy(w, object); err != nil {
+					fmt.Println("failed to copy object to http reponse.", err)
+					http.Error(w, "failed to copy object to response", http.StatusInternalServerError)
+					return
+				}
+
 			} else {
+				fmt.Println("ContentInfo not found for allocated content.")
 				http.Error(w, "missing content info in backend", http.StatusInternalServerError)
 				return
 			}
 		}
 
 	} else {
+		fmt.Println("Reg id not found")
 		http.Error(w, "registration not found", http.StatusBadRequest)
 		return
 	}
-
-	// here instead of sending file directly, we will use db to read and send file.
-	updateFile, err := os.Open("/root/digitalSignage/device/v.mp4")
-	defer updateFile.Close()
-
-	if err != nil {
-		// return 404 HTTP response code for File not found
-		http.Error(w, "Update file not found.", 404)
-		return
-	}
-
-	fileHeader := make([]byte, 512)
-	updateFile.Read(fileHeader)
-	fileType := http.DetectContentType(fileHeader)
-
-	fileInfo, _ := updateFile.Stat()
-	fileSize := fileInfo.Size()
-
-	//Transmit the headers
-	w.Header().Set("Expires", "0")
-	w.Header().Set("Content-Transfer-Encoding", "binary")
-	w.Header().Set("Content-Control", "private, no-transform, no-store, must-revalidate")
-	//w.Header().Set("Content-Disposition", "attachment; filename=v.mp4")
-	w.Header().Set("Content-Type", fileType)
-	w.Header().Set("Content-Length", strconv.FormatInt(fileSize, 10))
-
-	//Send the file
-	updateFile.Seek(0, 0)  // reset back to position since we've read first 512 bytes of data previously
-	io.Copy(w, updateFile) // transmit the updatefile bytes to the client
 	return
-	//if contentReq.ID != uuid.Nil &&
 }

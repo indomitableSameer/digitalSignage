@@ -13,7 +13,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func HandleStatusRequest(w http.ResponseWriter, r *http.Request) {
+func HandleStatusUpdateRequest(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("received status update req")
 	var statusReq requests.StatusUpdateRequest
 	body, _ := io.ReadAll(r.Body)

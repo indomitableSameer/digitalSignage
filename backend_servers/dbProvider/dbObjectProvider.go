@@ -10,10 +10,16 @@ import (
 )
 
 var Conn *dbConnObj
+var BucketInfo *bucketInfo
 
 type dbConnObj struct {
 	RDb   *gorm.DB
 	ObjDb *minio.Client
+}
+
+type bucketInfo struct {
+	FileBucket      string
+	ThumbnailBucket string
 }
 
 func getDB() (*gorm.DB, error) {
@@ -49,4 +55,5 @@ func init() {
 	}
 
 	Conn = &dbConnObj{RDb: db, ObjDb: objStorage}
+	BucketInfo = &bucketInfo{FileBucket: "dss-content-video-files", ThumbnailBucket: "dss-content-thumbnail-files"}
 }
