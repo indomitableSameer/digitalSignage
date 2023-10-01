@@ -119,15 +119,6 @@ func HandleAddContentRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// this is not needed as we can put info in the rdbms
-	// var jsonData, _ = json.Marshal(contentInfo)
-	// info, errr = dbprovider.Conn.ObjDb.PutObject(context.Background(), contentInfoBucket, contentId.String(), bytes.NewReader(jsonData), int64(len(jsonData)), minio.PutObjectOptions{})
-	// if errr != nil {
-	// 	fmt.Println(err)
-	// 	http.Error(w, "Failed to make entry", http.StatusInternalServerError)
-	// 	return
-	// }
-
 	var dbContentInfo []dbentities.ContentInfo
 	res := dbprovider.Conn.RDb.Order("Created_At desc").Find(&dbContentInfo)
 

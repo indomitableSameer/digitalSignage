@@ -1,5 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
+import axios, { HttpStatusCode } from 'axios';
 import PropTypes from 'prop-types';
 // @mui
 import { Grid, FormControl, InputLabel, Select, MenuItem, TextField, Button } from '@mui/material';
@@ -10,6 +11,10 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import Autocomplete from '@mui/material/Autocomplete';
 // component
 import Iconify from '../../../components/iconify';
+
+const api = axios.create({
+  baseURL: 'http://api.dss.com:8000',
+});
 
 LocationForm.propTypes = {
   countrylist: PropTypes.array.isRequired,
@@ -49,6 +54,35 @@ export default function LocationForm({
     console.log(startdate.format('DD-MM-YYYY'));
     console.log(endtime.format('HH:mm'));
     console.log(content);
+
+    const data = {
+      Country: country.Name,
+      City: city.Name,
+      Building: building.Name,
+      Area: area.Name,
+      Mac: device,
+      StartDate: startdate.format('DD-MM-YYYY'),
+      EndDate: enddate.format('DD-MM-YYYY'),
+      StartTime: starttime.format('HH:mm'),
+      EndTime: endtime.format('HH:mm'),
+      ContentInfoId: content.Id,
+    };
+
+    console.log(data);
+    api
+      .post('/addLocation', data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        // handle the response
+        console.log(response);
+      })
+      .catch((error) => {
+        // handle errors
+        console.log(error);
+      });
   };
 
   return (

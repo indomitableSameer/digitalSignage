@@ -8,7 +8,7 @@ import (
 
 type DeviceStatusRegister struct {
 	StatusId                    uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
-	RegistrationId              uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();not null"`
+	RegistrationId              uuid.UUID `gorm:"type:uuid;unique;default:uuid_generate_v4();not null"`
 	ScheduleAllocId             uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
 	ContentAllocId              uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
 	IpAddr                      string

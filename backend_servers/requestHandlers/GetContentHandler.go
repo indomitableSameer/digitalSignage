@@ -8,22 +8,45 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/google/uuid"
 	dbprovider "github.com/indomitableSameer/digitalSignage/backend_servers/dbProvider"
 	"github.com/indomitableSameer/digitalSignage/backend_servers/dbentities"
 	"github.com/indomitableSameer/digitalSignage/backend_servers/requests"
 )
 
-func HandleContentRequest(w http.ResponseWriter, r *http.Request) {
+func HandleGetContentRequest(w http.ResponseWriter, r *http.Request) {
 	var contentReq requests.ContentRequest
 	body, _ := io.ReadAll(r.Body)
 	err := json.Unmarshal(body, &contentReq)
 	if err != nil {
 		fmt.Println("error:", err)
+		http.Error(w, "Unable to parse request", http.StatusBadRequest)
+		return
 	}
 
 	var regDev dbentities.DeviceRegistrationDirectory
-	dbprovider.Conn.RDb.Where("Registration_Id = ?", contentReq.Id).First(&regDev)
+	dbprovider.Conn.RDb.Where("Registration_Id = ?", contentReq.RegistrationId).First(&regDev)
 	fmt.Println(regDev)
+
+	if regDev.RegistrationId != uuid.Nil {
+		var aAllocatedContent dbentities.ContentAllocationDirectory
+		dbprovider.Conn.RDb.Where("device_id = ?", regDev.DeviceId).First(&aAllocatedContent)
+
+		if aAllocatedContent.Id != uuid.Nil {
+			var aContentInfo dbentities.ContentInfo
+			dbprovider.Conn.RDb.Where("content_id = ?", aAllocatedContent.ContentInfoId).First(&aContentInfo)
+			if aContentInfo.ContentId != uuid.Nil && aContentInfo.FileBacketObjId != uuid.Nil {
+				// now here load fine binary form bucket and send to client
+			} else {
+				http.Error(w, "missing content info in backend", http.StatusInternalServerError)
+				return
+			}
+		}
+
+	} else {
+		http.Error(w, "registration not found", http.StatusBadRequest)
+		return
+	}
 
 	// here instead of sending file directly, we will use db to read and send file.
 	updateFile, err := os.Open("/root/digitalSignage/device/v.mp4")
