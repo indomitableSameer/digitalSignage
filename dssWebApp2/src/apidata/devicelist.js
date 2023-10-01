@@ -15,27 +15,36 @@ function countOccurrences(jsonObj, key, value) {
   }, 0);
 }
 
-const countUniqueValues = (arr, key) => {
+const generateCountriesOverview = (arr, key) => {
   const counts = {};
-  const datamap = new Map();
 
   arr.forEach((item) => {
     const value = item[key];
     counts[value] = (counts[value] || 0) + 1;
   });
 
-  console.log(datamap);
-  return counts;
+  const overview = Object.keys(counts).map((label) => ({ label, value: counts[label] }));
+  console.log(overview);
+  return overview;
 };
 
 function genWebData(jsonObj) {
-  console.log('Data Received:', jsonObj);
+  const totalEntries = Object.keys(jsonObj).length;
+  const registerd = countOccurrences(jsonObj, 'IsRegistered', true);
+  const online = countOccurrences(jsonObj, 'IsOnline', true);
+  const offline = registerd - online;
+  const available = totalEntries - registerd;
+
+  // console.log('registerd', registerd);
+  // console.log('online', online);
+  // console.log('offline = registerd - online', offline);
+  // console.log('available = totalEntries - registerd', available);
   const dashboardData = {
-    Online: countOccurrences(jsonObj, 'Online', true),
-    Ofline: countOccurrences(jsonObj, 'Online', false),
-    Registered: countOccurrences(jsonObj, 'Registered', true),
-    Available: countOccurrences(jsonObj, 'Registered', false),
-    Countries: countUniqueValues(jsonObj, 'Location'),
+    Online: online,
+    Offline: offline,
+    Registered: registerd,
+    Available: available,
+    Countries: generateCountriesOverview(jsonObj, 'Country'),
   };
   return dashboardData;
 }
@@ -46,11 +55,10 @@ const GetDevices = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/deviceList');
+        const response = await api.get('/getDeviceInfoList');
         setData(genWebData(response.data));
       } catch (error) {
         if (error.response) {
-          console.log('Data:', error.response.data);
           console.log('Status:', error.response.status);
         } else if (error.request) {
           console.log(error.request);

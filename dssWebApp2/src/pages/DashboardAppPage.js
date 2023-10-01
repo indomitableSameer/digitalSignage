@@ -8,17 +8,7 @@ import GetDevices from '../apidata/devicelist';
 // components
 import Iconify from '../components/iconify';
 // sections
-import {
-  AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppWidgetSummary,
-  AppCurrentSubject,
-  AppConversionRates,
-} from '../sections/@dashboard/app';
+import { AppCurrentVisits, AppWidgetSummary, AppConversionRates } from '../sections/@dashboard/app';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +19,7 @@ export default function DashboardAppPage() {
   const [offline, setOffline] = useState(0);
   const [available, setAvailable] = useState(0);
   const [registered, setRegistered] = useState(0);
+  const [countriesOverview, setCountriesOverview] = useState([{}]);
 
   useEffect(() => {
     // Use devicesData as needed
@@ -38,6 +29,7 @@ export default function DashboardAppPage() {
       setOffline(devicesData.Offline);
       setRegistered(devicesData.Registered);
       setAvailable(devicesData.Available);
+      setCountriesOverview(devicesData.Countries);
     }
   }, [devicesData]);
 
@@ -111,10 +103,10 @@ export default function DashboardAppPage() {
             <AppCurrentVisits
               title="Current Status"
               chartData={[
-                { label: 'Online', value: 4344 },
-                { label: 'Registered', value: 5435 },
-                { label: 'Available', value: 1443 },
-                { label: 'Ofline', value: 4443 },
+                { label: 'Online', value: online },
+                { label: 'Registered', value: registered },
+                { label: 'Available', value: available },
+                { label: 'Offline', value: offline },
               ]}
               chartColors={[
                 theme.palette.primary.main,
@@ -126,22 +118,7 @@ export default function DashboardAppPage() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppConversionRates
-              title="Locations"
-              subheader="Devices in locations"
-              chartData={[
-                { label: 'Italy', value: 0 },
-                { label: 'Japan', value: 0 },
-                { label: 'China', value: 0 },
-                { label: 'Canada', value: 0 },
-                { label: 'France', value: 0 },
-                { label: 'Germany', value: 2 },
-                { label: 'South Korea', value: 0 },
-                { label: 'Netherlands', value: 0 },
-                { label: 'United States', value: 0 },
-                { label: 'United Kingdom', value: 0 },
-              ]}
-            />
+            <AppConversionRates title="Locations" subheader="Devices in locations" chartData={countriesOverview} />
           </Grid>
         </Grid>
       </Container>
