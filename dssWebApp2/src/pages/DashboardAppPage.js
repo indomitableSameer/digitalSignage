@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
-import GetDashboardData from '../apidata/deviceInfoList';
+import GetDashboardData from '../apidata/dashboardData';
 // components
 // sections
 import { AppCurrentVisits, AppWidgetSummary, AppConversionRates } from '../sections/@dashboard/app';
