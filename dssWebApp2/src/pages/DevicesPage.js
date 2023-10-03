@@ -21,6 +21,8 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  Dialog,
+  DialogTitle,
 } from '@mui/material';
 // components
 import Label from '../components/label';
@@ -29,8 +31,7 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { DeviceListHead, DeviceListToolbar } from '../sections/@dashboard/device';
 // mock
-import USERLIST from '../_mock/user';
-import GetFromCloud from '../apidata/getApiCalls';
+import GetDevicesData from '../apidata/devicesData';
 
 // ----------------------------------------------------------------------
 
@@ -83,12 +84,32 @@ export default function DevicesPage() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [devInfoPopup, setOpenDeviceInfoPopup] = useState(null);
+
+  const devicesData = GetDevicesData();
+  const [pageData, setPageData] = useState([{}]);
+  useEffect(() => {
+    // Use devicesData as needed
+    if (devicesData != null) {
+      console.log('DashboardAppPage: Devices Data:', devicesData);
+      setPageData(devicesData);
+    }
+  }, [devicesData]);
+
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
 
   const handleCloseMenu = () => {
     setOpen(null);
+  };
+
+  const handleOpenDevInfoPopup = (event) => {
+    setOpenDeviceInfoPopup(event.currentTarget);
+  };
+
+  const handleCloseDevInfoPopup = () => {
+    setOpenDeviceInfoPopup(null);
   };
 
   const handleRequestSort = (event, property) => {
@@ -99,7 +120,7 @@ export default function DevicesPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = pageData.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -135,9 +156,9 @@ export default function DevicesPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - pageData.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(pageData, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
@@ -167,46 +188,71 @@ export default function DevicesPage() {
                     order={order}
                     orderBy={orderBy}
                     headLabel={TABLE_HEAD}
-                    rowCount={USERLIST.length}
+                    rowCount={pageData.length}
                     numSelected={selected.length}
                     onRequestSort={handleRequestSort}
                     onSelectAllClick={handleSelectAllClick}
                   />
                   <TableBody>
-                    {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                      const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                      const selectedUser = selected.indexOf(name) !== -1;
+                    {filteredUsers != null &&
+                      filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        const {
+                          Mac,
+                          IsOnline,
+                          ContentFileName,
+                          StartDate,
+                          EndDate,
+                          StartTime,
+                          EndTime,
+                          Area,
+                          Building,
+                          City,
+                          Country,
+                        } = row;
+                        const selectedUser = selected.indexOf(Mac) !== -1;
 
-                      return (
-                        <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                          <TableCell padding="checkbox">
-                            <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
-                          </TableCell>
+                        return (
+                          <TableRow hover key={Mac} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                            <TableCell padding="checkbox">
+                              <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, Mac)} />
+                            </TableCell>
 
-                          <TableCell component="th" scope="row" padding="none">
-                            <Stack direction="row" alignItems="center" spacing={2}>
-                              <Typography variant="subtitle1" noWrap>
-                                {name}
+                            <TableCell component="th" scope="row" padding="none">
+                              <Stack direction="row" alignItems="center" spacing={2}>
+                                <Button variant="outlined" color="info" onClick={handleOpenDevInfoPopup}>
+                                  <Typography variant="subtitle1" noWrap>
+                                    {Mac}
+                                  </Typography>
+                                </Button>
+                              </Stack>
+                            </TableCell>
+
+                            <TableCell align="left">
+                              <Label color={(IsOnline === false && 'error') || 'success'}>
+                                {IsOnline ? 'Online' : 'Offline'}
+                              </Label>
+                            </TableCell>
+
+                            <TableCell align="left">{ContentFileName}</TableCell>
+                            <TableCell align="left">
+                              <Typography variant="subtitle4">
+                                {StartDate}-{EndDate}, {StartTime}-{EndTime}
                               </Typography>
-                            </Stack>
-                          </TableCell>
+                            </TableCell>
+                            <TableCell align="left">
+                              <Typography variant="subtitle4">
+                                {Area}, {Building}, {City}, {Country}
+                              </Typography>
+                            </TableCell>
 
-                          <TableCell align="left">
-                            <Label color={(status === 'Offline' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                          </TableCell>
-
-                          <TableCell align="left">{'TestVideoFile.mp4'}</TableCell>
-                          <TableCell align="left">{'28/09/23-22/10/23 00:00-00:00'}</TableCell>
-                          <TableCell align="left">{'F1-W1, FRA-UAS, Frankfurt, Germany'}</TableCell>
-
-                          <TableCell align="right">
-                            <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                              <Iconify icon={'eva:more-vertical-fill'} />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                            <TableCell align="right">
+                              <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                                <Iconify icon={'eva:more-vertical-fill'} />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     {emptyRows > 0 && (
                       <TableRow style={{ height: 53 * emptyRows }}>
                         <TableCell colSpan={6} />
@@ -239,12 +285,21 @@ export default function DevicesPage() {
                   )}
                 </Table>
               </TableContainer>
+              {/* <Dialog open={devInfoPopup} onClose={handleCloseDevInfoPopup}>
+                <DialogTitle>Device Informations</DialogTitle>
+                <Typography variant="subtitle1" noWrap>
+                  Added On : 12-02-2023
+                </Typography>
+                <Typography variant="subtitle1" noWrap>
+                  Location : abc dbb aa cc
+                </Typography>
+              </Dialog> */}
             </Scrollbar>
 
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={USERLIST.length}
+              count={pageData.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
