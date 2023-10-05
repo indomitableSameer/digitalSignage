@@ -17,6 +17,7 @@ import globalVariables as gv
 import playScheduler
 import M2Crypto
 import deviceConfigManger
+import appdb as appdb
 
 logFile = 'dss_player.log'
 log_formatter = logging.Formatter('%(asctime)s %(levelname)s %(funcName)s(%(lineno)d) %(message)s')
@@ -33,34 +34,28 @@ app_log.addHandler(my_handler)
 
 load_dotenv()
 
-def read_reg_config():
-    config = configparser.ConfigParser(interpolation=None)
-    config.read("/home/pi/digitalSignage/device/app/app.ini")
-    print(config['DEFAULT'].getboolean('Registered'))
-    #print(config['registration.server']['Url'])
-    #print(config['registration.server']['Port'])
+def appThreads():
+	player_instance = vlcplayer(app_log, "./media/video.mp4")
 
-def appThreads(config:configManager.AppConfiguration, conn:M2Crypto.httpslib.HTTPSConnection):
-	player_instance = vlcplayer(app_log, os.path.join(config.content_filepath, config.content_file))
-
+	devRegDemonThread = threading.Thread(target=deviceRegistration.registerDevice, args=(app_log,), daemon=False, name="dev registration thread")
 	mediaPlayerDemonThread = threading.Thread(target=player_instance.run, args=(), daemon=False, name="media player thread")
-	playSchedulerDemonThread = threading.Thread(target=playScheduler.maintainPlaySchedule, args=(app_log, config, conn), daemon=False, name="Schedular thread")
-	statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log, config, conn), daemon=False, name="status Thread")
+	playSchedulerDemonThread = threading.Thread(target=playScheduler.maintainPlaySchedule, args=(app_log,), daemon=False, name="Schedular thread")
+	statusDeamonThread = threading.Thread(target=statusUpdate.updateDeviceStatusToCloud, args=(app_log,), daemon=False, name="status Thread")
+	contentDeamonThread = threading.Thread(target=contentHandler.getUpdatedContent, args=(app_log,), daemon=False, name="contenthandler Thread")
 
-	#mediaPlayerDemonThread.start()
-	#playSchedulerDemonThread.start()
-	#statusDeamonThread.start()
+	devRegDemonThread.start()
+	mediaPlayerDemonThread.start()
+	playSchedulerDemonThread.start()
+	statusDeamonThread.start()
+	contentDeamonThread.start()
 
 def main():
 	app_log.info('dss node app stating..')
-	appConfig = configManager.read_config()
-	conn = secure_conn.getConnection()
-	#appThreads(appConfig, conn)
-	deviceRegistration.registerDevice(app_log, conn)
-	print(deviceRegistration.reg_state.status)
-	appConfig = configManager.read_config()
-	if deviceRegistration.reg_state.status == True:		
-		print("reg")
+	appThreads()
+	#deviceRegistration.registerDevice(app_log, conn)
+	#print(deviceRegistration.reg_state.status)
+	#appConfig = configManager.read_config()	
+	gv.registration_event.set()
 
 if __name__ == "__main__":
 	main()

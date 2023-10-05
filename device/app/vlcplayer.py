@@ -30,6 +30,7 @@ class vlcplayer():
     def run(self):
         while True:
             try:
+                self.logger.info('waiting on sehedule_active')
                 if self.is_playing != True and gv.schedule_active.wait() == True:
                     self._startplay() #uncomment to run actual
                     self.logger.info('received schedule_active event set, start playing')
