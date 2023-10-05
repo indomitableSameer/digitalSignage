@@ -60,7 +60,7 @@ func HandleGetContentRequest(w http.ResponseWriter, r *http.Request) {
 				//w.Header().Set("Content-Disposition", "attachment; filename=v.mp4")
 				//w.Header().Set("Content-Type", fileType)
 				w.Header().Set("Content-Length", strconv.FormatInt(objectInfo.Size, 10))
-
+				w.Header().Set("Content-Id", aAllocatedContent.Id.String())
 				if _, err = io.Copy(w, object); err != nil {
 					fmt.Println("failed to copy object to http reponse.", err)
 					http.Error(w, "failed to copy object to response", http.StatusInternalServerError)

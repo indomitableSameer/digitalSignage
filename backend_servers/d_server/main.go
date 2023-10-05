@@ -51,9 +51,9 @@ func main() {
 	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Authorization", "Content-Type"})
 	origins := handlers.AllowedOrigins([]string{"*"})
 	/*, "localhost", "localhost:5173", "127.0.0.1", "127.0.0.1:5173", "http://127.0.0.1", "http://127.0.0.1:5173/"*/
-	fmt.Println("Started server at port 8000")
+	fmt.Println("Started server at port 8001")
 	//servererror := http.ListenAndServe(":8000", handlers.CORS(methods, origins, ttl, header)(multiplexer))
-	servererror := http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, ttl, headers)(multiplexer))
+	servererror := http.ListenAndServe(":8001", handlers.CORS(credentials, methods, origins, ttl, headers)(multiplexer))
 	if servererror != nil {
 		fmt.Println(servererror)
 	}

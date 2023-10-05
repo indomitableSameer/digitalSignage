@@ -1,6 +1,6 @@
 server {
-        listen 4001;
-        listen [::]:4001;
+        listen 4000;
+        listen [::]:4000;
 
         #root /var/www/web.dss.com;
         #index index.html;

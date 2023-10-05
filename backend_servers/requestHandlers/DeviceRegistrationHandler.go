@@ -60,11 +60,11 @@ func HandleDeviceRegistrationRequest(w http.ResponseWriter, r *http.Request) {
 		register.RegistrationId = uuid.New()
 		register.ServiceUrl = "device.dss.com"
 		register.ServicePort = "4001"
-		// dbprovider.Conn.RDb.Create(&register)
+		dbprovider.Conn.RDb.Create(&register)
 
 		fmt.Println(register)
 
-		response := response.DeviceRegistrationResponse{ServiceUrl: register.ServiceUrl, ServicePort: registerdDevices.ServicePort, RegistrationStatus: 1, UniqueSystemId: register.RegistrationId, Timezone: "Europe/Berlin"}
+		response := response.DeviceRegistrationResponse{ServiceUrl: register.ServiceUrl, ServicePort: register.ServicePort, RegistrationStatus: 1, UniqueSystemId: register.RegistrationId, Timezone: "Europe/Berlin"}
 		json, _ := json.Marshal(response)
 		w.Header().Set("content-type", "application/json")
 		w.Write(json)

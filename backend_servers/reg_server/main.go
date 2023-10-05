@@ -24,6 +24,7 @@ func main() {
 	ttl := handlers.MaxAge(3600)
 	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Authorization", "Content-Type"})
 	origins := handlers.AllowedOrigins([]string{"*"})
+	fmt.Println("started registration server at 8000..")
 	servererror := http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, ttl, headers)(multiplexer))
 	if servererror != nil {
 		fmt.Println(servererror)
