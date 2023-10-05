@@ -35,7 +35,7 @@ app_log.addHandler(my_handler)
 load_dotenv()
 
 def appThreads():
-	player_instance = vlcplayer(app_log, "./media/video.mp4")
+	player_instance = vlcplayer(app_log, "./media/content.mp4")
 
 	devRegDemonThread = threading.Thread(target=deviceRegistration.registerDevice, args=(app_log,), daemon=False, name="dev registration thread")
 	mediaPlayerDemonThread = threading.Thread(target=player_instance.run, args=(), daemon=False, name="media player thread")

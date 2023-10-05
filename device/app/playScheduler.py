@@ -16,19 +16,30 @@ _end_time = datetime.strptime("00:00", "%H:%M").time()
 def maintainPlaySchedule(log:logging):
     while True:
         try:
-            if gv.play_sched_event.wait() == True:
+            log.info("waiting on play_schedule_event for 30 sec..")
+            if gv.play_sched_event.wait(30) == True:
                 _getScheduleFromServer(log)
-                if date.today() >=  _start_date or date.today() <= _end_date:
-                    if datetime.now().time() >= _start_time and datetime.now().time() <= _end_time:
-                        log.info("setting schedule active event..")
-                        gv.schedule_active.set()
-                    else:
-                        log.info("clearing schedule inactive event..")
-                        gv.schedule_active.clear()
+                gv.play_sched_event.clear()
+            
+            log.info("checking play schedule in db..")
+            sched_details = appdb.getPlayScheduleFromDb()
+            global _start_date, _start_time
+            global _end_date, _end_time
+            log.info("found schedule in db " + sched_details.start_date +"-"+ sched_details.end_date +", "+ sched_details.start_time +"-"+ sched_details.end_time)
+            _start_date = datetime.strptime(sched_details.start_date, "%d-%m-%Y").date()
+            _end_date = datetime.strptime(sched_details.end_date, "%d-%m-%Y").date()
+            _start_time = datetime.strptime(sched_details.start_time, "%H:%M").time()
+            _end_time = datetime.strptime(sched_details.end_time, "%H:%M").time()
+            if date.today() >=  _start_date or date.today() <= _end_date:
+                if datetime.now().time() >= _start_time and datetime.now().time() <= _end_time:
+                    log.info("setting schedule active event..")
+                    gv.schedule_active.set()
                 else:
                     log.info("clearing schedule inactive event..")
                     gv.schedule_active.clear()
-            gv.play_sched_event.clear()
+            else:
+                log.info("clearing schedule inactive event..")
+                gv.schedule_active.clear()
         except Exception as e:
             log.error(e)
             gv.play_sched_event.clear()

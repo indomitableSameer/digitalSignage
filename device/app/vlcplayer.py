@@ -1,6 +1,7 @@
 # importing time and vlc
 import vlc, time
 import globalVariables as gv
+import os
 
 class vlcplayer():
     def __init__(self, logger, media_file):
@@ -28,13 +29,19 @@ class vlcplayer():
         self.player.stop()
 
     def run(self):
+        isContentRequestRunning = False
         while True:
             try:
-                self.logger.info('waiting on sehedule_active')
-                if self.is_playing != True and gv.schedule_active.wait() == True:
-                    self._startplay() #uncomment to run actual
-                    self.logger.info('received schedule_active event set, start playing')
-                    self.is_playing = True
+                if self.is_playing != True and isContentRequestRunning != True and gv.schedule_active.wait() == True:
+                    if self._checkFileExistance() == True:
+                        self._startplay() #uncomment to run actual
+                        self.logger.info('received schedule_active event set, start playing')
+                        self.is_playing = True
+                        isContentRequestRunning = False
+                    else:
+                        self.logger.info('content file now found, setting content event..')
+                        gv.content_event.set()
+                        isContentRequestRunning = True
                 elif gv.schedule_active.is_set() != True:
                     self._stopplay()
                     self.logger.info('received schedule_active event cleared, stoping playing..')
@@ -42,3 +49,11 @@ class vlcplayer():
             except Exception as e:
                 self.logger.info(e)
                 time.sleep(30)
+    
+    def _checkFileExistance(self):
+        if os.path.exists(self.media_file) == True and os.path.getsize(self.media_file) != 0 :
+            return True
+        else:
+            return False
+
+

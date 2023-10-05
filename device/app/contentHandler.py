@@ -6,7 +6,7 @@ import secure_conn as secure_conn
 from httpStatus import HttpStatus
 import globalVariables as gv
 
-FILE_PATH = "./media/video.mp4"
+FILE_PATH = "./media/content.mp4"
 
 def getUpdatedContent(log:logging):
     while True:
@@ -46,7 +46,7 @@ def getUpdatedContent(log:logging):
                     log.info("header file size :" + str(contentLen))
                     log.info("content id : "+ contentId)
                     connection.close()
-                    appdb.InsertOrUpdateContentInfoInDb(contentinfo_details.id, contentId, "video.mp4", FILE_PATH, "mp4")
+                    appdb.InsertOrUpdateContentInfoInDb(contentinfo_details.id, contentId, "content.mp4", FILE_PATH, "mp4")
                 log.info("clearing content_event..")
                 gv.content_event.clear()
         except Exception as e:
