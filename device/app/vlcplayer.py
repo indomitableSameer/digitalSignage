@@ -33,7 +33,7 @@ class vlcplayer():
     def run(self):
         while True:
             try:
-                if self.is_playing != True and gv.schedule_active.wait() == True:
+                if self.is_playing != True and gv.content_event.is_set() != True and gv.schedule_active.wait() == True:
                     if self._checkFileExistance() == True:
                         self._startplay()  # uncomment to run actual
                         self.logger.info(
@@ -41,7 +41,7 @@ class vlcplayer():
                         self.is_playing = True
                     else:
                         self.logger.info(
-                            'content file now found, setting content event..')
+                            'content file not found, setting content event..')
                         gv.content_event.set()
                 elif gv.schedule_active.is_set() != True:
                     self._stopplay()
