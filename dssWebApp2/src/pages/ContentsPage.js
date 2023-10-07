@@ -8,7 +8,6 @@ import { ContentList, ContentForm } from '../sections/@dashboard/contents';
 import GetFromCloud from '../apidata/getApiCalls';
 
 // ----------------------------------------------------------------------
-
 export default function ContentsPage() {
   const contentListData = GetFromCloud('contentlist');
   const [content, setContent] = useState([]);
@@ -22,7 +21,7 @@ export default function ContentsPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Content | Minimal UI </title>
+        <title> Dashboard: Content | DSS </title>
       </Helmet>
 
       <Container>

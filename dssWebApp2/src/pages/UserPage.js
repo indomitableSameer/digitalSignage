@@ -156,7 +156,7 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> Locations | Minimal UI </title>
+        <title> Locations | DSS </title>
       </Helmet>
 
       <Container>

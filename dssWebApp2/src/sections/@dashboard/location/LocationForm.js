@@ -13,7 +13,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Iconify from '../../../components/iconify';
 
 const api = axios.create({
-  baseURL: 'http://api.dss.com:8000',
+  baseURL: 'http://api.dss.com:8001',
 });
 
 LocationForm.propTypes = {
@@ -56,10 +56,10 @@ export default function LocationForm({
     console.log(content);
 
     const data = {
-      Country: country.Name,
-      City: city.Name,
-      Building: building.Name,
-      Area: area.Name,
+      Country: country,
+      City: city,
+      Building: building,
+      Area: area,
       Mac: device,
       StartDate: startdate.format('DD-MM-YYYY'),
       EndDate: enddate.format('DD-MM-YYYY'),
@@ -91,9 +91,7 @@ export default function LocationForm({
         <Grid item xs={2} sm={3} ms={5}>
           <Autocomplete
             id="country"
-            options={countrylist}
-            getOptionLabel={(option) => option.Name}
-            value={country}
+            options={countrylist.map((option) => option.Name)}
             onChange={(event, newValue) => {
               setCountry(newValue);
             }}
@@ -105,9 +103,7 @@ export default function LocationForm({
           <Autocomplete
             id="city"
             freeSolo
-            options={citylist}
-            getOptionLabel={(option) => option.Name}
-            value={city}
+            options={citylist.map((option) => option.Name)}
             onChange={(event, newValue) => {
               setCity(newValue);
             }}
@@ -122,9 +118,7 @@ export default function LocationForm({
           <Autocomplete
             id="building"
             freeSolo
-            options={buildinglist}
-            getOptionLabel={(option) => option.Name}
-            value={building}
+            options={buildinglist.map((option) => option.Name)}
             onChange={(event, newValue) => {
               setBuilding(newValue);
             }}
@@ -139,9 +133,7 @@ export default function LocationForm({
           <Autocomplete
             id="area"
             freeSolo
-            options={arealist}
-            getOptionLabel={(option) => option.Name}
-            value={area}
+            options={arealist.map((option) => option.Name)}
             onChange={(event, newValue) => {
               setArea(newValue);
             }}

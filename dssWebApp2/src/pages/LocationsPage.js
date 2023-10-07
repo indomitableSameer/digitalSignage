@@ -29,7 +29,6 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { LocationForm, LocationListHead, LocationListToolbar } from '../sections/@dashboard/location';
 // mock
-import USERLIST from '../_mock/user';
 import GetFromCloud from '../apidata/getApiCalls';
 
 // ----------------------------------------------------------------------
@@ -69,7 +68,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_loc) => _loc.country.toString().toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -86,7 +85,7 @@ export default function LocationsPage() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('country');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -95,7 +94,9 @@ export default function LocationsPage() {
   const cityListData = GetFromCloud('citylist');
   const buildingListData = GetFromCloud('buildinglist');
   const areaListData = GetFromCloud('arealist');
-  const deviceListData = GetFromCloud('devicelist');
+  const deviceListData = GetFromCloud('deviceInfoList');
+
+  const [locationListingData, setlocationListingData] = useState([]);
 
   useEffect(() => {
     // TODO : there check the if condition
@@ -115,7 +116,7 @@ export default function LocationsPage() {
       setAreaList(areaListData);
     }
     if (deviceListData != null) {
-      setDeviceList(deviceListData);
+      setlocationListingData(deviceListData);
     }
   }, [
     contentListData,
@@ -148,7 +149,7 @@ export default function LocationsPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = locationListingData.map((n) => n.country);
       setSelected(newSelecteds);
       return;
     }
@@ -184,16 +185,16 @@ export default function LocationsPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - locationListingData.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(locationListingData, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
   return (
     <>
       <Helmet>
-        <title> Locations | Minimal UI </title>
+        <title> Locations | DSS </title>
       </Helmet>
 
       <Container>
@@ -227,49 +228,47 @@ export default function LocationsPage() {
                     order={order}
                     orderBy={orderBy}
                     headLabel={TABLE_HEAD}
-                    rowCount={USERLIST.length}
+                    rowCount={locationListingData.length}
                     numSelected={selected.length}
                     onRequestSort={handleRequestSort}
                     onSelectAllClick={handleSelectAllClick}
                   />
                   <TableBody>
-                    {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                      const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                      const selectedUser = selected.indexOf(name) !== -1;
+                    {filteredUsers != null &&
+                      filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        const { Mac, Area, Building, City, Country } = row;
+                        const selectedUser = selected.indexOf(Country) !== -1;
 
-                      return (
-                        <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                          <TableCell padding="checkbox">
-                            <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
-                          </TableCell>
+                        return (
+                          <TableRow hover key={Mac} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                            <TableCell padding="checkbox">
+                              <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, Country)} />
+                            </TableCell>
 
-                          <TableCell component="th" scope="row" padding="none">
-                            <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
-                              <Typography variant="subtitle2" noWrap>
-                                {name}
-                              </Typography>
-                            </Stack>
-                          </TableCell>
+                            <TableCell component="th" scope="row" padding="none">
+                              <Stack direction="row" alignItems="center" spacing={2}>
+                                <Typography variant="subtitle2" noWrap>
+                                  {Country}
+                                </Typography>
+                              </Stack>
+                            </TableCell>
 
-                          <TableCell align="left">{company}</TableCell>
+                            <TableCell align="left">{City}</TableCell>
 
-                          <TableCell align="left">{role}</TableCell>
+                            <TableCell align="left">{Building}</TableCell>
 
-                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                            <TableCell align="left">{Area}</TableCell>
 
-                          <TableCell align="left">
-                            <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                          </TableCell>
+                            <TableCell align="left">{Mac}</TableCell>
 
-                          <TableCell align="right">
-                            <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                              <Iconify icon={'eva:more-vertical-fill'} />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                            <TableCell align="right">
+                              <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                                <Iconify icon={'eva:more-vertical-fill'} />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     {emptyRows > 0 && (
                       <TableRow style={{ height: 53 * emptyRows }}>
                         <TableCell colSpan={6} />
@@ -307,7 +306,7 @@ export default function LocationsPage() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={USERLIST.length}
+              count={locationListingData.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

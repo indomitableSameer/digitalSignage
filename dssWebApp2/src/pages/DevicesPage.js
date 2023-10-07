@@ -2,6 +2,8 @@ import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import { styled } from '@mui/material/styles';
 // @mui
 import {
   Card,
@@ -23,6 +25,8 @@ import {
   TablePagination,
   Dialog,
   DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 // components
 import Label from '../components/label';
@@ -75,6 +79,15 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(2),
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1),
+  },
+}));
+
 export default function DevicesPage() {
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
@@ -87,7 +100,7 @@ export default function DevicesPage() {
   const [devInfoPopup, setOpenDeviceInfoPopup] = useState(null);
 
   const devicesData = GetDevicesData();
-  const [pageData, setPageData] = useState([{}]);
+  const [pageData, setPageData] = useState([]);
   useEffect(() => {
     // Use devicesData as needed
     if (devicesData != null) {
@@ -165,7 +178,7 @@ export default function DevicesPage() {
   return (
     <>
       <Helmet>
-        <title> Devices | Minimal UI </title>
+        <title> Devices | DSS </title>
       </Helmet>
 
       <Container>
@@ -308,6 +321,38 @@ export default function DevicesPage() {
           </Card>
         </Stack>
       </Container>
+
+      <BootstrapDialog onClose={handleCloseDevInfoPopup} aria-labelledby="customized-dialog-title" open={devInfoPopup}>
+        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+          Device Info
+        </DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseDevInfoPopup}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        <DialogContent dividers>
+          <Typography gutterBottom>MAC : AB:AC:AD:AE:AF</Typography>
+          <Typography gutterBottom>Added On : 23-01-2023 00:00</Typography>
+          <Typography gutterBottom>Registered On : 24-01-2023 10:00</Typography>
+          <Typography gutterBottom>Last Status updated : 23-01-2023 00:00</Typography>
+          <Typography gutterBottom>Device OS : Linux6.1.21-v8+</Typography>
+          <Typography gutterBottom>Device App Version : 1.1</Typography>
+          <Typography gutterBottom>Device Ip : 127.0.0.1</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleCloseDevInfoPopup}>
+            Ok
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
 
       <Popover
         open={Boolean(open)}

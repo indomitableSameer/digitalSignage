@@ -1,18 +1,23 @@
 import { useState } from 'react';
-import axios, { HttpStatusCode } from 'axios';
+import axios from 'axios';
 // @mui
-import { Grid, FormControl, TextField, Button, Card } from '@mui/material';
+import { Grid, FormControl, TextField, Button, LinearProgress } from '@mui/material';
 // component
 import Iconify from '../../../components/iconify';
 
 const api = axios.create({
-  baseURL: 'http://api.dss.com:8000',
+  baseURL: 'http://api.dss.com:8001',
 });
 
 export default function ContentForm() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [file, setFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -26,14 +31,18 @@ export default function ContentForm() {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        onUploadProgress: (progressEvent) => {
+          const progress = (progressEvent.loaded / progressEvent.total) * 100;
+          setUploadProgress(progress);
+        },
       })
       .then((response) => {
-        // handle the response
-        console.log(response);
+        console.log('Upload successful:', response.data);
+        setUploadProgress(0); // Reset progress after successful upload
       })
       .catch((error) => {
-        // handle errors
-        console.log(error);
+        console.error('Error uploading file:', error);
+        setUploadProgress(0); // Reset progress on error
       });
   };
 
@@ -71,7 +80,7 @@ export default function ContentForm() {
             }}
           >
             select file
-            <input type="file" hidden />
+            <input type="file" hidden onChange={handleFileChange} />
           </Button>
         </Grid>
 
@@ -87,6 +96,7 @@ export default function ContentForm() {
           </Button>
         </Grid>
       </Grid>
+      {uploadProgress > 0 && <LinearProgress variant="determinate" value={uploadProgress} />}
     </FormControl>
   );
 }

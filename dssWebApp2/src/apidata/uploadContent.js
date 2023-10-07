@@ -2,7 +2,7 @@ import axios, { HttpStatusCode } from 'axios';
 import { useEffect, useState } from 'react';
 
 const api = axios.create({
-  baseURL: 'http://api.dss.com:8000',
+  baseURL: 'http://api.dss.com:8001',
 });
 
 const UploadContent = (file, name, description) => {

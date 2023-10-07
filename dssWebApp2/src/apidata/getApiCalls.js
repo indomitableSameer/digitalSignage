@@ -3,7 +3,7 @@ import { map } from 'lodash';
 import { useEffect, useState } from 'react';
 
 const api = axios.create({
-  baseURL: 'http://api.dss.com:8000',
+  baseURL: 'http://api.dss.com:8001',
 });
 
 const apiEndpoints = {

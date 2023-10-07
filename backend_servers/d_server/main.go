@@ -31,6 +31,7 @@ func main() {
 	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceStatusRegister{})
 
 	multiplexer := mux.NewRouter()
+	multiplexer.HandleFunc("/removeContent", requesthandlers.HandleRemoveContentRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/statusUpdate", requesthandlers.HandleStatusUpdateRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/getContent", requesthandlers.HandleGetContentRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/addLocation", requesthandlers.HandleAddLocationRequest).Methods(http.MethodPost)
