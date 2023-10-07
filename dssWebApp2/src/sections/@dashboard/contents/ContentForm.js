@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
 // @mui
 import { Grid, FormControl, TextField, Button, LinearProgress } from '@mui/material';
 // component
 import Iconify from '../../../components/iconify';
+import UpdateContentContext from './UpdateContentContext';
 
 const api = axios.create({
   baseURL: 'http://api.dss.com:8001',
 });
 
 export default function ContentForm() {
+  const triggerUpdate = useContext(UpdateContentContext);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [file, setFile] = useState(null);
@@ -39,6 +41,7 @@ export default function ContentForm() {
       .then((response) => {
         console.log('Upload successful:', response.data);
         setUploadProgress(0); // Reset progress after successful upload
+        triggerUpdate();
       })
       .catch((error) => {
         console.error('Error uploading file:', error);

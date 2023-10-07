@@ -1,23 +1,13 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
 // @mui
 import { Container, Card, Stack, Typography } from '@mui/material';
 // components
 import { ContentList, ContentForm } from '../sections/@dashboard/contents';
 // mock
-import GetFromCloud from '../apidata/getApiCalls';
+import { ContentUpdateProvider } from '../sections/@dashboard/contents/UpdateContentContext';
 
 // ----------------------------------------------------------------------
 export default function ContentsPage() {
-  const contentListData = GetFromCloud('contentlist');
-  const [content, setContent] = useState([]);
-  useEffect(() => {
-    if (contentListData != null) {
-      console.log('ContentsPage:Devices Data:', contentListData);
-      setContent(contentListData);
-    }
-  }, [contentListData, content]);
-
   return (
     <>
       <Helmet>
@@ -31,12 +21,14 @@ export default function ContentsPage() {
           </Typography>
         </Stack>
         <Stack spacing={1}>
-          <Card>
-            <ContentForm />
-          </Card>
-          <Card>
-            <ContentList content={content} />
-          </Card>
+          <ContentUpdateProvider>
+            <Card>
+              <ContentForm />
+            </Card>
+            <Card>
+              <ContentList />
+            </Card>
+          </ContentUpdateProvider>
         </Stack>
       </Container>
     </>
