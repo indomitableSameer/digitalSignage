@@ -29,7 +29,7 @@ def updateDeviceStatusToCloud(log:logging):
                 content_info = appdb.getContentInfoFromDb()
 
                 if reg_detail.reg_id != None:
-                    log.info("registration id found in db" + reg_detail.reg_id)
+                    log.info("registration id found in db->" + reg_detail.reg_id)
                     connection = secure_conn.getConnection(conn_details.service_url, int(conn_details.service_port))
                     connection.connect()
                     msg = json.dumps(StatusUpdateRequest(reg_detail.reg_id, play_sched.schedule_id, content_info.content_id).__dict__)
@@ -44,6 +44,13 @@ def updateDeviceStatusToCloud(log:logging):
                         gv.content_event.set()
                     elif response.status == HttpStatus.OK:
                         log.info("status updated sucessfully. next update after 30 sec")
+                        gv.play_sched_event.set()
+                    else:
+                        log.info("failed to update status..")
+                        gv.status_update_event.clear()
+                        gv.play_sched_event.clear()
+                        gv.schedule_active.clear()
+                        gv.registration_event.set() 
                     connection.close()
                     time.sleep(30)
                     

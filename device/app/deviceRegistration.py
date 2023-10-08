@@ -46,15 +46,16 @@ def registerDevice(log:logging):
                         appdb.InsertOrUpdateDeviceInfoInDb(device_info.id, timzone)
                         appdb.InsertOrUpdateRegDetailsInDb(reg_details.id, reg_id)
                         appdb.InsertOrUpdateConnDetailsInDb(conn_details.id, conn_details.registration_url, conn_details.registration_port, service_url, service_port)
+                        gv.registration_event.clear() # clear event as we are done with reg
+                        gv.status_update_event.set() # clear event as we are done with reg
                     
                     log.info("closing connection..")
                     connection.close()
-                    gv.registration_event.clear() # clear event as we are done with reg
-                    gv.status_update_event.set() # after successfull reg, time for status update.
                 else:
-                    log.info("registration request failed.", response.status)
-                    log.info("reason: ", response.reason)
+                    log.info("registration request failed." + str(response.status))
+                    log.info("reason: " + response.reason)
                     connection.close()
+                    time.sleep(30)
         except Exception as e:
             log.error(e)
             time.sleep(300)

@@ -16,8 +16,8 @@ _end_time = datetime.strptime("00:00", "%H:%M").time()
 def maintainPlaySchedule(log:logging):
     while True:
         try:
-            log.info("waiting on play_schedule_event for 30 sec..")
-            if gv.play_sched_event.wait(30) == True:
+            log.info("waiting on play_schedule_event..")
+            if gv.play_sched_event.wait() == True:
                 _getScheduleFromServer(log)
                 gv.play_sched_event.clear()
             
@@ -40,9 +40,11 @@ def maintainPlaySchedule(log:logging):
             else:
                 log.info("clearing schedule inactive event..")
                 gv.schedule_active.clear()
+            time.sleep(60)
         except Exception as e:
             log.error(e)
             gv.play_sched_event.clear()
+            time.sleep(60)
 
 def _getScheduleFromServer(log:logging):
     global _start_date, _start_time
