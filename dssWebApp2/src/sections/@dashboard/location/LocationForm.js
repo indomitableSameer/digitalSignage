@@ -71,7 +71,7 @@ export default function LocationForm() {
         }
       }
     };
-    console.log('called');
+    console.log('called sync location form page');
     fetchData();
   }, [triggerUpdate]);
 

@@ -85,7 +85,7 @@ export default function LocationList() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [locationListingData, setlocationListingData] = useState([{}]);
+  const [locationListingData, setlocationListingData] = useState([]);
   const triggerUpdate = useContext(UpdateLocationContext);
 
   // -----Api and Update Calls-----------------------------------
@@ -95,6 +95,8 @@ export default function LocationList() {
         const getLocationList = await api.get('/getDeviceInfoList');
         if (getLocationList.data != null) {
           setlocationListingData(getLocationList.data);
+        } else {
+          setlocationListingData([]);
         }
       } catch (error) {
         if (error.response) {
@@ -112,6 +114,7 @@ export default function LocationList() {
 
   // -----Functions-----------------------------------
   const handleOpenMenu = (mac) => (event) => {
+    console.log('handleOpenMenu called');
     const customEventData = {
       Mac: mac,
     };
@@ -153,8 +156,24 @@ export default function LocationList() {
     setSelected(newSelected);
   };
 
-  const handleLocationDelete = (mac) => (event, newPage) => {
-    console.log(mac);
+  const handleLocationDelete = async (event, newPage) => {
+    const data = { DeviceId: open.customData.Mac };
+    try {
+      const response = await api.post('/removeLocation', data, { headers: { 'Content-Type': 'application/json' } });
+      if (response.status === 200) {
+        handleCloseMenu();
+        triggerUpdate();
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log('Data:', error.response.data);
+        console.log('Status:', error.response.status);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log('Error:', error.message);
+      }
+    }
   };
 
   const handleLocationEdit = (mac) => (event, newPage) => {
@@ -293,12 +312,12 @@ export default function LocationList() {
           },
         }}
       >
-        <MenuItem onClick={handleLocationEdit(open && open.customData.Mac)}>
+        <MenuItem onClick={handleLocationEdit}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
-        <MenuItem sx={{ color: 'error.main' }} onClick={handleLocationDelete(open && open.customData.Mac)}>
+        <MenuItem sx={{ color: 'error.main' }} onClick={handleLocationDelete}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Delete
         </MenuItem>

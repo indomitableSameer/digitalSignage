@@ -18,7 +18,11 @@ export default function ContentList() {
     const fetchData = async () => {
       try {
         const response = await api.get('/getContentList');
-        setContent(response.data);
+        if (response.data != null) {
+          setContent(response.data);
+        } else {
+          setContent([]);
+        }
       } catch (error) {
         if (error.response) {
           console.log('Data:', error.response.data);
@@ -35,6 +39,7 @@ export default function ContentList() {
   }, [triggerUpdate]);
 
   const handleRemoveButton = async (data) => {
+    console.log('handleRemoveButton of content list got called');
     const response = await api.post('/removeContent', data, { headers: { 'Content-Type': 'application/json' } });
     console.log(response);
     triggerUpdate();
