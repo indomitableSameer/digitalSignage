@@ -1,4 +1,4 @@
-import axios, { HttpStatusCode } from 'axios';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 const api = axios.create({

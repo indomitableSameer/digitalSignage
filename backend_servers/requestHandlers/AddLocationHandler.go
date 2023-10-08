@@ -29,51 +29,51 @@ func HandleAddLocationRequest(w http.ResponseWriter, r *http.Request) {
 	if aCountryList.Name == addLocReq.Country {
 
 		var aCity dbentities.City
-		dbprovider.Conn.RDb.Where("name = ?", addLocReq.City).First(&aCity)
-		if aCity.Id <= 0 && len(addLocReq.City) > 0 {
-			aCity.Name = addLocReq.City
-			aCity.CountryId = aCountryList.Id
-			result := dbprovider.Conn.RDb.Create(&aCity)
-			if result.Error != nil {
-				http.Error(w, "somthing went wrong when adding city", http.StatusInternalServerError)
-				return
-			}
-			// after adding read, so that for next we can have ids
+		if len(addLocReq.City) > 0 {
 			dbprovider.Conn.RDb.Where("name = ?", addLocReq.City).First(&aCity)
+			if aCity.Id <= 0 {
+				result := dbprovider.Conn.RDb.Create(&dbentities.City{Name: addLocReq.City, CountryId: aCountryList.Id})
+				if result.Error != nil {
+					http.Error(w, "somthing went wrong when adding city", http.StatusInternalServerError)
+					return
+				}
+				// after adding read, so that for next we can have ids
+				dbprovider.Conn.RDb.Where("name = ?", addLocReq.City).First(&aCity)
+			}
 		} else {
 			http.Error(w, "city info is null", http.StatusBadRequest)
 			return
 		}
 
 		var aBuilding dbentities.Building
-		dbprovider.Conn.RDb.Where("name = ?", addLocReq.Building).First(&aBuilding)
-		if aBuilding.Id <= 0 && len(addLocReq.Building) > 0 {
-			aBuilding.Name = addLocReq.Building
-			aBuilding.CityId = aCity.Id
-			result := dbprovider.Conn.RDb.Create(&aBuilding)
-			if result.Error != nil {
-				http.Error(w, "somthing went wrong when adding building", http.StatusInternalServerError)
-				return
-			}
-			// after adding read, so that for next we can have ids
+		if len(addLocReq.Building) > 0 {
 			dbprovider.Conn.RDb.Where("name = ?", addLocReq.Building).First(&aBuilding)
+			if aBuilding.Id <= 0 {
+				result := dbprovider.Conn.RDb.Create(&dbentities.Building{Name: addLocReq.Building, CityId: aCity.Id})
+				if result.Error != nil {
+					http.Error(w, "somthing went wrong when adding building", http.StatusInternalServerError)
+					return
+				}
+				// after adding read, so that for next we can have ids
+				dbprovider.Conn.RDb.Where("name = ?", addLocReq.Building).First(&aBuilding)
+			}
 		} else {
 			http.Error(w, "Building info is null", http.StatusBadRequest)
 			return
 		}
 
 		var aArea dbentities.Area
-		dbprovider.Conn.RDb.Where("name = ?", addLocReq.Area).First(&aArea)
-		if aArea.Id <= 0 && len(addLocReq.Area) > 0 {
-			aArea.Name = addLocReq.Area
-			aArea.BuildingId = aBuilding.Id
-			result := dbprovider.Conn.RDb.Create(&aArea)
-			if result.Error != nil {
-				http.Error(w, "somthing went wrong when adding building", http.StatusInternalServerError)
-				return
-			}
-			// after adding read, so that for next we can have ids
+		if len(addLocReq.Area) > 0 {
 			dbprovider.Conn.RDb.Where("name = ?", addLocReq.Area).First(&aArea)
+			if aArea.Id <= 0 {
+				result := dbprovider.Conn.RDb.Create(&dbentities.Area{Name: addLocReq.Area, BuildingId: aBuilding.Id})
+				if result.Error != nil {
+					http.Error(w, "somthing went wrong when adding building", http.StatusInternalServerError)
+					return
+				}
+				// after adding read, so that for next we can have ids
+				dbprovider.Conn.RDb.Where("name = ?", addLocReq.Area).First(&aArea)
+			}
 		} else {
 			http.Error(w, "Area info is null", http.StatusBadRequest)
 			return

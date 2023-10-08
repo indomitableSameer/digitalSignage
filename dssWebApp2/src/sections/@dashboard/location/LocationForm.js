@@ -1,9 +1,8 @@
-import dayjs, { Dayjs } from 'dayjs';
-import { useState } from 'react';
-import axios, { HttpStatusCode } from 'axios';
-import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
+import { useState, useContext, useEffect } from 'react';
+import axios from 'axios';
 // @mui
-import { Grid, FormControl, InputLabel, Select, MenuItem, TextField, Button } from '@mui/material';
+import { Grid, FormControl, TextField, Button } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -11,29 +10,20 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import Autocomplete from '@mui/material/Autocomplete';
 // component
 import Iconify from '../../../components/iconify';
+import UpdateLocationContext from './UpdateLocationContext';
 
 const api = axios.create({
   baseURL: 'http://api.dss.com:8001',
 });
 
-LocationForm.propTypes = {
-  countrylist: PropTypes.array.isRequired,
-  citylist: PropTypes.array.isRequired,
-  buildinglist: PropTypes.array.isRequired,
-  arealist: PropTypes.array.isRequired,
-  devicelist: PropTypes.array.isRequired,
-  contentlist: PropTypes.array.isRequired,
-};
+export default function LocationForm() {
+  const [countrylist, setCountryList] = useState([]);
+  const [citylist, setCityList] = useState([]);
+  const [buildinglist, setBuildingList] = useState([]);
+  const [arealist, setAreaList] = useState([]);
+  const [devicelist, setDeviceList] = useState([]);
+  const [contentlist, setContentList] = useState([]);
 
-export default function LocationForm({
-  countrylist,
-  citylist,
-  buildinglist,
-  arealist,
-  devicelist,
-  contentlist,
-  ...other
-}) {
   const [country, setCountry] = useState();
   const [city, setCity] = useState();
   const [building, setBuilding] = useState();
@@ -44,6 +34,46 @@ export default function LocationForm({
   const [starttime, setStartTime] = useState(dayjs('2022-04-17T00:00'));
   const [endtime, setEndTime] = useState(dayjs('2022-04-17T00:00'));
   const [content, setContent] = useState();
+
+  const triggerUpdate = useContext(UpdateLocationContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const getCountry = await api.get('/getCountryList');
+        if (getCountry.data != null) {
+          setCountryList(getCountry.data);
+        }
+        const getCity = await api.get('/getCityList');
+        if (getCity.data != null) {
+          setCityList(getCity.data);
+        }
+        const getBuilding = await api.get('/getBuildingList');
+        if (getBuilding.data != null) {
+          setBuildingList(getBuilding.data);
+        }
+        const getArea = await api.get('/getAreaList');
+        if (getArea.data != null) {
+          setAreaList(getArea.data);
+        }
+        const getContent = await api.get('/getContentList');
+        if (getContent.data != null) {
+          setContentList(getContent.data);
+        }
+      } catch (error) {
+        if (error.response) {
+          console.log('Data:', error.response.data);
+          console.log('Status:', error.response.status);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error:', error.message);
+        }
+      }
+    };
+    console.log('called');
+    fetchData();
+  }, [triggerUpdate]);
 
   const handleSubmit = async () => {
     console.log(country);
@@ -78,6 +108,7 @@ export default function LocationForm({
       .then((response) => {
         // handle the response
         console.log(response);
+        triggerUpdate();
       })
       .catch((error) => {
         // handle errors

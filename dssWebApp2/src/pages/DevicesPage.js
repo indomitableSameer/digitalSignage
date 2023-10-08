@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
@@ -10,7 +9,6 @@ import {
   Table,
   Stack,
   Paper,
-  Avatar,
   Button,
   Popover,
   Checkbox,
