@@ -19,7 +19,7 @@ class vlcplayer():
     def _setup(self):
         self.logger.info('setting up media to player..')
         media = self.vlc_instance.media_new(self.media_file)
-        self.vlc_instance.vlm_set_loop('vv', True)
+        self.vlc_instance.vlm_set_loop("Content", True)
         self.player.set_media(media)
         self.logger.info('ready to play..')
 

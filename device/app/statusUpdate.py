@@ -44,10 +44,12 @@ def updateDeviceStatusToCloud(log:logging):
                         gv.content_event.set()
                     elif response.status == HttpStatus.OK:
                         log.info("status updated sucessfully. next update after 30 sec")
-                    else:
-                        log.info("failed to update status")
-                        gv.registration_event.set() 
                         gv.play_sched_event.set()
+                    else:
+                        log.info("failed to update status..")
+                        gv.status_update_event.clear()
+                        gv.registration_event.set() 
+                        # gv.play_sched_event.set()
                         gv.schedule_active.clear()
                     connection.close()
                     time.sleep(30)
