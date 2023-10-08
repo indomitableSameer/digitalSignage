@@ -14,21 +14,27 @@ class vlcplayer():
         self.vlc_instance = vlc.Instance("--aout=adummy --embedded-video")
         # self.vlc_instance.vlm_set_loop(media_file, True)
         self.player = self.vlc_instance.media_player_new()
+        self.media_list = self.vlc_instance.media_list_new([self.media_file])
+        self.media_list_player = self.vlc_instance.media_list_player_new()
+        self.media_list_player.set_media_list(self.media_list)
         logger.info('vlc player init done.')
 
     def _setup(self):
         self.logger.info('setting up media to player..')
-        media = self.vlc_instance.media_new(self.media_file)
-        self.vlc_instance.vlm_set_loop("Content", True)
-        self.player.set_media(media)
+        # media = self.vlc_instance.media_new(self.media_file)
+        # self.vlc_instance.vlm_set_loop("content", True)
+        # self.player.set_media(media)
+        self.media_list_player.set_playback_mode(vlc.PlaybackMode.loop)
         self.logger.info('ready to play..')
 
     def _startplay(self):
         self._setup()
-        self.player.play()
+        # self.player.play()
+        self.media_list_player.play()
 
     def _stopplay(self):
-        self.player.stop()
+        #self.player.stop()
+        self.media_list_player.stop()
 
     def run(self):
         while True:

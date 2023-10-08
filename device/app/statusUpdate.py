@@ -48,9 +48,9 @@ def updateDeviceStatusToCloud(log:logging):
                     else:
                         log.info("failed to update status..")
                         gv.status_update_event.clear()
-                        gv.registration_event.set() 
-                        # gv.play_sched_event.set()
+                        gv.play_sched_event.clear()
                         gv.schedule_active.clear()
+                        gv.registration_event.set() 
                     connection.close()
                     time.sleep(30)
                     
