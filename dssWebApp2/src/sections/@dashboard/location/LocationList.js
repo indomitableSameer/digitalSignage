@@ -76,6 +76,7 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function LocationList() {
+  // -----States-----------------------------------
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -87,6 +88,7 @@ export default function LocationList() {
   const [locationListingData, setlocationListingData] = useState([{}]);
   const triggerUpdate = useContext(UpdateLocationContext);
 
+  // -----Api and Update Calls-----------------------------------
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -108,8 +110,13 @@ export default function LocationList() {
     fetchData();
   }, [triggerUpdate]);
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
+  // -----Functions-----------------------------------
+  const handleOpenMenu = (mac) => (event) => {
+    const customEventData = {
+      Mac: mac,
+    };
+    const mergedEvent = { ...event, customData: customEventData };
+    setOpen(mergedEvent);
   };
 
   const handleCloseMenu = () => {
@@ -144,6 +151,14 @@ export default function LocationList() {
       newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
     setSelected(newSelected);
+  };
+
+  const handleLocationDelete = (mac) => (event, newPage) => {
+    console.log(mac);
+  };
+
+  const handleLocationEdit = (mac) => (event, newPage) => {
+    console.log(mac);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -210,7 +225,7 @@ export default function LocationList() {
                       <TableCell align="left">{Mac}</TableCell>
 
                       <TableCell align="right">
-                        <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                        <IconButton size="large" color="inherit" onClick={handleOpenMenu(Mac)}>
                           <Iconify icon={'eva:more-vertical-fill'} />
                         </IconButton>
                       </TableCell>
@@ -260,6 +275,34 @@ export default function LocationList() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open && open.currentTarget}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            width: 140,
+            '& .MuiMenuItem-root': {
+              px: 1,
+              typography: 'body2',
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={handleLocationEdit(open && open.customData.Mac)}>
+          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+          Edit
+        </MenuItem>
+
+        <MenuItem sx={{ color: 'error.main' }} onClick={handleLocationDelete(open && open.customData.Mac)}>
+          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+          Delete
+        </MenuItem>
+      </Popover>
     </Card>
   );
 }

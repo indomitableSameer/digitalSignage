@@ -25,6 +25,8 @@ func HandleRemoveContentRequest(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, &removeContentReq)
 	if err != nil || len(removeContentReq.ContentId) == 0 {
 		fmt.Println("error:", err)
+		http.Error(w, "failed to parse request", http.StatusBadRequest)
+		return
 	}
 
 	var aContentInfo dbentities.ContentInfo
