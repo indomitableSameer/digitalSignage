@@ -12,7 +12,7 @@ openssl req -key server-key.pem -new -out server.csr -subj "/C=DE/ST=Hessen/L=FR
 echo "subjectAltName=DNS:web.dss.com,DNS:localhost,IP:0.0.0.0" > server-ext.cnf
 echo "keyUsage=digitalSignature,keyEncipherment,nonRepudiation,dataEncipherment" >> server-ext.cnf
 echo "extendedKeyUsage=serverAuth,clientAuth" >> server-ext.cnf
-openssl x509 -req -in server.csr -CA ../ca/ca-cert.pem -CAkey ../ca/ca-key.pem -CAcreateserial -out server-cert.pem -extfile server-ext.cnf
+openssl x509 -req -in server.csr -CA ../ca/ca-cert.pem -CAkey ../ca/ca-key.pem -CAcreateserial -out server-cert.pem -extfile server-ext.cnf -days 365
 
 echo "Server's signed certificate"
 openssl x509 -in server-cert.pem -noout -text
