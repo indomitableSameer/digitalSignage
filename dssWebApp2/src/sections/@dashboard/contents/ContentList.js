@@ -7,7 +7,7 @@ import UpdateContentContext from './UpdateContentContext';
 
 // ----------------------------------------------------------------------
 const api = axios.create({
-  baseURL: 'http://api.dss.com:8001',
+  baseURL: 'https://api.dss.com:8001',
 });
 
 export default function ContentList() {
