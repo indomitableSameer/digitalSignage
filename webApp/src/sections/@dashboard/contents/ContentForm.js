@@ -7,7 +7,7 @@ import Iconify from '../../../components/iconify';
 import UpdateContentContext from './UpdateContentContext';
 
 const api = axios.create({
-  baseURL: 'https://api.dss.com:8001',
+  baseURL: 'https://device.dss.com:4001',
 });
 
 export default function ContentForm() {

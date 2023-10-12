@@ -28,7 +28,7 @@ import UpdateLocationContext from './UpdateLocationContext';
 // ----------------------------------------------------------------------
 
 const api = axios.create({
-  baseURL: 'https://api.dss.com:8001',
+  baseURL: 'https://device.dss.com:4001',
 });
 
 const TABLE_HEAD = [
