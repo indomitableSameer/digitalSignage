@@ -180,8 +180,6 @@ export default function LocationForm() {
             id="mac"
             freeSolo
             options={devicelist}
-            getOptionLabel={(option) => option.Name}
-            value={device}
             onChange={(event, newValue) => {
               setDevice(newValue);
             }}
@@ -199,7 +197,7 @@ export default function LocationForm() {
               format="DD-MM-YYYY"
               value={startdate}
               disablePast
-              onChange={(event) => setStartDate(event.target.value)}
+              onChange={(newValue) => setStartDate(newValue)}
             />
           </Grid>
           <Grid item xs={2} sm={3} ms={5}>
@@ -208,7 +206,7 @@ export default function LocationForm() {
               format="DD-MM-YYYY"
               value={enddate}
               disablePast
-              onChange={(event) => setEndDate(event.target.value)}
+              onChange={(newValue) => setEndDate(newValue)}
             />
           </Grid>
           <Grid item xs={2} sm={3} ms={5}>
@@ -230,7 +228,6 @@ export default function LocationForm() {
             id="contentselect"
             options={contentlist}
             getOptionLabel={(option) => option.Name}
-            value={content}
             onChange={(event, newValue) => {
               setContent(newValue);
             }}
