@@ -2,8 +2,6 @@ import json
 import logging
 import time
 import appUtils
-import M2Crypto
-from configManager import AppConfiguration
 import appdb as appdb
 import globalVariables as gv
 import secure_conn as secure_conn
@@ -16,7 +14,7 @@ class StatusUpdateRequest:
         self.ContentAllocId = content_id
         self.App_Version = appUtils.get_app_version()
         self.Os_Version = appUtils.get_os_version()
-        self.IpAddr = '1.1.1.1'
+        self.IpAddr = appUtils.get_ip_addr()
 
 
 def updateDeviceStatusToCloud(log:logging):

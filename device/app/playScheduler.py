@@ -1,9 +1,7 @@
 from datetime import datetime, time, date
 import logging, json
-from configManager import AppConfiguration
 import globalVariables as gv
-import time, M2Crypto
-import appUtils
+import time
 import appdb as appdb
 import secure_conn as secure_conn
 from httpStatus import HttpStatus
