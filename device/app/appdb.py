@@ -91,8 +91,6 @@ def InsertOrUpdateConnDetailsInDb(id, registration_url, registration_port, servi
     conn = sqlite3.connect(DB_FILE_PATH)
     cursor = conn.cursor()
     cursor.execute("INSERT OR REPLACE INTO conn_details (id, registration_url, registration_port, service_url, service_port) values (?, ?, ?, ?, ?)", (id, registration_url, registration_port, service_url, service_port))
-    for row in cursor.execute("SELECT id, registration_url, registration_port, service_url, service_port FROM conn_details"):
-        print(row)
     conn.commit()
     conn.close()
 
@@ -113,10 +111,6 @@ def getRegistrationDetailsFromDb():
 def InsertOrUpdateRegDetailsInDb(id, reg_id):
     conn = sqlite3.connect(DB_FILE_PATH)
     cursor = conn.cursor()
-    print(id)
-    print(reg_id)
     cursor.execute("INSERT OR REPLACE INTO reg_details (id, reg_id) values (?, ?)", (id, reg_id))
-    for row in cursor.execute("SELECT id, reg_id FROM reg_details"):
-        print(row)
     conn.commit()
     conn.close()

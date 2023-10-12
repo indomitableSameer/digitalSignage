@@ -1,0 +1,14 @@
+[Unit]
+Description=digital Signage Service
+After=network-online.target
+
+[Service]
+WorkingDirectory=/home/pi/digitalSignage/device/app
+Type=simple
+Restart=always
+RestartSec=5
+User=root
+ExecStart=/usr/bin/env python3 /home/pi/digitalSignage/device/app/node.py
+
+[Install]
+WantedBy=multi-user.target

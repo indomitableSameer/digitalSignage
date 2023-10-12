@@ -1,22 +1,15 @@
 # importing time and vlc
-import asyncio
-import configparser
-import os
-import time
 import logging
 import threading
 from vlcplayer import vlcplayer
 import deviceRegistration as deviceRegistration
 import statusUpdate as statusUpdate
-import configManager as configManager
 import contentHandler as contentHandler
 import secure_conn as secure_conn
 from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
 import globalVariables as gv
 import playScheduler
-import M2Crypto
-import deviceConfigManger
 import appdb as appdb
 
 logFile = 'dss_player.log'
