@@ -43,8 +43,8 @@ def updateDeviceStatusToCloud(log:logging):
                         gv.play_sched_event.set()
                         gv.content_event.set()
                     elif response.status == HttpStatus.OK:
-                        log.info("status updated sucessfully. next update after 30 sec")
-                        gv.play_sched_event.set()
+                        log.info("status updated sucessfully. setting cloud_sync_ok_event..")
+                        gv.cloud_sync_ok_event.set()
                     else:
                         log.info("failed to update status..")
                         gv.status_update_event.clear()
@@ -52,8 +52,7 @@ def updateDeviceStatusToCloud(log:logging):
                         gv.schedule_active.clear()
                         gv.registration_event.set() 
                     connection.close()
-                    time.sleep(30)
-                    
+                    time.sleep(30)   
                 else:
                     log.info("updateDeviceStatusToCloud : reg found false. setting reg event to start work flow..")
                     gv.registration_event.set()
