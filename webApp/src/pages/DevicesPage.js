@@ -28,15 +28,18 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Autocomplete,
-  TextField,
 } from '@mui/material';
 // components
 import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
-import { DeviceListHead, DeviceListToolbar } from '../sections/@dashboard/device';
+import {
+  DeviceContentUpdateDialog,
+  DeviceListHead,
+  DeviceListToolbar,
+  DeviceScheduleUpdateDialog,
+} from '../sections/@dashboard/device';
 // mock
 import GetDevicesData from '../apidata/devicesData';
 
@@ -109,31 +112,24 @@ export default function DevicesPage() {
   const devicesData = GetDevicesData();
 
   const [pageData, setPageData] = useState([]);
+  // ----------------Dialog -----------------------------
+  const [devContentUpdateDialog, setOpenDevContentUpdateDialog] = useState(null);
+  const handleOpenContentUpdateDialog = (event, data) => {
+    setOpenDevContentUpdateDialog(data);
+  };
+  const handleCloseContentUpdateDialog = () => {
+    setOpenDevContentUpdateDialog(null);
+  };
 
-  const [devContentUpdatePopup, setOpenDevContentUpdatePopup] = useState(null);
-  const [contentlist, setContentList] = useState([]);
-  const [updateContentItem, setUpdateContentItem] = useState();
+  const [devSchedUpdateDialog, setOpenSchedUpdateDialog] = useState(null);
+  const handleOpenSchedUpdateDialog = (event, data) => {
+    setOpenSchedUpdateDialog(data);
+  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const getContent = await api.get('/getContentList');
-        if (getContent.data != null) {
-          setContentList(getContent.data);
-        }
-      } catch (error) {
-        if (error.response) {
-          console.log('Data:', error.response.data);
-          console.log('Status:', error.response.status);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log('Error:', error.message);
-        }
-      }
-    };
-    fetchData();
-  }, []);
+  const handleCloseSchedUpdateDialog = () => {
+    setOpenSchedUpdateDialog(null);
+  };
+  // ----------------Dialog -----------------------------
 
   useEffect(() => {
     // Use devicesData as needed
@@ -149,20 +145,6 @@ export default function DevicesPage() {
 
   const handleCloseMenu = () => {
     setOpen(null);
-  };
-
-  const handleOpenContentUpdatePopup = (event, data) => {
-    console.log(data);
-    setOpenDevContentUpdatePopup(data);
-  };
-
-  const handleSubmitContentUpdate = (event, data) => {
-    console.log(data);
-    console.log(updateContentItem);
-  };
-
-  const handleCloseContentUpdatePopup = () => {
-    setOpenDevContentUpdatePopup(null);
   };
 
   const handleOpenDevInfoPopup = (event, row) => {
@@ -304,7 +286,7 @@ export default function DevicesPage() {
                                 color="info"
                                 size="small"
                                 startIcon={<SmartDisplayIcon fontSize="medium" />}
-                                onClick={(event) => handleOpenContentUpdatePopup(event, row)}
+                                onClick={(event) => handleOpenContentUpdateDialog(event, row)}
                               >
                                 {ContentFileName}
                               </Button>
@@ -315,7 +297,7 @@ export default function DevicesPage() {
                                 color="info"
                                 size="small"
                                 startIcon={<ScheduleIcon fontSize="medium" />}
-                                onClick={(event) => handleOpenContentUpdatePopup(event, row)}
+                                onClick={(event) => handleOpenSchedUpdateDialog(event, row)}
                               >
                                 {StartDate}-{EndDate}, {StartTime}-{EndTime}
                               </Button>
@@ -427,25 +409,9 @@ export default function DevicesPage() {
         </DialogActions>
       </BootstrapDialog>
 
-      <Dialog fullWidth="sm" open={devContentUpdatePopup} onClose={handleCloseContentUpdatePopup}>
-        <DialogTitle>Update Content</DialogTitle>
-        <DialogContent>
-          <Autocomplete
-            autoHighlight
-            id="contentselect"
-            options={contentlist}
-            getOptionLabel={(option) => option.Name}
-            onChange={(event, newValue) => {
-              setUpdateContentItem(newValue);
-            }}
-            renderInput={(params) => <TextField {...params} label="select to update new content to play at location" />}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseContentUpdatePopup}>Cancel</Button>
-          <Button onClick={handleSubmitContentUpdate}>Submit</Button>
-        </DialogActions>
-      </Dialog>
+      <DeviceContentUpdateDialog item={devContentUpdateDialog} OnClose={handleCloseContentUpdateDialog} />
+
+      <DeviceScheduleUpdateDialog item={devSchedUpdateDialog} OnClose={handleCloseSchedUpdateDialog} />
 
       <Popover
         open={Boolean(open)}
