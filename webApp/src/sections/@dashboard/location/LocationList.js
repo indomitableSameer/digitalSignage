@@ -309,10 +309,10 @@ export default function LocationList() {
           },
         }}
       >
-        <MenuItem onClick={handleLocationEdit}>
+        {/* <MenuItem onClick={handleLocationEdit}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem sx={{ color: 'error.main' }} onClick={handleLocationDelete}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />

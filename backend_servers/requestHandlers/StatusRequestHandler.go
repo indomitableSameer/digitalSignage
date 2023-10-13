@@ -40,7 +40,11 @@ func HandleStatusUpdateRequest(w http.ResponseWriter, r *http.Request) {
 
 		// add this to db and send response
 		var status dbentities.DeviceStatusRegister
-		status.StatusId = uuid.New()
+		dbprovider.Conn.RDb.Where("Registration_Id = ?", regDev.RegistrationId).First(&status)
+		if status.StatusId == uuid.Nil {
+			status.StatusId = uuid.New()
+		}
+
 		status.RegistrationId = regDev.RegistrationId
 		status.ScheduleAllocId, _ = uuid.Parse(statusReq.ScheduleAllocId)
 		status.ContentAllocId, _ = uuid.Parse(statusReq.ContentAllocId)
@@ -48,8 +52,8 @@ func HandleStatusUpdateRequest(w http.ResponseWriter, r *http.Request) {
 		status.OsVersion = statusReq.Os_Version
 		status.IpAddr = statusReq.IpAddr
 		dbprovider.Conn.RDb.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "registration_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"updated_at"}),
+			Columns:   []clause.Column{{Name: "status_id"}},
+			DoUpdates: clause.AssignmentColumns([]string{"updated_at", "schedule_alloc_id", "content_alloc_id", "ip_addr", "os_version", "app_version", "updated_at"}),
 		}).Create(&status)
 
 	} else {

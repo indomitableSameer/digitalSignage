@@ -47,6 +47,9 @@ func main() {
 	multiplexer.HandleFunc("/getAreaList", requesthandlers.HandleGetAreaListRequest).Methods(http.MethodGet)
 	multiplexer.HandleFunc("/getEventStream", requesthandlers.HandleEventStreamRequest).Methods(http.MethodGet)
 
+	multiplexer.HandleFunc("/updateAllocContent", requesthandlers.HandleUpdateAllocContentRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/updateAllocSchedule", requesthandlers.HandleUpdateAllocScheduleRequest).Methods(http.MethodPost)
+
 	credentials := handlers.AllowCredentials()
 	methods := handlers.AllowedMethods([]string{"GET", "PUT", "POST", "OPTIONS"})
 	ttl := handlers.MaxAge(3600)

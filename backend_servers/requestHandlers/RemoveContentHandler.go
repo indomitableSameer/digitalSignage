@@ -49,8 +49,11 @@ func HandleRemoveContentRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbprovider.Conn.RDb.Delete(&aContentInfo)
-
-	fmt.Println("Object removed successfully")
+	if err := dbprovider.Conn.RDb.Delete(&aContentInfo).Error; err != nil {
+		fmt.Print(err)
+		http.Error(w, "Failed to revove entry.", http.StatusInternalServerError)
+		return
+	}
+	fmt.Print("removed entry from contentInfo table successfully.")
 	return
 }

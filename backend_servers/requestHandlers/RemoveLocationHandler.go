@@ -34,7 +34,11 @@ func HandleRemoveLocationRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbprovider.Conn.RDb.Delete(&aDevInfo)
+	if err := dbprovider.Conn.RDb.Delete(&aDevInfo).Error; err != nil {
+		fmt.Print(err)
+		http.Error(w, "Failed to revove entry.", http.StatusInternalServerError)
+		return
+	}
 
 	fmt.Println("location removed successfully")
 	return

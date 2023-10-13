@@ -1,7 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import SmartDisplayIcon from '@mui/icons-material/SmartDisplay';
 import { styled } from '@mui/material/styles';
 // @mui
 import {
@@ -25,6 +28,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Autocomplete,
+  TextField,
 } from '@mui/material';
 // components
 import Label from '../components/label';
@@ -45,6 +50,10 @@ const TABLE_HEAD = [
   { id: 'Location', label: 'Location', alignRight: false },
   { id: '' },
 ];
+
+const api = axios.create({
+  baseURL: 'https://device.dss.com:4001',
+});
 
 // ----------------------------------------------------------------------
 
@@ -98,7 +107,34 @@ export default function DevicesPage() {
   const [devInfoPopup, setOpenDeviceInfoPopup] = useState(null);
 
   const devicesData = GetDevicesData();
+
   const [pageData, setPageData] = useState([]);
+
+  const [devContentUpdatePopup, setOpenDevContentUpdatePopup] = useState(null);
+  const [contentlist, setContentList] = useState([]);
+  const [updateContentItem, setUpdateContentItem] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const getContent = await api.get('/getContentList');
+        if (getContent.data != null) {
+          setContentList(getContent.data);
+        }
+      } catch (error) {
+        if (error.response) {
+          console.log('Data:', error.response.data);
+          console.log('Status:', error.response.status);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error:', error.message);
+        }
+      }
+    };
+    fetchData();
+  }, []);
+
   useEffect(() => {
     // Use devicesData as needed
     if (devicesData != null) {
@@ -115,8 +151,22 @@ export default function DevicesPage() {
     setOpen(null);
   };
 
-  const handleOpenDevInfoPopup = (event) => {
-    setOpenDeviceInfoPopup(event.currentTarget);
+  const handleOpenContentUpdatePopup = (event, data) => {
+    console.log(data);
+    setOpenDevContentUpdatePopup(data);
+  };
+
+  const handleSubmitContentUpdate = (event, data) => {
+    console.log(data);
+    console.log(updateContentItem);
+  };
+
+  const handleCloseContentUpdatePopup = () => {
+    setOpenDevContentUpdatePopup(null);
+  };
+
+  const handleOpenDevInfoPopup = (event, row) => {
+    setOpenDeviceInfoPopup(row);
   };
 
   const handleCloseDevInfoPopup = () => {
@@ -230,7 +280,11 @@ export default function DevicesPage() {
 
                             <TableCell component="th" scope="row" padding="none">
                               <Stack direction="row" alignItems="center" spacing={2}>
-                                <Button variant="outlined" color="info" onClick={handleOpenDevInfoPopup}>
+                                <Button
+                                  variant="outlined"
+                                  color="info"
+                                  onClick={(event) => handleOpenDevInfoPopup(event, row)}
+                                >
                                   <Typography variant="subtitle1" noWrap>
                                     {Mac}
                                   </Typography>
@@ -244,11 +298,27 @@ export default function DevicesPage() {
                               </Label>
                             </TableCell>
 
-                            <TableCell align="left">{ContentFileName}</TableCell>
                             <TableCell align="left">
-                              <Typography variant="subtitle4">
+                              <Button
+                                variant="text"
+                                color="info"
+                                size="small"
+                                startIcon={<SmartDisplayIcon fontSize="medium" />}
+                                onClick={(event) => handleOpenContentUpdatePopup(event, row)}
+                              >
+                                {ContentFileName}
+                              </Button>
+                            </TableCell>
+                            <TableCell align="left">
+                              <Button
+                                variant="text"
+                                color="info"
+                                size="small"
+                                startIcon={<ScheduleIcon fontSize="medium" />}
+                                onClick={(event) => handleOpenContentUpdatePopup(event, row)}
+                              >
                                 {StartDate}-{EndDate}, {StartTime}-{EndTime}
-                              </Typography>
+                              </Button>
                             </TableCell>
                             <TableCell align="left">
                               <Typography variant="subtitle4">
@@ -320,7 +390,12 @@ export default function DevicesPage() {
         </Stack>
       </Container>
 
-      <BootstrapDialog onClose={handleCloseDevInfoPopup} aria-labelledby="customized-dialog-title" open={devInfoPopup}>
+      <BootstrapDialog
+        fullWidth="sm"
+        onClose={handleCloseDevInfoPopup}
+        aria-labelledby="customized-dialog-title"
+        open={devInfoPopup}
+      >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
           Device Info
         </DialogTitle>
@@ -337,13 +412,13 @@ export default function DevicesPage() {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <Typography gutterBottom>MAC : AB:AC:AD:AE:AF</Typography>
-          <Typography gutterBottom>Added On : 23-01-2023 00:00</Typography>
-          <Typography gutterBottom>Registered On : 24-01-2023 10:00</Typography>
-          <Typography gutterBottom>Last Status updated : 23-01-2023 00:00</Typography>
-          <Typography gutterBottom>Device OS : Linux6.1.21-v8+</Typography>
-          <Typography gutterBottom>Device App Version : 1.1</Typography>
-          <Typography gutterBottom>Device Ip : 127.0.0.1</Typography>
+          <Typography gutterBottom>MAC : {devInfoPopup && devInfoPopup.Mac}</Typography>
+          <Typography gutterBottom>Added On : {devInfoPopup && devInfoPopup.DevAddedOn}</Typography>
+          <Typography gutterBottom>Registered On : {devInfoPopup && devInfoPopup.DevRegOn}</Typography>
+          <Typography gutterBottom>Last Status updated : {devInfoPopup && devInfoPopup.LastUpdateAt}</Typography>
+          <Typography gutterBottom>Device OS : {devInfoPopup && devInfoPopup.DeviceOS}</Typography>
+          <Typography gutterBottom>Device App Version : {devInfoPopup && devInfoPopup.DeviceAppVer}</Typography>
+          <Typography gutterBottom>Device IP : {devInfoPopup && devInfoPopup.DeviceIp}</Typography>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleCloseDevInfoPopup}>
@@ -351,6 +426,26 @@ export default function DevicesPage() {
           </Button>
         </DialogActions>
       </BootstrapDialog>
+
+      <Dialog fullWidth="sm" open={devContentUpdatePopup} onClose={handleCloseContentUpdatePopup}>
+        <DialogTitle>Update Content</DialogTitle>
+        <DialogContent>
+          <Autocomplete
+            autoHighlight
+            id="contentselect"
+            options={contentlist}
+            getOptionLabel={(option) => option.Name}
+            onChange={(event, newValue) => {
+              setUpdateContentItem(newValue);
+            }}
+            renderInput={(params) => <TextField {...params} label="select to update new content to play at location" />}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseContentUpdatePopup}>Cancel</Button>
+          <Button onClick={handleSubmitContentUpdate}>Submit</Button>
+        </DialogActions>
+      </Dialog>
 
       <Popover
         open={Boolean(open)}
