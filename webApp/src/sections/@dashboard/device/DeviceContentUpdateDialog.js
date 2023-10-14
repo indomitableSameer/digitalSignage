@@ -10,8 +10,9 @@ import {
   DialogActions,
   Button,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import UpdateDeviceContext from './UpdateDeviceContext';
 
 const api = axios.create({
   baseURL: 'https://device.dss.com:4001',
@@ -19,6 +20,8 @@ const api = axios.create({
 // ----------------------------------------------------------------------
 
 export default function DeviceContentUpdateDialog({ item, OnClose }) {
+  const triggerUpdate = useContext(UpdateDeviceContext);
+
   const [contentList, setContentList] = useState([]);
   const [selected, setSelected] = useState();
 
@@ -58,15 +61,20 @@ export default function DeviceContentUpdateDialog({ item, OnClose }) {
   };
 
   const handleSubmit = async () => {
+    if (selected === null) {
+      handleClose();
+      return;
+    }
+
     const msg = { Mac: item.Mac, ContentInfoId: selected.Id };
     try {
-      const response = await api.post('/updateAllocSchedule', msg, { headers: { 'Content-Type': 'application/json' } });
+      const response = await api.post('/updateAllocContent', msg, { headers: { 'Content-Type': 'application/json' } });
       if (response.status === 200) {
         handleClose();
         setAlertMsg('Content updated successfully!');
         setAlertType('success');
         setAlert(true);
-        // triggerUpdate();
+        triggerUpdate();
       }
     } catch (error) {
       if (error.response) {

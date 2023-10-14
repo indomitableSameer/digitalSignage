@@ -40,6 +40,12 @@ func HandleUpdateAllocScheduleRequest(w http.ResponseWriter, r *http.Request) {
 		schedule.EndTime = updateAllocSchedule.EndTime
 	}
 
+	if len(schedule.StartDate) == 0 || len(schedule.EndDate) == 0 || len(schedule.StartTime) == 0 || len(schedule.EndTime) == 0 {
+		fmt.Println("missing values")
+		http.Error(w, "missing values", http.StatusBadRequest)
+		return
+	}
+
 	var devDir dbentities.DeviceDirectory
 	dbprovider.Conn.RDb.Where("mac = ?", updateAllocSchedule.Mac).First(&devDir)
 	if devDir.DeviceID == uuid.Nil {

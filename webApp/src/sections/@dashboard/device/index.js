@@ -3,3 +3,4 @@ export { default as DeviceListToolbar } from './DeviceListToolbar';
 export { default as DeviceScheduleUpdateDialog } from './DeviceScheduleUpdateDialog';
 export { default as DeviceContentUpdateDialog } from './DeviceContentUpdateDialog';
 export { default as DeviceInfoDialog } from './DeviceInfoDialog';
+export { default as DeviceList } from './DeviceList';

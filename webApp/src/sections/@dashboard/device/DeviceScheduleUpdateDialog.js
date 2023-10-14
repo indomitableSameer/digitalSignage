@@ -7,7 +7,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import UpdateDeviceContext from './UpdateDeviceContext';
 
 const api = axios.create({
   baseURL: 'https://device.dss.com:4001',
@@ -16,6 +17,8 @@ const api = axios.create({
 // ----------------------------------------------------------------------
 
 export default function DeviceScheduleUpdateDialog({ item, OnClose }) {
+  const triggerUpdate = useContext(UpdateDeviceContext);
+
   const [startdate, setStartDate] = useState(dayjs());
   const [enddate, setEndDate] = useState(dayjs());
   const [starttime, setStartTime] = useState(dayjs('2022-04-17T00:00'));
@@ -50,26 +53,28 @@ export default function DeviceScheduleUpdateDialog({ item, OnClose }) {
       if (response.status === 200) {
         handleClose();
         setAlertMsg('Schedule updated successfully!');
-        setAlert(true);
+
         setAlertType('success');
+        setAlert(true);
+        triggerUpdate();
       }
     } catch (error) {
       if (error.response) {
         console.log('Data:', error.response.data);
         console.log('Status:', error.response.status);
         setAlertMsg('Schedule update failed!');
-        setAlert(true);
         setAlertType('error');
+        setAlert(true);
       } else if (error.request) {
         console.log(error.request);
         setAlertMsg('Schedule update failed!');
-        setAlert(true);
         setAlertType('error');
+        setAlert(true);
       } else {
         console.log('Error:', error.message);
         setAlertMsg('Schedule update failed!');
-        setAlert(true);
         setAlertType('error');
+        setAlert(true);
       }
     }
   };
