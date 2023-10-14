@@ -2,10 +2,8 @@ import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import CloseIcon from '@mui/icons-material/Close';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import SmartDisplayIcon from '@mui/icons-material/SmartDisplay';
-import { styled } from '@mui/material/styles';
 // @mui
 import {
   Card,
@@ -24,10 +22,6 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from '@mui/material';
 // components
 import Label from '../components/label';
@@ -36,6 +30,7 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import {
   DeviceContentUpdateDialog,
+  DeviceInfoDialog,
   DeviceListHead,
   DeviceListToolbar,
   DeviceScheduleUpdateDialog,
@@ -89,15 +84,6 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2),
-  },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1),
-  },
-}));
-
 export default function DevicesPage() {
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
@@ -107,12 +93,12 @@ export default function DevicesPage() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [devInfoPopup, setOpenDeviceInfoPopup] = useState(null);
-
   const devicesData = GetDevicesData();
 
   const [pageData, setPageData] = useState([]);
+
   // ----------------Dialog -----------------------------
+
   const [devContentUpdateDialog, setOpenDevContentUpdateDialog] = useState(null);
   const handleOpenContentUpdateDialog = (event, data) => {
     setOpenDevContentUpdateDialog(data);
@@ -129,6 +115,16 @@ export default function DevicesPage() {
   const handleCloseSchedUpdateDialog = () => {
     setOpenSchedUpdateDialog(null);
   };
+
+  const [devInfoPopup, setOpenDeviceInfoPopup] = useState(null);
+  const handleOpenDevInfoPopup = (event, row) => {
+    setOpenDeviceInfoPopup(row);
+  };
+
+  const handleCloseDevInfoPopup = () => {
+    setOpenDeviceInfoPopup(null);
+  };
+
   // ----------------Dialog -----------------------------
 
   useEffect(() => {
@@ -145,14 +141,6 @@ export default function DevicesPage() {
 
   const handleCloseMenu = () => {
     setOpen(null);
-  };
-
-  const handleOpenDevInfoPopup = (event, row) => {
-    setOpenDeviceInfoPopup(row);
-  };
-
-  const handleCloseDevInfoPopup = () => {
-    setOpenDeviceInfoPopup(null);
   };
 
   const handleRequestSort = (event, property) => {
@@ -348,15 +336,6 @@ export default function DevicesPage() {
                   )}
                 </Table>
               </TableContainer>
-              {/* <Dialog open={devInfoPopup} onClose={handleCloseDevInfoPopup}>
-                <DialogTitle>Device Informations</DialogTitle>
-                <Typography variant="subtitle1" noWrap>
-                  Added On : 12-02-2023
-                </Typography>
-                <Typography variant="subtitle1" noWrap>
-                  Location : abc dbb aa cc
-                </Typography>
-              </Dialog> */}
             </Scrollbar>
 
             <TablePagination
@@ -372,45 +351,8 @@ export default function DevicesPage() {
         </Stack>
       </Container>
 
-      <BootstrapDialog
-        fullWidth="sm"
-        onClose={handleCloseDevInfoPopup}
-        aria-labelledby="customized-dialog-title"
-        open={devInfoPopup}
-      >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Device Info
-        </DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleCloseDevInfoPopup}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent dividers>
-          <Typography gutterBottom>MAC : {devInfoPopup && devInfoPopup.Mac}</Typography>
-          <Typography gutterBottom>Added On : {devInfoPopup && devInfoPopup.DevAddedOn}</Typography>
-          <Typography gutterBottom>Registered On : {devInfoPopup && devInfoPopup.DevRegOn}</Typography>
-          <Typography gutterBottom>Last Status updated : {devInfoPopup && devInfoPopup.LastUpdateAt}</Typography>
-          <Typography gutterBottom>Device OS : {devInfoPopup && devInfoPopup.DeviceOS}</Typography>
-          <Typography gutterBottom>Device App Version : {devInfoPopup && devInfoPopup.DeviceAppVer}</Typography>
-          <Typography gutterBottom>Device IP : {devInfoPopup && devInfoPopup.DeviceIp}</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleCloseDevInfoPopup}>
-            Ok
-          </Button>
-        </DialogActions>
-      </BootstrapDialog>
-
+      <DeviceInfoDialog item={devInfoPopup} OnClose={handleCloseDevInfoPopup} />
       <DeviceContentUpdateDialog item={devContentUpdateDialog} OnClose={handleCloseContentUpdateDialog} />
-
       <DeviceScheduleUpdateDialog item={devSchedUpdateDialog} OnClose={handleCloseSchedUpdateDialog} />
 
       <Popover
