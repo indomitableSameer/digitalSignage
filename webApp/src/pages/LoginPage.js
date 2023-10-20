@@ -40,7 +40,7 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage() {
+export default function LoginPage({ OnLoginSuccessCallback }) {
   const mdUp = useResponsive('up', 'md');
 
   return (
@@ -77,7 +77,7 @@ export default function LoginPage() {
               Don’t have an account? {''}
               <Link variant="subtitle2">Get started</Link>
             </Typography>
-            <LoginForm />
+            <LoginForm OnLoginSuccessCallbackFunc={OnLoginSuccessCallback} />
           </StyledContent>
         </Container>
       </StyledRoot>

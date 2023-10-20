@@ -1,4 +1,5 @@
-import { Navigate, useRoutes } from 'react-router-dom';
+import { Navigate, useRoutes, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -13,21 +14,53 @@ import DashboardAppPage from './pages/DashboardAppPage';
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+  const navigate = useNavigate();
+
+  const handleLoginSuccessful = () => {
+    // Logic to handle successful login
+    setIsLoggedIn(true);
+    localStorage.setItem('token', 'abc');
+    navigate('/dashboard/app', { replace: true });
+  };
+
+  useEffect(() => {
+    // Check authentication status on page load
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   const routes = useRoutes([
     {
-      path: '/dashboard',
-      element: <DashboardLayout />,
+      path: '/',
+      element: isLoggedIn ? (
+        <Navigate to="/dashboard/app" />
+      ) : (
+        <LoginPage OnLoginSuccessCallback={handleLoginSuccessful} />
+      ),
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        { element: <Navigate to="/login" />, index: true },
+        { path: 'login', element: <LoginPage OnLoginSuccessCallback={handleLoginSuccessful} /> },
+      ],
+    },
+    {
+      path: '/dashboard',
+      element: isLoggedIn ? (
+        <DashboardLayout />
+      ) : (
+        //   <Navigate to="/dashboard/app" replace />
+        // </DashboardLayout>
+        <Navigate to="/login" replace />
+      ),
+      children: [
+        { element: <Navigate to="/dashboard/app" /> },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'locations', element: <LocationsPage /> },
         { path: 'devices', element: <DevicesPage /> },
         { path: 'contents', element: <ContentsPage /> },
       ],
-    },
-    {
-      path: 'login',
-      element: <LoginPage />,
     },
     {
       element: <SimpleLayout />,

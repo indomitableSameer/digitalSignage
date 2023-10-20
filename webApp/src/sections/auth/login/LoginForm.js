@@ -8,13 +8,14 @@ import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm() {
+export default function LoginForm({ OnLoginSuccessCallbackFunc }) {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClick = () => {
-    navigate('/dashboard', { replace: true });
+    OnLoginSuccessCallbackFunc();
+    // navigate('/dashboard', { replace: true });
   };
 
   return (
