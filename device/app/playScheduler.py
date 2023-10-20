@@ -8,8 +8,8 @@ from httpStatus import HttpStatus
 
 _start_date = datetime.strptime("01-01-2023", "%d-%m-%Y").date()
 _end_date = datetime.strptime("01-01-2500", "%d-%m-%Y").date()
-_start_time = datetime.strptime("00:00", "%H:%M").time()
-_end_time = datetime.strptime("00:00", "%H:%M").time()
+_start_time = datetime.strptime("00:00:00", "%H:%M:%S").time()
+_end_time = datetime.strptime("00:00:00", "%H:%M:%S").time()
 
 def maintainPlaySchedule(log:logging):
     while True:
@@ -30,14 +30,15 @@ def maintainPlaySchedule(log:logging):
                 _start_time = datetime.strptime(sched_details.start_time, "%H:%M").time()
                 _end_time = datetime.strptime(sched_details.end_time, "%H:%M").time()
                 if date.today() >= _start_date and date.today() <= _end_date:
-                    if datetime.now().time() >= _start_time and datetime.now().time() <= _end_time and gv.schedule_active.is_set() == False:
-                        log.info("setting schedule active event..")
-                        gv.schedule_active.set()
+                    if datetime.now().time() >= _start_time and datetime.now().time() <= _end_time:
+                        if gv.schedule_active.is_set() == False: 
+                            log.info("setting schedule active event..")
+                            gv.schedule_active.set()
                     elif gv.schedule_active.is_set() == True:
-                        log.info("clearing schedule inactive event..")
+                        log.info("clearing schedule inactive event due to out of time..")
                         gv.schedule_active.clear()
                 elif gv.schedule_active.is_set() == True:
-                    log.info("clearing schedule inactive event..")
+                    log.info("clearing schedule inactive event due to out of date..")
                     gv.schedule_active.clear()
                 time.sleep(60)
         except Exception as e:

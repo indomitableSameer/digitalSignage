@@ -1,15 +1,12 @@
 from datetime import datetime
 import json
 import logging
-import configparser
 import time
-import M2Crypto.SSL
-import M2Crypto.Engine
-import M2Crypto.X509
 import appUtils
 import appdb as appdb
 import globalVariables as gv
 import secure_conn as secure_conn
+from httpStatus import HttpStatus
 
 class DeviceRegisterRequest:
     def __init__(self):
@@ -20,7 +17,7 @@ def registerDevice(log:logging):
     while True:
         try:
             log.info("waiting on reg event ")
-            if gv.registration_event.wait() == True:
+            if gv.registration_event.wait(120) == True:
                 reg_details = appdb.getRegistrationDetailsFromDb()
                 conn_details = appdb.getConnDetailsFromDb()
                 device_info = appdb.getDeviceInfoFromDb()
@@ -29,12 +26,10 @@ def registerDevice(log:logging):
                 headers = {'Content-type': 'application/json'}
                 connection = secure_conn.getConnection(conn_details.registration_url, int(conn_details.registration_port))
                 connection.connect()
-                connection.request("POST", "/registerDevice",
-                                json.dumps(DeviceRegisterRequest().__dict__), headers)
-                
+                connection.request("POST", "/registerDevice", json.dumps(DeviceRegisterRequest().__dict__), headers)
                 response = connection.getresponse()
 
-                if response.status == 200:
+                if response.status == HttpStatus.OK: #if status is ok that means either registration is newly done or it was already done. In both case we dont care. 
                     body = json.loads(response.read().decode())   
                     log.info("registration response -->" + json.dumps(body))
 
@@ -51,11 +46,16 @@ def registerDevice(log:logging):
                     
                     log.info("closing connection..")
                     connection.close()
-                else:
-                    log.info("registration request failed." + str(response.status))
-                    log.info("reason: " + response.reason)
+                else: # connection was okay but status is not okay.. that means device is not allocated to any location. In this case we will stop all the threads and check after 2 min.
+                    log.error("registration request failed." +", reason: " + response.reason + ", status code: " + str(response.status))
+                    log.warning("stoping all running threads..")
                     connection.close()
-                    time.sleep(30)
+                    gv.play_sched_event.clear()
+                    gv.schedule_active.clear()
+                    gv.cloud_sync_ok_event.clear()
+                    gv.status_update_event.clear()
         except Exception as e:
+            # if there is connection issue then wait for 5 min before retry
+            # in this case threads are not stopped and if old content is scheduled can be active, keep it running..
             log.error(e)
             time.sleep(300)

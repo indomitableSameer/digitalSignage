@@ -7,6 +7,8 @@ import globalVariables as gv
 import secure_conn as secure_conn
 from httpStatus import HttpStatus
 
+MAX_FAIL_COUNT = 3
+
 class StatusUpdateRequest:
     def __init__(self, reg_id, sched_id, content_id):
         self.RegistrationId = reg_id
@@ -18,6 +20,7 @@ class StatusUpdateRequest:
 
 
 def updateDeviceStatusToCloud(log:logging):
+    statusUpdateFailure = 0
     while True:
         try:
             if gv.status_update_event.wait() == True:
@@ -41,21 +44,26 @@ def updateDeviceStatusToCloud(log:logging):
                         gv.play_sched_event.set()
                         gv.content_event.set()
                     elif response.status == HttpStatus.OK:
-                        log.info("status updated sucessfully. setting cloud_sync_ok_event..")
-                        gv.cloud_sync_ok_event.set()
+                        if gv.cloud_sync_ok_event.is_set() == False:
+                            log.info("status updated sucessfully. setting cloud_sync_ok_event..")
+                            gv.cloud_sync_ok_event.set()
                     else:
-                        log.info("failed to update status..")
+                        log.info("failed to update status..") # this can happen when device is removed
                         gv.status_update_event.clear()
-                        gv.play_sched_event.clear()
-                        gv.schedule_active.clear()
-                        gv.registration_event.set() 
+                        #gv.play_sched_event.clear()
+                        #gv.schedule_active.clear()
+                        gv.registration_event.set()
+    
                     connection.close()
                     time.sleep(30)   
                 else:
                     log.info("updateDeviceStatusToCloud : reg found false. setting reg event to start work flow..")
                     gv.registration_event.set()
                     time.sleep(30)
-        except Exception as e:
-            log.critical("Exception in satus thread", e)
+        except Exception as e: #
+            log.critical("Exception in satuts thread", e)
             time.sleep(30)
+            if statusUpdateFailure > MAX_FAIL_COUNT:
+                gv.status_update_event.clear()
+                gv.registration_event.set()
     
