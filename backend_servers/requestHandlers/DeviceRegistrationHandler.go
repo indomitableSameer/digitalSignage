@@ -26,17 +26,12 @@ func HandleDeviceRegistrationRequest(w http.ResponseWriter, r *http.Request) {
 	var aC dbentities.City
 	var aCo dbentities.Country
 	dbprovider.Conn.RDb.Where("id= ?", 1).First(&aB)
-	fmt.Println(aB)
 	dbprovider.Conn.RDb.Where("id= ?", aB.CityId).First(&aC)
-	fmt.Println(aC)
 	dbprovider.Conn.RDb.Where("id= ?", aC.CountryId).First(&aCo)
-	fmt.Println(aCo)
 
 	fmt.Println("reg request received from device -> ", regReq.Mac)
-	fmt.Println("going to check if mac present")
 	var deviceDirEntry dbentities.DeviceDirectory
 	dbprovider.Conn.RDb.Where("Mac = ?", regReq.Mac).First(&deviceDirEntry)
-	fmt.Println(deviceDirEntry)
 	if regReq.Mac == deviceDirEntry.MAC {
 
 		var aArea dbentities.Area
@@ -46,7 +41,6 @@ func HandleDeviceRegistrationRequest(w http.ResponseWriter, r *http.Request) {
 		dbprovider.Conn.RDb.Where("Device_Id = ?", deviceDirEntry.DeviceID).First(&registerdDevices)
 
 		if registerdDevices.DeviceId != uuid.Nil {
-			fmt.Println(registerdDevices)
 			response := response.DeviceRegistrationResponse{ServiceUrl: registerdDevices.ServiceUrl, ServicePort: registerdDevices.ServicePort, RegistrationStatus: 2, UniqueSystemId: registerdDevices.RegistrationId, Timezone: "Europe/Berlin"}
 			json, _ := json.Marshal(response)
 			w.Header().Set("content-type", "application/json")
@@ -61,9 +55,6 @@ func HandleDeviceRegistrationRequest(w http.ResponseWriter, r *http.Request) {
 		register.ServiceUrl = "device.dss.com"
 		register.ServicePort = "4001"
 		dbprovider.Conn.RDb.Create(&register)
-
-		fmt.Println(register)
-
 		response := response.DeviceRegistrationResponse{ServiceUrl: register.ServiceUrl, ServicePort: register.ServicePort, RegistrationStatus: 1, UniqueSystemId: register.RegistrationId, Timezone: "Europe/Berlin"}
 		json, _ := json.Marshal(response)
 		w.Header().Set("content-type", "application/json")
