@@ -11,6 +11,7 @@ import (
 	dbprovider "github.com/indomitableSameer/digitalSignage/backend_servers/dbProvider"
 	"github.com/indomitableSameer/digitalSignage/backend_servers/dbentities"
 	"github.com/indomitableSameer/digitalSignage/backend_servers/requests"
+	response "github.com/indomitableSameer/digitalSignage/backend_servers/responses"
 	"gorm.io/gorm/clause"
 )
 
@@ -33,10 +34,15 @@ func HandleStatusUpdateRequest(w http.ResponseWriter, r *http.Request) {
 		var aAllocContent dbentities.ContentAllocationDirectory
 		dbprovider.Conn.RDb.Where("device_id = ?", regDev.DeviceId).First(&aAllocSchedule)
 		dbprovider.Conn.RDb.Where("device_id = ?", regDev.DeviceId).First(&aAllocContent)
-		if aAllocSchedule.Id.String() != statusReq.ScheduleAllocId ||
-			aAllocContent.Id.String() != statusReq.ContentAllocId {
-			// now tell client then he is out of sync
-			w.WriteHeader(http.StatusConflict)
+
+		var aSyncStatusRes response.SyncStatus
+		if aAllocSchedule.Id.String() != statusReq.ScheduleAllocId {
+			aSyncStatusRes.ScheduleSync = true
+		}
+
+		if aAllocContent.Id.String() != statusReq.ContentAllocId {
+
+			aSyncStatusRes.ContentSync = true
 		}
 
 		// add this to db and send response
@@ -61,6 +67,15 @@ func HandleStatusUpdateRequest(w http.ResponseWriter, r *http.Request) {
 			DoUpdates: clause.AssignmentColumns([]string{"schedule_alloc_id", "content_alloc_id", "ip_addr", "os_version", "app_version", "updated_at"}),
 		}).Create(&status)
 
+		if aSyncStatusRes.ContentSync || aSyncStatusRes.ScheduleSync ||
+			aSyncStatusRes.ConfigSync || aSyncStatusRes.ModeSync {
+			w.WriteHeader(http.StatusConflict)
+		}
+
+		json, _ := json.Marshal(aSyncStatusRes)
+		w.Header().Set("content-type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Write(json)
 	} else {
 		http.Error(w, "can not update as device not registered", http.StatusBadRequest)
 		return
