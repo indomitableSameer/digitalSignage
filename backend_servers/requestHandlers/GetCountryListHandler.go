@@ -12,7 +12,7 @@ import (
 
 func HandleGetCountryListRequest(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("recived getCountryList request")
+	fmt.Println("recived /getCountryList request")
 	var dbCountries []dbentities.Country
 	result := dbprovider.Conn.RDb.Find(&dbCountries)
 
@@ -27,7 +27,6 @@ func HandleGetCountryListRequest(w http.ResponseWriter, r *http.Request) {
 
 	json, _ := json.Marshal(resCountryList)
 	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "https://web.dss.com")
 	w.Write(json)
 	return
 }

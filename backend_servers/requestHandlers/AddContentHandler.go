@@ -15,58 +15,9 @@ import (
 	"github.com/minio/minio-go/v7"
 )
 
-// func getThumbnailStream(file multipart.File) {
-// 	ctx := gmf.NewCtx()
-
-// 	// Create a new context for decoding the video
-// 	inputCtx, err := gmf.NewInputCtxWithBuffer(file)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		return
-// 	}
-// 	defer inputCtx.CloseInputAndRelease()
-
-// 	// Find the video stream
-// 	videoStream, err := inputCtx.GetBestStream(gmf.AVMEDIA_TYPE_VIDEO)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		return
-// 	}
-
-// 	// Seek to the desired time position (e.g., 10 seconds into the video)
-// 	err = inputCtx.SeekFile(10.0, 0, 0)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		return
-// 	}
-
-// 	// Read a frame at the current time position
-// 	packet, err := inputCtx.GetNextPacket()
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		return
-// 	}
-// 	defer packet.Free()
-
-// 	// Decode the video frame
-// 	frame, err := packet.Frames(videoStream.CodecCtx)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		return
-// 	}
-// 	defer frame.Free()
-
-// 	// Save the decoded frame as a thumbnail image
-// 	err = frame.ToJPEG("thumbnail.jpg", 0)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		return
-// 	}
-// }
-
 func HandleAddContentRequest(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("recived addContent request")
+	fmt.Println("received /addContent request..")
 	const contentInfoBucket = "dss-content-thumbnail-files"
 	const contentFileBucket = "dss-content-video-files"
 
@@ -138,7 +89,6 @@ func HandleAddContentRequest(w http.ResponseWriter, r *http.Request) {
 
 	json, _ := json.Marshal(resContentList)
 	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "https://web.dss.com")
 	w.Write(json)
 
 	fmt.Println("Object uploaded successfully", info)

@@ -17,7 +17,7 @@ type Claims struct {
 
 func HandleLoginRequest(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("recived login")
+	fmt.Println("received /login request..")
 	key, _ := os.ReadFile("/root/digitalSignage/pki/device-server/device-server-key.pem")
 	jwtSecretKey, err := jwt.ParseECPrivateKeyFromPEM(key)
 	if err != nil {
@@ -54,11 +54,5 @@ func HandleLoginRequest(w http.ResponseWriter, r *http.Request) {
 		SameSite: http.SameSiteStrictMode,
 	}
 	http.SetCookie(w, &cookie)
-
-	//.Header().Set("Authorization", "Bearer "+ tokenString)
-	//w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "https://web.dss.com")
-	//w.Header().Set("Access-Control-Expose-Headers", "*")
-	//fmt.Println(tokenString)
 	return
 }

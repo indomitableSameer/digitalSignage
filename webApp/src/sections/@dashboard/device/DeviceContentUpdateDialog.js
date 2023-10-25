@@ -11,7 +11,6 @@ import {
   Button,
 } from '@mui/material';
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
 import UpdateDeviceContext from './UpdateDeviceContext';
 import baseApi from '../../../api/baseApi';
 // ----------------------------------------------------------------------

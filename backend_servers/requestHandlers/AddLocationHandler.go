@@ -13,7 +13,7 @@ import (
 )
 
 func HandleAddLocationRequest(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("adding location to db")
+	fmt.Println("received /addlocation request..")
 	var addLocReq requests.AddLocation
 	body, _ := io.ReadAll(r.Body)
 	err := json.Unmarshal(body, &addLocReq)
