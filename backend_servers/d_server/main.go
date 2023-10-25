@@ -50,10 +50,12 @@ func main() {
 	multiplexer.HandleFunc("/updateAllocContent", requesthandlers.HandleUpdateAllocContentRequest).Methods(http.MethodPost)
 	multiplexer.HandleFunc("/updateAllocSchedule", requesthandlers.HandleUpdateAllocScheduleRequest).Methods(http.MethodPost)
 
+	multiplexer.HandleFunc("/login", requesthandlers.HandleLoginRequest).Methods(http.MethodPost)
+
 	credentials := handlers.AllowCredentials()
 	methods := handlers.AllowedMethods([]string{"GET", "PUT", "POST", "OPTIONS"})
 	ttl := handlers.MaxAge(3600)
-	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Authorization", "Content-Type"})
+	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Authorization", "Content-Type", "Credentials"})
 	origins := handlers.AllowedOrigins([]string{"*"})
 	/*, "localhost", "localhost:5173", "127.0.0.1", "127.0.0.1:5173", "http://127.0.0.1", "http://127.0.0.1:5173/"*/
 	fmt.Println("Started server at port 8001")

@@ -1,4 +1,6 @@
 import { Helmet } from 'react-helmet-async';
+import { useState } from 'react';
+import { HttpStatusCode } from 'axios';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Link, Container, Typography, Divider, Stack, Button } from '@mui/material';
@@ -9,7 +11,7 @@ import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
-
+import baseApi from '../api/baseApi';
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled('div')(({ theme }) => ({
@@ -42,6 +44,24 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 export default function LoginPage({ OnLoginSuccessCallback }) {
   const mdUp = useResponsive('up', 'md');
+
+  const onSubmit = async () => {
+    try {
+      const response = await baseApi.post('/login');
+      if (response.status === HttpStatusCode.Ok) {
+        OnLoginSuccessCallback();
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log('Data:', error.response.data);
+        console.log('Status:', error.response.status);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log('Error:', error.message);
+      }
+    }
+  };
 
   return (
     <>
@@ -77,7 +97,7 @@ export default function LoginPage({ OnLoginSuccessCallback }) {
               Don’t have an account? {''}
               <Link variant="subtitle2">Get started</Link>
             </Typography>
-            <LoginForm OnLoginSuccessCallbackFunc={OnLoginSuccessCallback} />
+            <LoginForm OnLoginSuccessCallbackFunc={onSubmit} />
           </StyledContent>
         </Container>
       </StyledRoot>

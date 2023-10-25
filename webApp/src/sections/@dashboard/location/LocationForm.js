@@ -11,10 +11,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 // component
 import Iconify from '../../../components/iconify';
 import UpdateLocationContext from './UpdateLocationContext';
-
-const api = axios.create({
-  baseURL: 'https://device.dss.com:4001',
-});
+import baseApi from '../../../api/baseApi';
 
 export default function LocationForm() {
   const [countrylist, setCountryList] = useState([]);
@@ -40,23 +37,23 @@ export default function LocationForm() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const getCountry = await api.get('/getCountryList');
+        const getCountry = await baseApi.get('/getCountryList');
         if (getCountry.data != null) {
           setCountryList(getCountry.data);
         }
-        const getCity = await api.get('/getCityList');
+        const getCity = await baseApi.get('/getCityList');
         if (getCity.data != null) {
           setCityList(getCity.data);
         }
-        const getBuilding = await api.get('/getBuildingList');
+        const getBuilding = await baseApi.get('/getBuildingList');
         if (getBuilding.data != null) {
           setBuildingList(getBuilding.data);
         }
-        const getArea = await api.get('/getAreaList');
+        const getArea = await baseApi.get('/getAreaList');
         if (getArea.data != null) {
           setAreaList(getArea.data);
         }
-        const getContent = await api.get('/getContentList');
+        const getContent = await baseApi.get('/getContentList');
         if (getContent.data != null) {
           setContentList(getContent.data);
         }
@@ -99,7 +96,7 @@ export default function LocationForm() {
     };
 
     console.log(data);
-    api
+    baseApi
       .post('/addLocation', data, {
         headers: {
           'Content-Type': 'application/json',

@@ -25,12 +25,8 @@ import Scrollbar from '../../../components/scrollbar';
 import LocationListToolbar from './LocationListToolbar';
 import LocationListHead from './LocationListHead';
 import UpdateLocationContext from './UpdateLocationContext';
+import baseApi from '../../../api/baseApi';
 // ----------------------------------------------------------------------
-
-const api = axios.create({
-  baseURL: 'https://device.dss.com:4001',
-});
-
 const TABLE_HEAD = [
   { id: 'Country', label: 'Country', alignRight: false },
   { id: 'City', label: 'City', alignRight: false },
@@ -89,7 +85,7 @@ export default function LocationList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const getLocationList = await api.get('/getDeviceInfoList');
+        const getLocationList = await baseApi.get('/getDeviceInfoList');
         if (getLocationList.data != null) {
           setlocationListingData(getLocationList.data);
         } else {
@@ -156,7 +152,7 @@ export default function LocationList() {
   const handleLocationDelete = async (event, newPage) => {
     const data = { DeviceId: open.customData.Mac };
     try {
-      const response = await api.post('/removeLocation', data, { headers: { 'Content-Type': 'application/json' } });
+      const response = await baseApi.post('/removeLocation', data, { headers: { 'Content-Type': 'application/json' } });
       if (response.status === 200) {
         handleCloseMenu();
         triggerUpdate();

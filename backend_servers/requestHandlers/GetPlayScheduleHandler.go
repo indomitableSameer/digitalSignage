@@ -40,7 +40,7 @@ func HandleGetPlayScheduleRequest(w http.ResponseWriter, r *http.Request) {
 
 			json, _ := json.Marshal(schedule)
 			w.Header().Set("content-type", "application/json")
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Origin", "https://web.dss.com")
 			w.Write(json)
 		} else {
 			http.Error(w, "schedule not found", http.StatusNotFound)

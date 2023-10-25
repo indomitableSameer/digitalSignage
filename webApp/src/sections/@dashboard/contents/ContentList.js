@@ -4,11 +4,8 @@ import { useContext, useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
 import ContentCard from './ContentCard';
 import UpdateContentContext from './UpdateContentContext';
-
+import baseApi from '../../../api/baseApi';
 // ----------------------------------------------------------------------
-const api = axios.create({
-  baseURL: 'https://device.dss.com:4001',
-});
 
 export default function ContentList() {
   const triggerUpdate = useContext(UpdateContentContext);
@@ -17,7 +14,7 @@ export default function ContentList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/getContentList');
+        const response = await baseApi.get('/getContentList');
         if (response.data != null) {
           setContent(response.data);
         } else {
@@ -40,7 +37,7 @@ export default function ContentList() {
 
   const handleRemoveButton = async (data) => {
     console.log('handleRemoveButton of content list got called');
-    const response = await api.post('/removeContent', data, { headers: { 'Content-Type': 'application/json' } });
+    const response = await baseApi.post('/removeContent', data, { headers: { 'Content-Type': 'application/json' } });
     console.log(response);
     triggerUpdate();
   };

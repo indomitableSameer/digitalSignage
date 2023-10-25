@@ -1,10 +1,7 @@
 import axios, { HttpStatusCode } from 'axios';
 import { map } from 'lodash';
 import { useEffect, useState } from 'react';
-
-const api = axios.create({
-  baseURL: 'https://device.dss.com:4001',
-});
+import baseApi from '../api/baseApi';
 
 const apiEndpoints = {
   contentlist: '/getContentList',
@@ -45,7 +42,7 @@ const GetFromCloud = (what) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get(apiendoint);
+        const response = await baseApi.get(apiendoint);
         setData(response.data);
       } catch (error) {
         if (error.response) {

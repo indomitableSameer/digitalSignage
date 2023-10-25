@@ -13,10 +13,7 @@ import {
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import UpdateDeviceContext from './UpdateDeviceContext';
-
-const api = axios.create({
-  baseURL: 'https://device.dss.com:4001',
-});
+import baseApi from '../../../api/baseApi';
 // ----------------------------------------------------------------------
 
 export default function DeviceContentUpdateDialog({ item, OnClose }) {
@@ -38,7 +35,7 @@ export default function DeviceContentUpdateDialog({ item, OnClose }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const getContent = await api.get('/getContentList');
+        const getContent = await baseApi.get('/getContentList');
         if (getContent.data != null) {
           setContentList(getContent.data);
         }
@@ -68,7 +65,9 @@ export default function DeviceContentUpdateDialog({ item, OnClose }) {
 
     const msg = { Mac: item.Mac, ContentInfoId: selected.Id };
     try {
-      const response = await api.post('/updateAllocContent', msg, { headers: { 'Content-Type': 'application/json' } });
+      const response = await baseApi.post('/updateAllocContent', msg, {
+        headers: { 'Content-Type': 'application/json' },
+      });
       if (response.status === 200) {
         handleClose();
         setAlertMsg('Content updated successfully!');

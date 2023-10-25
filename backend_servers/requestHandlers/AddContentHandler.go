@@ -138,7 +138,7 @@ func HandleAddContentRequest(w http.ResponseWriter, r *http.Request) {
 
 	json, _ := json.Marshal(resContentList)
 	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "https://web.dss.com")
 	w.Write(json)
 
 	fmt.Println("Object uploaded successfully", info)
