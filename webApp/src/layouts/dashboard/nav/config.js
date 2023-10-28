@@ -19,18 +19,13 @@ const navConfig = [
   {
     title: 'Devices',
     path: '/dashboard/devices',
-    icon: icon('ic_location'),
+    icon: icon('ic_device'),
   },
   {
     title: 'Content',
     path: '/dashboard/contents',
-    icon: icon('ic_cart'),
+    icon: icon('ic_content'),
   },
-  // {
-  //   title: 'login',
-  //   path: '/login',
-  //   icon: icon('ic_lock'),
-  // },
 ];
 
 export default navConfig;
