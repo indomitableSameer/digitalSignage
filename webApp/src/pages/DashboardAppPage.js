@@ -6,7 +6,7 @@ import { Grid, Container, Typography } from '@mui/material';
 import baseApi from '../api/baseApi';
 // components
 // sections
-import { AppCurrentVisits, AppWidgetSummary, AppConversionRates } from '../sections/@dashboard/app';
+import { StatusOvervidePieChart, StatusWidgetSummary, LocationsBarChart } from '../sections/@dashboard/app';
 // ----------------------------------------------------------------------
 
 function countOccurrences(jsonObj, key, value) {
@@ -98,23 +98,23 @@ export default function DashboardAppPage() {
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Online" total={online} icon={'zondicons:location'} />
+            <StatusWidgetSummary title="Online" total={online} icon={'zondicons:location'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Registered" total={registered} color="info" icon={'zondicons:location'} />
+            <StatusWidgetSummary title="Registered" total={registered} color="info" icon={'zondicons:location'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Available" total={available} color="warning" icon={'zondicons:location'} />
+            <StatusWidgetSummary title="Available" total={available} color="warning" icon={'zondicons:location'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Offline" total={offline} color="error" icon={'zondicons:location'} />
+            <StatusWidgetSummary title="Offline" total={offline} color="error" icon={'zondicons:location'} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits
+            <StatusOvervidePieChart
               title="Current Status"
               chartData={[
                 { label: 'Online', value: online },
@@ -132,7 +132,7 @@ export default function DashboardAppPage() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppConversionRates title="Locations" subheader="Devices in locations" chartData={countriesOverview} />
+            <LocationsBarChart title="Locations" subheader="Devices in locations" chartData={countriesOverview} />
           </Grid>
         </Grid>
       </Container>
