@@ -3,16 +3,56 @@ import { useEffect, useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
-import GetDashboardData from '../apidata/dashboardData';
+import baseApi from '../api/baseApi';
 // components
 // sections
 import { AppCurrentVisits, AppWidgetSummary, AppConversionRates } from '../sections/@dashboard/app';
-
 // ----------------------------------------------------------------------
+
+function countOccurrences(jsonObj, key, value) {
+  return Object.values(jsonObj).reduce((count, obj) => {
+    if (key in obj && obj[key] === value) {
+      count += 1;
+    }
+    return count;
+  }, 0);
+}
+
+const generateCountriesOverview = (arr, key) => {
+  const counts = {};
+
+  arr.forEach((item) => {
+    const value = item[key];
+    counts[value] = (counts[value] || 0) + 1;
+  });
+
+  const overview = Object.keys(counts).map((label) => ({ label, value: counts[label] }));
+  console.log(overview);
+  return overview;
+};
+
+function genWebData(jsonObj) {
+  if (jsonObj != null) {
+    const totalEntries = Object.keys(jsonObj).length;
+    const registerd = countOccurrences(jsonObj, 'IsRegistered', true);
+    const online = countOccurrences(jsonObj, 'IsOnline', true);
+    const offline = registerd - online;
+    const available = totalEntries - registerd;
+
+    const dashboardData = {
+      Online: online,
+      Offline: offline,
+      Registered: registerd,
+      Available: available,
+      Countries: generateCountriesOverview(jsonObj, 'Country'),
+    };
+    return dashboardData;
+  }
+  return null;
+}
 
 export default function DashboardAppPage() {
   const theme = useTheme();
-  const devicesData = GetDashboardData();
   const [online, setOnline] = useState(0);
   const [offline, setOffline] = useState(0);
   const [available, setAvailable] = useState(0);
@@ -20,16 +60,32 @@ export default function DashboardAppPage() {
   const [countriesOverview, setCountriesOverview] = useState([{}]);
 
   useEffect(() => {
-    // Use devicesData as needed
-    if (devicesData != null) {
-      console.log('DashboardAppPage: Devices Data:', devicesData);
-      setOnline(devicesData.Online);
-      setOffline(devicesData.Offline);
-      setRegistered(devicesData.Registered);
-      setAvailable(devicesData.Available);
-      setCountriesOverview(devicesData.Countries);
-    }
-  }, [devicesData]);
+    const fetchData = async () => {
+      try {
+        const response = await baseApi.get('/getDeviceInfoList');
+        if (response.data != null) {
+          const devicesData = genWebData(response.data);
+          console.log('DashboardAppPage: Devices Data:', devicesData);
+          setOnline(devicesData.Online);
+          setOffline(devicesData.Offline);
+          setRegistered(devicesData.Registered);
+          setAvailable(devicesData.Available);
+          setCountriesOverview(devicesData.Countries);
+        }
+      } catch (error) {
+        if (error.response) {
+          console.log('Data:', error.response.data);
+          console.log('Status:', error.response.status);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error:', error.message);
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
