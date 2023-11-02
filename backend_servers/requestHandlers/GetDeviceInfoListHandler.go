@@ -83,7 +83,7 @@ func extractStatusInfos(deviceId uuid.UUID) (bool, string, string, string, strin
 
 func HandleGetDeviceInfoListRequest(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("recived getDevicelist request")
+	fmt.Println("recived /getDevicelist request")
 	var dbdevList []dbentities.DeviceDirectory
 	result := dbprovider.Conn.RDb.Order("Created_At desc").Find(&dbdevList)
 
@@ -103,7 +103,6 @@ func HandleGetDeviceInfoListRequest(w http.ResponseWriter, r *http.Request) {
 
 	json, _ := json.Marshal(resDevList)
 	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(json)
 	return
 }

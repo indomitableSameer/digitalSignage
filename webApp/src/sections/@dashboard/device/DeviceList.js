@@ -28,6 +28,7 @@ import Label from '../../../components/label';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import UpdateDeviceContext from './UpdateDeviceContext';
+import baseApi from '../../../api/baseApi';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -38,10 +39,6 @@ const TABLE_HEAD = [
   { id: 'Location', label: 'Location', alignRight: false },
   { id: '' },
 ];
-
-const api = axios.create({
-  baseURL: 'https://device.dss.com:4001',
-});
 
 // ----------------------------------------------------------------------
 
@@ -92,7 +89,7 @@ export default function DeviceList({ OnDevInfoClick, OnContentInfoClick, OnSched
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const getDeviceList = await api.get('/getDeviceInfoList');
+        const getDeviceList = await baseApi.get('/getDeviceInfoList');
         if (getDeviceList.data != null) {
           setPageData(getDeviceList.data);
         } else {

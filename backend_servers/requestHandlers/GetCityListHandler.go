@@ -27,7 +27,6 @@ func HandleGetCityListRequest(w http.ResponseWriter, r *http.Request) {
 
 	json, _ := json.Marshal(resCityList)
 	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(json)
 	return
 }

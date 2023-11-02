@@ -12,7 +12,7 @@ import (
 
 func HandleGetContentListRequest(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("recived getContentList request")
+	fmt.Println("recived /getContentList request")
 
 	var dbContentInfo []dbentities.ContentInfo
 	res := dbprovider.Conn.RDb.Order("Created_At desc").Find(&dbContentInfo)
@@ -31,7 +31,6 @@ func HandleGetContentListRequest(w http.ResponseWriter, r *http.Request) {
 
 	json, _ := json.Marshal(resContentList)
 	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(json)
 	return
 }

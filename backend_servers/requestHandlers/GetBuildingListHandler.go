@@ -27,7 +27,6 @@ func HandleGetBuildingListRequest(w http.ResponseWriter, r *http.Request) {
 
 	json, _ := json.Marshal(resBuildingList)
 	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(json)
 	return
 }

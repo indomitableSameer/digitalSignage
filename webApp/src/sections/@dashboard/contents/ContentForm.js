@@ -5,10 +5,7 @@ import { Grid, FormControl, TextField, Button, LinearProgress } from '@mui/mater
 // component
 import Iconify from '../../../components/iconify';
 import UpdateContentContext from './UpdateContentContext';
-
-const api = axios.create({
-  baseURL: 'https://device.dss.com:4001',
-});
+import baseApi from '../../../api/baseApi';
 
 export default function ContentForm() {
   const triggerUpdate = useContext(UpdateContentContext);
@@ -28,7 +25,7 @@ export default function ContentForm() {
     formData.append('Description', description);
     formData.append('FileSize', file.size);
 
-    api
+    baseApi
       .post('/addContent', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

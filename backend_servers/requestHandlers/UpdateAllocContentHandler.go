@@ -61,6 +61,5 @@ func HandleUpdateAllocContentRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "somthing went wrong while content allocation", http.StatusInternalServerError)
 		return
 	}
-
 	return
 }

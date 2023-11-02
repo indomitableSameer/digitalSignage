@@ -16,6 +16,7 @@ import (
 )
 
 func HandleGetContentRequest(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("received /getContent received")
 	var contentReq requests.ContentRequest
 	body, _ := io.ReadAll(r.Body)
 	err := json.Unmarshal(body, &contentReq)

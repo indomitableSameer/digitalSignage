@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	dbprovider "github.com/indomitableSameer/digitalSignage/backend_servers/dbProvider"
@@ -40,9 +41,12 @@ func HandleStatusUpdateRequest(w http.ResponseWriter, r *http.Request) {
 
 		// add this to db and send response
 		var status dbentities.DeviceStatusRegister
-		dbprovider.Conn.RDb.Where("Registration_Id = ?", regDev.RegistrationId).First(&status)
-		if status.StatusId == uuid.Nil {
+		var existingStatusEntry dbentities.DeviceStatusRegister
+		dbprovider.Conn.RDb.Where("Registration_Id = ?", regDev.RegistrationId).First(&existingStatusEntry)
+		if existingStatusEntry.StatusId == uuid.Nil {
 			status.StatusId = uuid.New()
+		} else {
+			status.StatusId = existingStatusEntry.StatusId
 		}
 
 		status.RegistrationId = regDev.RegistrationId
@@ -51,9 +55,10 @@ func HandleStatusUpdateRequest(w http.ResponseWriter, r *http.Request) {
 		status.AppVersion = statusReq.App_Version
 		status.OsVersion = statusReq.Os_Version
 		status.IpAddr = statusReq.IpAddr
+		status.UpdatedAt = time.Now()
 		dbprovider.Conn.RDb.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "status_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"updated_at", "schedule_alloc_id", "content_alloc_id", "ip_addr", "os_version", "app_version", "updated_at"}),
+			DoUpdates: clause.AssignmentColumns([]string{"schedule_alloc_id", "content_alloc_id", "ip_addr", "os_version", "app_version", "updated_at"}),
 		}).Create(&status)
 
 	} else {

@@ -9,11 +9,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { useState, useContext } from 'react';
 import UpdateDeviceContext from './UpdateDeviceContext';
-
-const api = axios.create({
-  baseURL: 'https://device.dss.com:4001',
-});
-
+import baseApi from '../../../api/baseApi';
 // ----------------------------------------------------------------------
 
 export default function DeviceScheduleUpdateDialog({ item, OnClose }) {
@@ -49,7 +45,9 @@ export default function DeviceScheduleUpdateDialog({ item, OnClose }) {
 
     console.log(msg);
     try {
-      const response = await api.post('/updateAllocSchedule', msg, { headers: { 'Content-Type': 'application/json' } });
+      const response = await baseApi.post('/updateAllocSchedule', msg, {
+        headers: { 'Content-Type': 'application/json' },
+      });
       if (response.status === 200) {
         handleClose();
         setAlertMsg('Schedule updated successfully!');

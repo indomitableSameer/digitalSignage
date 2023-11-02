@@ -2,7 +2,7 @@
 
 const account = {
   displayName: 'Admin',
-  email: 'demo@minimals.cc',
+  email: 'admin@dss.com',
   photoURL: '/assets/images/avatars/avatar_default.jpg',
 };
 

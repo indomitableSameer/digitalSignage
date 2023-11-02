@@ -14,7 +14,7 @@ import (
 
 func main() {
 
-	fmt.Println("creating db..")
+	fmt.Println("migrating db..")
 	dbprovider.Conn.RDb.AutoMigrate(&dbentities.ContentInfo{})
 
 	dbprovider.Conn.RDb.AutoMigrate(&dbentities.Country{})
@@ -31,34 +31,37 @@ func main() {
 	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceStatusRegister{})
 
 	multiplexer := mux.NewRouter()
-	multiplexer.HandleFunc("/removeLocation", requesthandlers.HandleRemoveLocationRequest).Methods(http.MethodPost)
-	multiplexer.HandleFunc("/removeContent", requesthandlers.HandleRemoveContentRequest).Methods(http.MethodPost)
-	multiplexer.HandleFunc("/statusUpdate", requesthandlers.HandleStatusUpdateRequest).Methods(http.MethodPost)
-	multiplexer.HandleFunc("/getContent", requesthandlers.HandleGetContentRequest).Methods(http.MethodGet)
-	multiplexer.HandleFunc("/addLocation", requesthandlers.HandleAddLocationRequest).Methods(http.MethodPost)
-	multiplexer.HandleFunc("/getDeviceInfoList", requesthandlers.HandleGetDeviceInfoListRequest).Methods(http.MethodGet)
-	multiplexer.HandleFunc("/addContent", requesthandlers.HandleAddContentRequest).Methods(http.MethodPost)
-	multiplexer.HandleFunc("/getContentList", requesthandlers.HandleGetContentListRequest).Methods(http.MethodGet)
-	multiplexer.HandleFunc("/getPlaySchedule", requesthandlers.HandleGetPlayScheduleRequest).Methods(http.MethodGet)
-	multiplexer.HandleFunc("/addPlaySchedule", requesthandlers.HandleAddPlayScheduleRequest).Methods(http.MethodPost)
-	multiplexer.HandleFunc("/getCountryList", requesthandlers.HandleGetCountryListRequest).Methods(http.MethodGet)
-	multiplexer.HandleFunc("/getCityList", requesthandlers.HandleGetCityListRequest).Methods(http.MethodGet)
-	multiplexer.HandleFunc("/getBuildingList", requesthandlers.HandleGetBuildingListRequest).Methods(http.MethodGet)
-	multiplexer.HandleFunc("/getAreaList", requesthandlers.HandleGetAreaListRequest).Methods(http.MethodGet)
-	multiplexer.HandleFunc("/getEventStream", requesthandlers.HandleEventStreamRequest).Methods(http.MethodGet)
 
-	multiplexer.HandleFunc("/updateAllocContent", requesthandlers.HandleUpdateAllocContentRequest).Methods(http.MethodPost)
-	multiplexer.HandleFunc("/updateAllocSchedule", requesthandlers.HandleUpdateAllocScheduleRequest).Methods(http.MethodPost)
+	// Web APIs
+	multiplexer.HandleFunc("/web/login", requesthandlers.HandleLoginRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/web/removeLocation", requesthandlers.HandleRemoveLocationRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/web/removeContent", requesthandlers.HandleRemoveContentRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/web/addLocation", requesthandlers.HandleAddLocationRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/web/getDeviceInfoList", requesthandlers.HandleGetDeviceInfoListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/web/addContent", requesthandlers.HandleAddContentRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/web/getContentList", requesthandlers.HandleGetContentListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/web/getCountryList", requesthandlers.HandleGetCountryListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/web/getCityList", requesthandlers.HandleGetCityListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/web/getBuildingList", requesthandlers.HandleGetBuildingListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/web/getAreaList", requesthandlers.HandleGetAreaListRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/web/getEventStream", requesthandlers.HandleEventStreamRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/web/updateAllocContent", requesthandlers.HandleUpdateAllocContentRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/web/updateAllocSchedule", requesthandlers.HandleUpdateAllocScheduleRequest).Methods(http.MethodPost)
 
+	// Device APIs
+	multiplexer.HandleFunc("/device/statusUpdate", requesthandlers.HandleStatusUpdateRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/device/getContent", requesthandlers.HandleGetContentRequest).Methods(http.MethodGet)
+	multiplexer.HandleFunc("/device/getPlaySchedule", requesthandlers.HandleGetPlayScheduleRequest).Methods(http.MethodGet)
+
+	// CORS settings
 	credentials := handlers.AllowCredentials()
 	methods := handlers.AllowedMethods([]string{"GET", "PUT", "POST", "OPTIONS"})
 	ttl := handlers.MaxAge(3600)
-	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Authorization", "Content-Type"})
-	origins := handlers.AllowedOrigins([]string{"*"})
-	/*, "localhost", "localhost:5173", "127.0.0.1", "127.0.0.1:5173", "http://127.0.0.1", "http://127.0.0.1:5173/"*/
+	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Authorization", "Content-Type", "Credentials"})
+	origins := handlers.AllowedOrigins([]string{"https://web.dss.com"})
 	fmt.Println("Started server at port 8001")
-	//servererror := http.ListenAndServe(":8000", handlers.CORS(methods, origins, ttl, header)(multiplexer))
 	servererror := http.ListenAndServe(":8001", handlers.CORS(credentials, methods, origins, ttl, headers)(multiplexer))
+
 	if servererror != nil {
 		fmt.Println(servererror)
 	}

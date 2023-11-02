@@ -27,7 +27,6 @@ func HandleGetAreaListRequest(w http.ResponseWriter, r *http.Request) {
 
 	json, _ := json.Marshal(resAreaList)
 	w.Header().Set("content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(json)
 	return
 }

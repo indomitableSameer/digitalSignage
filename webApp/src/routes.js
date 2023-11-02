@@ -10,27 +10,16 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ContentsPage from './pages/ContentsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
-
 // ----------------------------------------------------------------------
 
 export default function Router() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleLoginSuccessful = () => {
-    // Logic to handle successful login
     setIsLoggedIn(true);
-    localStorage.setItem('token', 'abc');
-    navigate('/dashboard/app', { replace: true });
+    // navigate('/dashboard/app', { replace: true });
   };
-
-  useEffect(() => {
-    // Check authentication status on page load
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
 
   const routes = useRoutes([
     {

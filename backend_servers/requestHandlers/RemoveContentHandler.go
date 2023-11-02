@@ -16,7 +16,7 @@ import (
 
 func HandleRemoveContentRequest(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("recived removeContent request")
+	fmt.Println("recived /removeContent request")
 	const contentInfoBucket = "dss-content-thumbnail-files"
 	const contentFileBucket = "dss-content-video-files"
 

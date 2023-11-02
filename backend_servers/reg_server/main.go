@@ -17,7 +17,7 @@ func main() {
 	dbprovider.Conn.RDb.AutoMigrate(&dbentities.DeviceRegistrationDirectory{})
 
 	multiplexer := mux.NewRouter()
-	multiplexer.HandleFunc("/registerDevice", requesthandlers.HandleDeviceRegistrationRequest).Methods(http.MethodPost)
+	multiplexer.HandleFunc("/device/registerDevice", requesthandlers.HandleDeviceRegistrationRequest).Methods(http.MethodPost)
 
 	credentials := handlers.AllowCredentials()
 	methods := handlers.AllowedMethods([]string{"POST", "OPTIONS"})
