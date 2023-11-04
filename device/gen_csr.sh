@@ -1,1 +1,1 @@
-openssl req -key nonzymkey.key -new -out zymkey.csr -engine zymkey_ssl -keyform e -subj "/C=US/ST=California/L=Santa Barbara/O=Zymbit/OU=Zymkey/CN=rpi.edge.zymbit.com"
+sudo openssl req -nodes -key "pkcs11:token=dss;object=dss_key;type=private" -new -out device.csr -engine zymkey_ssl -keyform e -subj "/C=DE/ST=Hessen/L=FRA/O=FRA-UAS/OU=FB2/CN=b8:27:eb:e8:40:6f/emailAddress=client.dss@gmail.com"

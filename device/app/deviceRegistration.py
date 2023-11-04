@@ -26,7 +26,7 @@ def registerDevice(log:logging):
                 headers = {'Content-type': 'application/json'}
                 connection = secure_conn.getConnection(conn_details.registration_url, int(conn_details.registration_port))
                 connection.connect()
-                connection.request("POST", "/registerDevice", json.dumps(DeviceRegisterRequest().__dict__), headers)
+                connection.request("POST", "/device/registerDevice", json.dumps(DeviceRegisterRequest().__dict__), headers)
                 response = connection.getresponse()
 
                 if response.status == HttpStatus.OK: #if status is ok that means either registration is newly done or it was already done. In both case we dont care. 

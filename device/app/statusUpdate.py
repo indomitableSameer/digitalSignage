@@ -36,7 +36,7 @@ def updateDeviceStatusToCloud(log:logging):
                     msg = json.dumps(StatusUpdateRequest(reg_detail.reg_id, play_sched.schedule_id, content_info.content_id).__dict__)
                     log.info("sending status msg :" + msg)
                     headers = {'Content-type': 'application/json'}
-                    connection.request("POST", "/statusUpdate", msg, headers)    
+                    connection.request("POST", "/device/statusUpdate", msg, headers)    
                     response = connection.getresponse()
 
                     if response.status == HttpStatus.CONFLICT:

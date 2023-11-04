@@ -29,7 +29,7 @@ def getUpdatedContent(log: logging):
 
                     headers = {'Content-type': 'application/json'}
                     req = {"RegistrationId": reg_details.reg_id}
-                    connection.request("GET", "/getContent",
+                    connection.request("GET", "/device/getContent",
                                        json.dumps(req), headers)
 
                     response = connection.getresponse()

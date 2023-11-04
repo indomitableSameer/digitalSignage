@@ -61,7 +61,7 @@ def _getScheduleFromServer(log:logging):
         
         headers = {'Content-type': 'application/json'}
         req = {"RegistrationId": reg_details.reg_id}
-        connection.request("GET", "/getPlaySchedule", json.dumps(req), headers)    
+        connection.request("GET", "/device/getPlaySchedule", json.dumps(req), headers)    
         response = connection.getresponse()
 
         if response.status != HttpStatus.OK:
