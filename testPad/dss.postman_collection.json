@@ -1,0 +1,584 @@
+{
+	"info": {
+		"_postman_id": "fdab163e-fa21-436f-a57c-b5aa794d6dcb",
+		"name": "dss",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10536805"
+	},
+	"item": [
+		{
+			"name": "device",
+			"item": [
+				{
+					"name": "https://register.dss.com:4000/device/registerDevice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Mac\":\"b8:27:eb:e8:40:6f\", \r\n    \"IpAddr\":\"192.168.165.15\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://register.dss.com:4000/device/registerDevice",
+							"protocol": "https",
+							"host": [
+								"register",
+								"dss",
+								"com"
+							],
+							"port": "4000",
+							"path": [
+								"device",
+								"registerDevice"
+							]
+						},
+						"description": "Register device with backend server by providing mac address and ip address."
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/device/statusUpdate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"RegistrationId\":\"0b595f59-b246-402c-9079-e1fa1a5ab8be\",\r\n    \"ScheduleAllocId\":\"36414f0d-da7d-493e-8efd-358690ee8568\",\r\n    \"ContentAllocId\":\"23177bfe-c4df-4fca-8ab1-2ea19ea2bb78\",\r\n    \"App_Version\":\"1.1\",\r\n    \"Os_Version\":\"1.1\",\r\n    \"IpAddr\":\"127.01.01.01\"\r\n}"
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/device/statusUpdate",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"device",
+								"statusUpdate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/device/getContent",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"RegistrationId\":\"e84d1e0a-455e-4c36-9743-899733b39bef\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/device/getContent",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"device",
+								"getContent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/device/getPlaySchedule",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"RegistrationId\":\"c8017d64-de73-40a0-9fa4-903d0261fb26\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/device/getPlaySchedule",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"device",
+								"getPlaySchedule"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "web",
+			"item": [
+				{
+					"name": "https://device.dss.com:4001/web/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/web/login",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/addLocation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Country\":\"Germany\",\r\n\t\"City\":\"Frankfurt\",\r\n\t\"Building\":\"Fra-Uas\",\r\n\t\"Area\":\"B1-F1-W2\",\r\n\t\"Mac\":\"b8:27:eb:bd:15:3a\",\r\n\t\"StartDate\":\"30-09-2023\",\r\n\t\"EndDate\":\"30-12-2023\",\r\n\t\"StartTime\":\"11:00\",\r\n\t\"EndTime\":\"15:00\",\r\n\t\"ContentInfoId\":\"404af461-9490-4feb-b1f2-603d47735a85\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/web/addLocation",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"addLocation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/addDevice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Mac\":\"ab:ac:ad:ae:af\", \r\n    \"Location\":\"Germany\"\r\n}"
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/web/addDevice",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"addDevice"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/addContent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Length",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "File",
+									"type": "file",
+									"src": "/C:/Users/Benutzer1/Downloads/uploaded_file.mp4"
+								},
+								{
+									"key": "FileName",
+									"value": "TestFile5",
+									"type": "text"
+								},
+								{
+									"key": "Description",
+									"value": "This is a test file",
+									"type": "text"
+								},
+								{
+									"key": "FileSize",
+									"value": "25132345",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/web/addContent",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"addContent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/removeContent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ContentId\":\"abc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/web/removeContent",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"removeContent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/removeLocation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"DeviceId\":\"ab:ac:ad:ae:af\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/web/removeLocation",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"removeLocation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/updateAllocContent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Mac\":\"b8:27:eb:e8:40:6f\",\r\n    \"ContentInfoId\":\"1cd14b4d-dca5-4646-8511-e8d10419c02d\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/web/updateAllocContent",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"updateAllocContent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/updateAllocSchedule",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Mac\":\"b8:27:eb:e8:40:6f\",\r\n    \"StartDate\":\"13-10-2023\",\r\n\t\"EndDate\":\"01-01-2024\",\r\n\t\"StartTime\":\"07:00\",\r\n\t\"EndTime\":\"19:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://device.dss.com:4001/web/updateAllocSchedule",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"updateAllocSchedule"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/getDeviceInfoList",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://device.dss.com:4001/web/getDeviceInfoList",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"getDeviceInfoList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/getContentList",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://device.dss.com:4001/web/getContentList",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"getContentList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/getCountryList",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://device.dss.com:4001/web/getCountryList",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"getCountryList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/getCityList",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://device.dss.com:4001/web/getCityList",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"getCityList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/getBuildingList",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://device.dss.com:4001/web/getBuildingList",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"getBuildingList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/getAreaList",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://device.dss.com:4001/web/getAreaList",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"getAreaList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://device.dss.com:4001/web/getEventStream",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://device.dss.com:4001/web/getEventStream",
+							"protocol": "https",
+							"host": [
+								"device",
+								"dss",
+								"com"
+							],
+							"port": "4001",
+							"path": [
+								"web",
+								"getEventStream"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

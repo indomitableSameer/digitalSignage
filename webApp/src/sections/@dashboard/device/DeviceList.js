@@ -29,6 +29,7 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import UpdateDeviceContext from './UpdateDeviceContext';
 import baseApi from '../../../api/baseApi';
+import DeviceConfigDialog from './DeviceConfigDialog';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -66,7 +67,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (item) => item?.Mac?.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -84,6 +85,17 @@ export default function DeviceList({ OnDevInfoClick, OnContentInfoClick, OnSched
 
   const triggerUpdate = useContext(UpdateDeviceContext);
 
+  const [devConfigDialog, setOpenDeviceConfigPopup] = useState(null);
+  const handleOpenDevConfigPopup = (event, row) => {
+    console.log('handleOpenDevConfigPopup is called');
+    console.log(row);
+    setOpenDeviceConfigPopup(row);
+    handleCloseMenu();
+  };
+
+  const handleCloseDevConfigPopup = () => {
+    setOpenDeviceConfigPopup(null);
+  };
   // ----------Api and Update Calls----------------------
 
   useEffect(() => {
@@ -112,8 +124,13 @@ export default function DeviceList({ OnDevInfoClick, OnContentInfoClick, OnSched
 
   // -----------------------------------------------------
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
+  const handleOpenMenu = (mac) => (event) => {
+    console.log('handleOpenMenu called');
+    const customEventData = {
+      Mac: mac,
+    };
+    const mergedEvent = { ...event, customData: customEventData };
+    setOpen(mergedEvent);
   };
 
   const handleCloseMenu = () => {
@@ -255,7 +272,7 @@ export default function DeviceList({ OnDevInfoClick, OnContentInfoClick, OnSched
                       </TableCell>
 
                       <TableCell align="right">
-                        <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                        <IconButton size="large" color="inherit" onClick={handleOpenMenu(Mac)}>
                           <Iconify icon={'eva:more-vertical-fill'} />
                         </IconButton>
                       </TableCell>
@@ -308,7 +325,7 @@ export default function DeviceList({ OnDevInfoClick, OnContentInfoClick, OnSched
 
       <Popover
         open={Boolean(open)}
-        anchorEl={open}
+        anchorEl={open && open.currentTarget}
         onClose={handleCloseMenu}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -324,11 +341,12 @@ export default function DeviceList({ OnDevInfoClick, OnContentInfoClick, OnSched
           },
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={(event) => handleOpenDevConfigPopup(event, open.customData.Mac)}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Configure
         </MenuItem>
       </Popover>
+      <DeviceConfigDialog item={devConfigDialog} OnClose={handleCloseDevConfigPopup} />
     </Card>
   );
 }

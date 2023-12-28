@@ -5,6 +5,7 @@ import { Stack, Container, Typography } from '@mui/material';
 // components
 // sections
 import {
+  DeviceConfigDialog,
   DeviceContentUpdateDialog,
   DeviceInfoDialog,
   DeviceList,
@@ -42,6 +43,17 @@ export default function DevicesPage() {
     setOpenDeviceInfoPopup(null);
   };
 
+  // const [devConfigDialog, setOpenDeviceConfigPopup] = useState(null);
+  // const handleOpenDevConfigPopup = (event, row) => {
+  //   console.log('handleOpenDevConfigPopup is called');
+  //   console.log(row);
+  //   setOpenDeviceConfigPopup(row);
+  // };
+
+  // const handleCloseDevConfigPopup = () => {
+  //   setOpenDeviceConfigPopup(null);
+  // };
+
   return (
     <>
       <Helmet>
@@ -59,10 +71,10 @@ export default function DevicesPage() {
               OnDevInfoClick={handleOpenDevInfoPopup}
               OnContentInfoClick={handleOpenContentUpdateDialog}
               OnScheduleInfoClick={handleOpenSchedUpdateDialog}
+              // OnDevConfigUpdateClick={handleOpenDevConfigPopup}
             />
           </Stack>
         </Container>
-
         <DeviceInfoDialog item={devInfoPopup} OnClose={handleCloseDevInfoPopup} />
         <DeviceContentUpdateDialog item={devContentUpdateDialog} OnClose={handleCloseContentUpdateDialog} />
         <DeviceScheduleUpdateDialog item={devSchedUpdateDialog} OnClose={handleCloseSchedUpdateDialog} />

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	dbprovider "github.com/indomitableSameer/digitalSignage/backend_servers/dbProvider"
 	"github.com/indomitableSameer/digitalSignage/backend_servers/dbentities"
@@ -57,10 +58,13 @@ func main() {
 	credentials := handlers.AllowCredentials()
 	methods := handlers.AllowedMethods([]string{"GET", "PUT", "POST", "OPTIONS"})
 	ttl := handlers.MaxAge(3600)
+	//corsOption := handlers.AllowedOriginValidator(OriginValidator)
 	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Authorization", "Content-Type", "Credentials"})
-	origins := handlers.AllowedOrigins([]string{"https://web.dss.com"})
+	// origins := handlers.AllowedOrigins([]string{"*"})
+	origins := handlers.AllowedOrigins([]string{"https://web.dss.com", "https://web.dss.com:443"})
 	fmt.Println("Started server at port 8001")
-	servererror := http.ListenAndServe(":8001", handlers.CORS(credentials, methods, origins, ttl, headers)(multiplexer))
+	loggedRouter := handlers.CombinedLoggingHandler(os.Stdout, multiplexer)
+	servererror := http.ListenAndServe(":8001", handlers.CORS(credentials, methods, origins, ttl, headers)(loggedRouter))
 
 	if servererror != nil {
 		fmt.Println(servererror)
